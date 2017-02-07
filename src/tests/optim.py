@@ -26,7 +26,7 @@ def ko_chassagnole ():
     bounds = [0, problem.get_number_reactions() - 1]
 
     final_pop = optimization_intSetRep(prob, bounds,
-                                       resultFile="/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_size5.csv")
+                                       resultFile="/Volumes/Data/Documents/Projects/DeCaF/Optimizations/ResultsEXP/optim_Chassagnole_Serine_size5.csv")
 
 
 def underover_chassagnole():
@@ -50,7 +50,7 @@ def underover_chassagnole():
     bounds = [[0, 0], [problem.get_number_reactions() - 1, len(levels) - 1]]
 
     final_pop = optimization_tupleSetRep(prob, bounds,
-                                       resultFile="/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_size5.csv")
+                                       resultFile="/Volumes/Data/Documents/Projects/DeCaF/Optimizations/ResultsEXP/optim_Chassagnole_Serine_size5.csv")
 
 if __name__ == '__main__':
     #ko_chassagnole()

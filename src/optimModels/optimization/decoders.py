@@ -22,7 +22,7 @@ class decoderReactionsKnockouts(absDecoder):
             pass # TO DO change the envCondition to LB=UB=0 in the ko reactions
 
         elif isinstance(simulProblem, kineticSimulationProblem):
-            koReacs = self.individual_decoded_str(candidate, simulProblem.model)
+            koReacs = self.candidate_decoded(candidate, simulProblem.model)
             # change ode func to set the new KO reaction set
             simulProblem.reset_parameters()
             simulProblem.set_reactions_ko(koReacs)
@@ -44,7 +44,7 @@ class decoderUnderOverExpression(absDecoder):
             pass  # TO DO
 
         elif isinstance(simulProblem, kineticSimulationProblem):
-            solDecoded = self.individual_decoded_str(candidate, simulProblem.model)
+            solDecoded = self.candidate_decoded(candidate, simulProblem.model)
             simulProblem.reset_parameters()
             simulProblem.set_factors(solDecoded)
             simulProblem.update_obj()
