@@ -19,14 +19,14 @@ def ko_chassagnole ():
                                      objectiveFunc=targetFlux("vsersynth"),
                                      solverId=odeSolver.LSODA)
 
-    prob.set_optim_parameters(popSize=100, maxGenerations=10, popSelectedSize=50, maxCandidateSize=8,
+    prob.set_optim_parameters(popSize=100, maxGenerations=100, popSelectedSize=50, maxCandidateSize=5,
                               crossoverRate=1.0, mutationRate=0.1, newCandidatesRate=0.1)
 
     # define the max limit for index of reactions and levels
     bounds = [0, problem.get_number_reactions() - 1]
 
     final_pop = optimization_intSetRep(prob, bounds,
-                                       resultFile="/Volumes/Data/Documents/Projects/DeCaF/Optimizations/ResultsEXP/optim_Chassagnole_Serine_size8.csv")
+                                       resultFile="/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_size5.csv")
 
 
 def underover_chassagnole():
@@ -43,14 +43,14 @@ def underover_chassagnole():
                                      objectiveFunc=targetFlux("vsersynth"),
                                      solverId=odeSolver.LSODA)
 
-    prob.set_optim_parameters(popSize=10, maxGenerations=10, popSelectedSize=5, maxCandidateSize=8,
+    prob.set_optim_parameters(popSize=100, maxGenerations=100, popSelectedSize=50, maxCandidateSize=5,
                               crossoverRate=1.0, mutationRate=0.1, newCandidatesRate=0.1)
 
     # define the max limit for index of reactions and levels
     bounds = [[0, 0], [problem.get_number_reactions() - 1, len(levels) - 1]]
 
     final_pop = optimization_tupleSetRep(prob, bounds,
-                                       resultFile="/Volumes/Data/Documents/Projects/DeCaF/Optimizations/ResultsEXP/optim_Chassagnole_Serine_size8.csv")
+                                       resultFile="/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_size5.csv")
 
 if __name__ == '__main__':
     #ko_chassagnole()
