@@ -5,8 +5,8 @@ from collections import OrderedDict
 from numpy import linspace
 from optimModels.utils.utils import merge_two_dicts
 
-from src.optimModels.simulation import kineticSimulationResult, stoichiometricSimulationResult
-from src.optimModels.simulation import odeSolver
+from optimModels.simulation.simulationResults import kineticSimulationResult, stoichiometricSimulationResult
+from optimModels.simulation.solvers import odeSolver
 
 
 class simulationProblem:

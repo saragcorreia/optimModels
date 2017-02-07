@@ -1,7 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 
-from src.optimModels.simulation import kineticSimulationProblem,stoichiometricSimulationProblem
+from optimModels.simulation.simulationProblems import kineticSimulationProblem,stoichiometricSimulationProblem
 
 
 class absDecoder:

@@ -3,8 +3,7 @@ from optimModels.optimization.evolutionaryComputation import optimProblemConfigu
 from optimModels.optimization.objectiveFunctions import targetFlux
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
 from optimModels.simulation.solvers import odeSolver
-
-from src.optimModels.model.dynamicModel import load_kinetic_model
+from optimModels.model.dynamicModel import load_kinetic_model
 
 
 def ko_chassagnole ():

@@ -8,7 +8,7 @@ DIL = 0.1/3600
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
 from optimModels.simulation.solvers import odeSolver
 
-from src.optimModels.model.dynamicModel import load_kinetic_model
+from optimModels.model.dynamicModel import load_kinetic_model
 
 if __name__ == '__main__':
     model = load_kinetic_model(SBML_MODEL)

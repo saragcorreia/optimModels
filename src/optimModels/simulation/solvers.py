@@ -1,6 +1,6 @@
 import odespy
 
-from src.optimModels import solverParameters, Parameter
+from optimModels.utils.constantes import solverParameters, Parameter
 
 class odeSolver:
     LSODA = 1

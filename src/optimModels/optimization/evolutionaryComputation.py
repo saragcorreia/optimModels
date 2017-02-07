@@ -15,7 +15,7 @@ from random import Random
 from inspyred import ec
 from optimModels.optimization import evaluators, generators, replacers,variators
 
-from src.optimModels.optimization import observers
+from optimModels.optimization import observers
 
 
 class optimProblemConfiguration():
