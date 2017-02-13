@@ -3,10 +3,16 @@ from abc import ABCMeta, abstractmethod
 class simulationResult:
     __metaclass__ = ABCMeta
 
-
     @abstractmethod
     def get_fluxes_distribution(self):
         pass
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
 
 # NOT USED ... YET
 class stoichiometricSimulationResult(simulationResult):

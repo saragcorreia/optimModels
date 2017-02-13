@@ -9,6 +9,8 @@ from optimModels.simulation.simulationProblems import kineticSimulationProblem
 from optimModels.simulation.solvers import odeSolver
 
 from optimModels.model.dynamicModel import load_kinetic_model
+from optimModels.simulation.overrideSimulationProblem import overrideKineticSimProblem
+from collections import OrderedDict
 
 if __name__ == '__main__':
     model = load_kinetic_model(SBML_MODEL)
@@ -20,24 +22,19 @@ if __name__ == '__main__':
     print "------------------"
 
     print "------------------ KO PGI ------------------"
-    problem.set_reactions_ko(["vPGI"])
-    problem.update_obj()
-    res = problem.simulate(odeSolver.LSODA)
+    overrideProblem = overrideKineticSimProblem(factors = OrderedDict([("vPGI",0.0)]))
+    res = problem.simulate(odeSolver.LSODA, overrideProblem)
     print res.get_fluxes_distribution()
     print "------------------"
 
     print "------------------ under vPTS ------------------"
-    problem.reset_parameters()
-    problem.set_factors({"vPTS":0.005})
-    problem.update_obj()
-    res = problem.simulate(odeSolver.LSODA)
+    overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("vPTS", 0.005)]))
+    res = problem.simulate(odeSolver.LSODA,overrideProblem)
     print res.get_fluxes_distribution()
     print "------------------"
 
     print "------------------ over vPTS ------------------"
-    problem.reset_parameters()
-    problem.set_factors({"vPTS": 20})
-    problem.update_obj()
-    res = problem.simulate(odeSolver.LSODA)
+    overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("vPTS", 20)]))
+    res = problem.simulate(odeSolver.LSODA,overrideProblem)
     print res.get_fluxes_distribution()
     print "------------------"

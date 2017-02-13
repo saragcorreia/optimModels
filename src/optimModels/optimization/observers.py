@@ -5,9 +5,10 @@ def save_all_results(population, num_generations, num_evaluations, args):
     #save the optimization configuration
 
     print "Number of generation:" + str(num_generations)
+
     config = args["configuration"]
     decoder = config.get_decoder()
-    model = config.get_simulation_problem().model
+    model = config.get_simulation_problem().get_model()
 
     if num_generations == 0:
         file.write("population_size;candidate_max_size;crossover_rate; mutation_rate;new_candidates_rate; num_elites\n")

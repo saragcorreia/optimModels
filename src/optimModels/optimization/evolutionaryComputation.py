@@ -13,15 +13,16 @@
 from random import Random
 
 from inspyred import ec
-from optimModels.optimization import evaluators, generators, replacers,variators
+from optimModels.optimization import evaluators, generators, replacers, variators
 
 from optimModels.optimization import observers
-
+import logging
 
 class optimProblemConfiguration():
-    def __init__(self, simulationProblem, decoder=None, objectiveFunc = None, solverId = None):
+
+    def __init__(self, simulationProblem=None, decoder=None, objectiveFunc=None, solverId=None):
         if objectiveFunc is None or solverId is None:
-            raise Exception ("You must indicate the objective function and the solver id.")
+           raise Exception("You must indicate the objective function and the solver id.")
         self.simulProblem = simulationProblem
         self.decoder = decoder
         self.objectiveFunc = objectiveFunc
@@ -36,22 +37,23 @@ class optimProblemConfiguration():
     def get_decoder(self):
         return self.decoder
 
-    def set_knockouts (self, ko_list):
+    def set_knockouts(self, ko_list):
         self.simulProblem.set_reactions_ko(ko_list)
 
     def set_parameters(self, parameters):
         self.simulProblem.set_parameters(parameters)
 
-    #return the first reaction to optimize (NOT FINAL VERSION)
+    # return the first reaction to optimize (NOT FINAL VERSION)
     def get_objective_function(self):
         return self.objectiveFunc;
 
     def get_solver_id(self):
         return self.solverId
 
-    #set and gets of basic optimization problem parameters
-    def set_optim_parameters(self, popSize=100, maxGenerations=100, popSelectedSize=50, maxCandidateSize=10, numElites=1, crossoverRate=0.9, mutationRate=0.1, newCandidatesRate=0.1):
-        self._populationSize=popSize
+    # set and gets of basic optimization problem parameters
+    def set_optim_parameters(self, popSize=100, maxGenerations=100, popSelectedSize=50, maxCandidateSize=10,
+                             numElites=1, crossoverRate=0.9, mutationRate=0.1, newCandidatesRate=0.1):
+        self._populationSize = popSize
         self._maxGenerations = maxGenerations
         self._populationSelectedSize = popSelectedSize
         self._maxCandidateSize = maxCandidateSize
@@ -68,7 +70,7 @@ class optimProblemConfiguration():
     def populationSize(self, value):
         if type(value) is not int:
             raise TypeError("Population size must be an integer.")
-        self._populationSize=value
+        self._populationSize = value
 
     @property
     def maxGenerations(self):
@@ -97,7 +99,8 @@ class optimProblemConfiguration():
     @populationSelectedSize.setter
     def populationSelectedSize(self, value):
         if type(value) is not int and value > self.population_size:
-            raise TypeError("Maximum candidates selected for variators must be an integer and lower than population size.")
+            raise TypeError(
+                "Maximum candidates selected for variators must be an integer and lower than population size.")
         self._populationSelectedSize = value
 
     @property
@@ -116,7 +119,7 @@ class optimProblemConfiguration():
 
     @crossoverRate.setter
     def crossoverRate(self, value):
-        if type(value) is not float or value<0.0 or value>1.0:
+        if type(value) is not float or value < 0.0 or value > 1.0:
             raise ValueError("Crossover rate must be between 0 and 1.")
         self._crossoverRate = value
 
@@ -126,7 +129,7 @@ class optimProblemConfiguration():
 
     @mutationRate.setter
     def mutationRate(self, value):
-        if type(value) is not float or value<0.0 or value>1.0:
+        if type(value) is not float or value < 0.0 or value > 1.0:
             raise ValueError("Mutation rate must be between 0 and 1.")
         self._mutationRate = value
 
@@ -136,23 +139,37 @@ class optimProblemConfiguration():
 
     @newCandidatesRate.setter
     def newCandidatesRate(self, value):
-        if type(value) is not float or value<0.0 or value>1.0:
+        if type(value) is not float or value < 0.0 or value > 1.0:
             raise ValueError("New candidates rate must be between 0 and 1.")
         self._newCandidatesRate = value
 
     def get_parameters_str(self):
-        params = [self.populationSize, self.maxCandidateSize, self.crossoverRate, self.mutationRate, self.newCandidatesRate, self.numElites]
-        print params
-        print ";".join([str(elem) for elem in params])+"\n"
-        return ";".join([str(elem) for elem in params])+"\n"
+        params = [self.populationSize, self.maxCandidateSize, self.crossoverRate, self.mutationRate,
+                  self.newCandidatesRate, self.numElites]
+        return ";".join([str(elem) for elem in params]) + "\n"
 
 
 
-def optimization_intSetRep(confOptimProblem, bounds, resultFile):
+    def __getstate__(self):
+        # Copy the object's state from self.__dict__ which contains
+        # all our instance attributes. Always use the dict.copy()
+        # method to avoid modifying the original state.
+        state = self.__dict__.copy()
+        return state
 
+    def __setstate__(self, state):
+        # Restore instance attributes (i.e., filename and lineno).
+        self.__dict__.update(state)
+
+
+
+
+
+def optimization_intSetRep(confOptimProblem, bounds, resultFile, multiprocessing = False):
     rand = Random()
     my_ec = ec.EvolutionaryComputation(rand)
     my_ec.selector = ec.selectors.tournament_selection
+    ec.variators.arithmetic_crossover
     my_ec.variator = [variators.uniform_crossover,
                       variators.grow_mutation_intSetRep,
                       variators.shrink_mutation,
@@ -163,21 +180,49 @@ def optimization_intSetRep(confOptimProblem, bounds, resultFile):
     my_ec.observer = observers.save_all_results
 
 
-    final_pop = my_ec.evolve(generator=generators.generator_intSetRep,
-                             evaluator=evaluators.evaluator,
-                             bounder=ec.Bounder(bounds[0],bounds[1]),
-                             pop_size = confOptimProblem.populationSize,
-                             max_generations = confOptimProblem.maxGenerations,
-                             candidate_max_size=confOptimProblem.maxCandidateSize,
-                             num_elites = confOptimProblem.numElites,
-                             num_selected = confOptimProblem.populationSelectedSize,
-                             crossover_rate=confOptimProblem.crossoverRate,
-                             mutation_rate=confOptimProblem.mutationRate,
-                             new_candidates_rate=confOptimProblem.newCandidatesRate,
-                             configuration = confOptimProblem,
-                             results_file = resultFile,
-                             tournament_size = 3)
+    logger = logging.getLogger('inspyred.ec')
+    logger.setLevel(logging.DEBUG)
+    file_handler = logging.FileHandler('/Volumes/Data/inspyred.log', mode='w')
+    file_handler.setLevel(logging.DEBUG)
+    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    file_handler.setFormatter(formatter)
+    logger.addHandler(file_handler)
+
+    if multiprocessing:
+        print "Multiprocessing!!!"
+        final_pop = my_ec.evolve(generator = generators.generator_intSetRep,
+                                 evaluator = ec.evaluators.parallel_evaluation_mp,
+                                 mp_evaluator = evaluators.evaluator,
+                                 mp_num_cpus = 8,
+                                 bounder = ec.Bounder(bounds[0], bounds[1]),
+                                 pop_size = confOptimProblem.populationSize,
+                                 max_generations = confOptimProblem.maxGenerations,
+                                 candidate_max_size = confOptimProblem.maxCandidateSize,
+                                 num_elites = confOptimProblem.numElites,
+                                 num_selected = confOptimProblem.populationSelectedSize,
+                                 crossover_rate = confOptimProblem.crossoverRate,
+                                 mutation_rate = confOptimProblem.mutationRate,
+                                 new_candidates_rate = confOptimProblem.newCandidatesRate,
+                                 configuration = confOptimProblem,
+                                 results_file = resultFile,
+                                 tournament_size=3)
+    else:
+        final_pop = my_ec.evolve(generator=generators.generator_intSetRep,
+                                 evaluator=evaluators.evaluator,
+                                 bounder=ec.Bounder(bounds[0], bounds[1]),
+                                 pop_size=confOptimProblem.populationSize,
+                                 max_generations=confOptimProblem.maxGenerations,
+                                 candidate_max_size=confOptimProblem.maxCandidateSize,
+                                 num_elites=confOptimProblem.numElites,
+                                 num_selected=confOptimProblem.populationSelectedSize,
+                                 crossover_rate=confOptimProblem.crossoverRate,
+                                 mutation_rate=confOptimProblem.mutationRate,
+                                 new_candidates_rate=confOptimProblem.newCandidatesRate,
+                                 configuration=confOptimProblem,
+                                 results_file=resultFile,
+                                 tournament_size=3)
     return final_pop
+
 
 def optimization_tupleSetRep(confOptimProblem, bounds, resultFile):
     rand = Random()
@@ -193,17 +238,29 @@ def optimization_tupleSetRep(confOptimProblem, bounds, resultFile):
     my_ec.terminator = ec.terminators.generation_termination
     my_ec.observer = observers.save_all_results
 
-    final_pop = my_ec.evolve(generator=generators.generator_intTupleRep,
-                             evaluator=evaluators.evaluator,
-                             bounder=ec.Bounder(bounds[0], bounds[1]),
+
+    # logger = logging.getLogger('inspyred.ec')
+    # logger.setLevel(logging.DEBUG)
+    # file_handler = logging.FileHandler('/Volumes/Data/inspyred.log', mode='w')
+    # file_handler.setLevel(logging.DEBUG)
+    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # file_handler.setFormatter(formatter)
+    # logger.addHandler(file_handler)
+
+
+    final_pop = my_ec.evolve(generator = generators.generator_intTupleRep,
+                             evaluator=ec.evaluators.parallel_evaluation_mp,
+                             mp_evaluator=evaluators.evaluator,
+                             mp_num_cpus=8,
+                             bounder = ec.Bounder(bounds[0], bounds[1]),
                              pop_size = confOptimProblem.populationSize,
                              max_generations = confOptimProblem.maxGenerations,
-                             candidate_max_size=confOptimProblem.maxCandidateSize,
+                             candidate_max_size = confOptimProblem.maxCandidateSize,
                              num_elites = confOptimProblem.numElites,
                              num_selected = confOptimProblem.populationSelectedSize,
-                             crossover_rate=confOptimProblem.crossoverRate,
-                             mutation_rate=confOptimProblem.mutationRate,
-                             new_candidates_rate=confOptimProblem.newCandidatesRate,
+                             crossover_rate = confOptimProblem.crossoverRate,
+                             mutation_rate = confOptimProblem.mutationRate,
+                             new_candidates_rate = confOptimProblem.newCandidatesRate,
                              configuration = confOptimProblem,
                              results_file = resultFile,
                              tournament_size = 3)

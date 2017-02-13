@@ -15,6 +15,13 @@ class absObjectiveFunction:
     def method_str(self):
         pass
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
 class targetFlux(absObjectiveFunction):
     def __init__(self, targetReactionId):
         self.targetReactionId = targetReactionId

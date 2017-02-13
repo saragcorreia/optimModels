@@ -53,7 +53,7 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
     """
 
     population.sort()
-    print "--------- population replacement ---------------"
+   # print "--------- population replacement ---------------"
     num_to_replace = min(len(offspring), len(population))
     population[:num_to_replace] = offspring[:num_to_replace]
     population.sort()
@@ -72,7 +72,7 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
 
     #complete the population size with new elements
     numNewCandidates = len(population) - len(newPopulation)
-    print "number of duplicated elements to remove:" + str(numNewCandidates)
+   # print "number of duplicated elements to remove:" + str(numNewCandidates)
     newCandidates = _generateNewCandidates(numNewCandidates, random, args)
     newPopulation = newPopulation + newCandidates
 
@@ -84,7 +84,12 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
 def _generateNewCandidates(numCandidates, random, args):
     newCandidates = []
     if numCandidates > 0:
-        generator = args["_ec"].generator
+
+        try:
+            generator = args["_ec"].mp_generator
+        except AttributeError:
+            generator = args["_ec"].generator
+
         evaluator = args["_ec"].evaluator
 
         newElems = [generator(random=random, args=args) for i in range(numCandidates)]

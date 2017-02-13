@@ -2,15 +2,10 @@
     ===============================================================
     :mod:`evaluators` -- evaluation of candidates
     ===============================================================
-
-
-
     .. module:: evaluators
     .. moduleauthor:: Sara Correia <sarag.correia@gmail.com>
 """
 import math
-
-
 def evaluator(candidates, args):
     config = args["configuration"]
     decoder = config.get_decoder()
@@ -18,17 +13,17 @@ def evaluator(candidates, args):
     fitness = []
     solutions = []
     for candidate in candidates:
-        decoder.update_simulation_problem(candidate, simulProblem)
+        overrideProblem = decoder.get_override_simul_problem(candidate, simulProblem)
         fitInd = -1.0
         try:
-            res = simulProblem.simulate(config.get_solver_id())
+            res = simulProblem.simulate(config.get_solver_id(), overrideProblem)
             fitInd = config.get_objective_function().get_fitness(res)
             if math.isnan(fitInd):
                 fitInd = 0.0
         except ValueError, e:
             print "Oops! Solver problems.  " + e.message
 
-        solutions.append(decoder.candidate_decoded(candidate, config.get_simulation_problem().model))
+        solutions.append(decoder.candidate_decoded(candidate, config.get_simulation_problem().get_model()))
         fitness.append(fitInd)
 
     # print "---------EVALUATION-------------"

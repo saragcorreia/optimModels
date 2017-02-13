@@ -21,38 +21,38 @@ class odeSolver:
     def __init__(self, solverId):
         self.solverId = solverId
 
-    def get_solver(self, odeProblem):
+    def get_solver(self, func):
         if self.solverId is odeSolver.LSODA:
-            solver = odespy.Lsoda(odeProblem.func)
+            solver = odespy.Lsoda(func)
         elif self.solverId is odeSolver.LSODAR:
-            solver = odespy.Lsodar(odeProblem.func)
+            solver = odespy.Lsodar(func)
         elif self.solverId is odeSolver.LSODE:
-            solver = odespy.Lsode(odeProblem.func)
+            solver = odespy.Lsode(func)
         elif self.solverId is odeSolver.HEUN:
-            solver = odespy.Heun(odeProblem.func)
+            solver = odespy.Heun(func)
         elif self.solverId is odeSolver.EULER:
-            solver = odespy.Euler(odeProblem.func)
+            solver = odespy.Euler(func)
         elif self.solverId is odeSolver.RK4:
-            solver = odespy.RK4(odeProblem.func)
+            solver = odespy.RK4(func)
         elif self.solverId is odeSolver.DORMAN_PRINCE:
-            solver = odespy.DormandPrince(odeProblem.func)
+            solver = odespy.DormandPrince(func)
         elif self.solverId is odeSolver.RKFehlberg:
-            solver = odespy.RKFehlberg(odeProblem.func)
+            solver = odespy.RKFehlberg(func)
         elif self.solverId is odeSolver.Dopri5:
-            solver = odespy.Dopri5(odeProblem.func)
+            solver = odespy.Dopri5(func)
         elif self.solverId is odeSolver.Dop853:
-             solver = odespy.Dop853(odeProblem.func)
+             solver = odespy.Dop853(func)
         elif self.solverId is odeSolver.Vode:
-            solver = odespy.Vode(odeProblem.func)
+            solver = odespy.Vode(func)
         elif self.solverId is odeSolver.AdamsBashforth2:
-            solver = odespy.AdamsBashforth2(odeProblem.func, method='bdf')
+            solver = odespy.AdamsBashforth2(func, method='bdf')
         elif self.solverId is odeSolver.Radau5:
-            solver = odespy.Radau5(odeProblem.func)
+            solver = odespy.Radau5(func)
         elif self.solverId is odeSolver.AdamsBashMoulton2:
-            solver = odespy.AdamsBashMoulton2(odeProblem.func)
+            solver = odespy.AdamsBashMoulton2(func)
         elif self.solverId is 15:
             print odespy.list_available_solvers()
-            solver = odespy.Lsoda(odeProblem.func,)
+            solver = odespy.Lsoda(func,)
 
         # increase by default the number of steps for LSODA
         if self.solverId is odeSolver.LSODA or self.solverId is odeSolver.LSODAR:

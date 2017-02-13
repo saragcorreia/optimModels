@@ -66,7 +66,7 @@ class dynamicModel(ODEModel):
 
 
 
-    def get_ode(self, r_dict=None, params=None, newFactors= None):
+    def get_ode(self, r_dict=None, params=None, factors= None):
 
         p = self.merge_constants()
         v = self.variable_params.copy()
@@ -79,13 +79,21 @@ class dynamicModel(ODEModel):
         if params:
             p.update(params)
 
-        factor =  OrderedDict([(r_id, 1) for r_id in self.reactions])
+        allFactors =  OrderedDict([(r_id, 1) for r_id in self.reactions])
 
-        if newFactors:
-            factor.update(newFactors)
+        if factors:
+            allFactors.update(factors)
 
         exec self.build_ode() in globals()
         ode_func = eval('ode_func')
 
-        f = lambda t, x: ode_func(t, x, r, p, v, factor)
+        f = lambda t, x: ode_func(t, x, r, p, v, allFactors)
         return f
+
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
