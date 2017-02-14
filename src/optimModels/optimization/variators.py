@@ -1,5 +1,5 @@
 import copy
-from random import Random
+
 from inspyred.ec.variators.crossovers import crossover
 from inspyred.ec.variators.mutators import mutator
 
@@ -105,7 +105,6 @@ def uniform_crossover(random, mom, dad, args):
     if random.random() > crossRate or (len(mom)==1 and len(dad)==1):
         children.append(mom)
         children.append(dad)
-        #print "crossover pass"
         return children
 
     maxSize = args["candidate_max_size"]
@@ -138,20 +137,20 @@ def uniform_crossover(random, mom, dad, args):
 
 
 
-
-if __name__ == '__main__':
-    candidate = [{1,2,3,6},{2,4,5},{1},{7,8}]
-    candidate= [{(1,2),(22,3),(3,2)},{(2,4),(5,1)},{(1,1)},{(7,1),(8,1)}]
-    print candidate
-
-
-    args = {"candidate_max_size":5, "mutation_rate":1.0}
-    rand = Random()
-    print "----- grow mutation ------"
-    grow_mutation_intTupleRep(rand, candidate, args)
-    print "----- shrink mutation ------"
-    shrink_mutation(rand, candidate, args)
-    print "----- single muation ------"
-    single_mutation_intTupleRep(rand, candidate, args)
-    print "----- uniform crossover ------"
-    uniform_crossover(rand, candidate, args)
+# if __name__ == '__main__':
+#     from Random import random
+#     candidate = [{1,2,3,6},{2,4,5},{1},{7,8}]
+#     candidate= [{(1,2),(22,3),(3,2)},{(2,4),(5,1)},{(1,1)},{(7,1),(8,1)}]
+#     print candidate
+#
+#
+#     args = {"candidate_max_size":5, "mutation_rate":1.0}
+#     rand = Random()
+#     print "----- grow mutation ------"
+#     grow_mutation_intTupleRep(rand, candidate, args)
+#     print "----- shrink mutation ------"
+#     shrink_mutation(rand, candidate, args)
+#     print "----- single muation ------"
+#     single_mutation_intTupleRep(rand, candidate, args)
+#     print "----- uniform crossover ------"
+#     uniform_crossover(rand, candidate, args)

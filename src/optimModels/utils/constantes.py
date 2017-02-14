@@ -3,11 +3,11 @@ class modelType:
     KINETIC=1
 
 
-class solverStatus:
-    """ Enumeration of possible solution status. """
-    OPTIMAL = 0
-    UNKNOWN = 1
-    ERROR = 2
+# class solverStatus:
+#     """ Enumeration of possible solution status. """
+#     OPTIMAL = 0
+#     UNKNOWN = 1
+#     ERROR = 2
 
 
 

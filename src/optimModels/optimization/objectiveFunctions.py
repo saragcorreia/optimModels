@@ -45,10 +45,10 @@ class BPCY (absObjectiveFunction):
         self.uptakeId = uptakeId
 
     def get_fitenss(self, simulResult):
-        fluxes= simulResult.get_fluxes_distribution()
-        if self.biomassId not in fluxes.keys or self.productId not in fluxes.keys:
+        ssFluxes= simulResult.get_fluxes_distribution()
+        if self.biomassId not in ssFluxes.keys or self.productId not in ssFluxes.keys:
             raise ValueError("Reaction ids is not present in the fluxes distribution. Please check id objective function is correct.")
-        return (fluxes[self.biomass] * fluxes[self.productId])/fluxes[self.uptakeId]
+        return (ssFluxes[self.biomass] * ssFluxes[self.productId])/ssFluxes[self.uptakeId]
 
     def get_name(self):
         return "Biomass-Product Coupled Yield"

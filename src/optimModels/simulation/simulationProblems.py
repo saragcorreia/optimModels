@@ -23,9 +23,9 @@ class simulationProblem:
 
 # NOT USED .. YET
 class stoichiometricSimulationProblem(simulationProblem):
-    def __init__(self, model, envConditions, objFunc, method):
+    def __init__(self, model, modifications, objFunc, method):
         self._model = model
-        self._envConditions = envConditions
+        self._modifications = modifications
         self._objFunc = objFunc
         self._method = method
 
@@ -45,10 +45,10 @@ class stoichiometricSimulationProblem(simulationProblem):
         self.__dict__.update(state)
 
 class kineticSimulationProblem(simulationProblem):
-    def __init__(self, model, parameters=None, rDict={}, factors=None, time = 1e9, steps = 10000, tSteps = None):
+    def __init__(self, model, parameters=None, rates=None, factors=None, time = 1e9, steps = 10000, tSteps = None):
         self._model = model
         self._parameters = parameters
-        self._rDict = rDict
+        self._rates = rates
         self._factors = factors
         self._time = time
         self._steps = steps
@@ -76,11 +76,11 @@ class kineticSimulationProblem(simulationProblem):
 
     @property
     def rates(self):
-        return self._rDict
+        return self._rates
 
     @rates.setter
-    def rates(self, rDict):
-        self._rDict = rDict
+    def rates(self, rates):
+        self._rates = rates
         self.update_func()
 
     @property
@@ -145,7 +145,7 @@ class kineticSimulationProblem(simulationProblem):
         #t2 = time.time()
         #print "TIME (seconds): " + str(t2 - t1)
 
-        res = kineticSimulationResult(self.get_model().id, final_rates, final_params, final_factors,
+        res = kineticSimulationResult(self.get_model().id, merge_two_dicts(final_rates, final_params), final_factors,
                                       self.get_time_steps()[len(self.get_time_steps()) - 1])
 
         return res

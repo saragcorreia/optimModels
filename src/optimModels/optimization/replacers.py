@@ -40,8 +40,9 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
     This function performs a new candidates replacement, which means that
     the offspring replace the least fit individuals in the existing
     population, even if those offspring are less fit than the individuals
-    that they replace. Moreover a new set of candidates random generated
-    will be added to the population
+    that they replace.Moreover a new set of candidates random generated
+    will be added to the population. The duplicated candidates are
+    replaced by new ones randomly generated.
 
     .. Arguments:
        random -- the random number generator object

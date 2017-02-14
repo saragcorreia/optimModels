@@ -1,18 +1,18 @@
 from collections import OrderedDict
 
 class overrideStoichSimProblem():
-    def __init__(self,envConditions):
-        self._envConditions = envConditions
+    def __init__(self,modifications):
+        self._modifications = modifications
 
     @property
-    def enConditions(self):
-        return self._envConditions
+    def modifications(self):
+        return self._modifications
 
-    @enConditions.setter
+    @modifications.setter
     def enConditions(self, values):
         if not isinstance(values, OrderedDict):
             raise Exception ("Factors must be of type OrderedDict, where the key is the reaction id and the value a tuple of doubles!")
-        self._envConditions = values
+        self._modifications = values
 
 
 class overrideKineticSimProblem():

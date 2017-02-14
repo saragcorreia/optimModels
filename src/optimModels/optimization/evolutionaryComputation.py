@@ -11,6 +11,7 @@
 """
 
 from random import Random
+from multiprocessing import cpu_count
 
 from inspyred import ec
 from optimModels.optimization import evaluators, generators, replacers, variators
@@ -18,11 +19,11 @@ from optimModels.optimization import evaluators, generators, replacers, variator
 from optimModels.optimization import observers
 import logging
 
-class optimProblemConfiguration():
 
+class optimProblemConfiguration():
     def __init__(self, simulationProblem=None, decoder=None, objectiveFunc=None, solverId=None):
         if objectiveFunc is None or solverId is None:
-           raise Exception("You must indicate the objective function and the solver id.")
+            raise Exception("You must indicate the objective function and the solver id.")
         self.simulProblem = simulationProblem
         self.decoder = decoder
         self.objectiveFunc = objectiveFunc
@@ -148,24 +149,15 @@ class optimProblemConfiguration():
                   self.newCandidatesRate, self.numElites]
         return ";".join([str(elem) for elem in params]) + "\n"
 
-
-
     def __getstate__(self):
-        # Copy the object's state from self.__dict__ which contains
-        # all our instance attributes. Always use the dict.copy()
-        # method to avoid modifying the original state.
         state = self.__dict__.copy()
         return state
 
     def __setstate__(self, state):
-        # Restore instance attributes (i.e., filename and lineno).
         self.__dict__.update(state)
 
 
-
-
-
-def optimization_intSetRep(confOptimProblem, bounds, resultFile, multiprocessing = False):
+def optimization_intSetRep(confOptimProblem, bounds, resultFile, isMultiProc=False):
     rand = Random()
     my_ec = ec.EvolutionaryComputation(rand)
     my_ec.selector = ec.selectors.tournament_selection
@@ -179,32 +171,36 @@ def optimization_intSetRep(confOptimProblem, bounds, resultFile, multiprocessing
     my_ec.terminator = ec.terminators.generation_termination
     my_ec.observer = observers.save_all_results
 
+    # logger = logging.getLogger('inspyred.ec')
+    # logger.setLevel(logging.DEBUG)
+    # file_handler = logging.FileHandler('/Volumes/Data/inspyred.log', mode='w')
+    # file_handler.setLevel(logging.DEBUG)
+    # formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # file_handler.setFormatter(formatter)
+    # logger.addHandler(file_handler)
 
-    logger = logging.getLogger('inspyred.ec')
-    logger.setLevel(logging.DEBUG)
-    file_handler = logging.FileHandler('/Volumes/Data/inspyred.log', mode='w')
-    file_handler.setLevel(logging.DEBUG)
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
-
-    if multiprocessing:
+    if isMultiProc:
         print "Multiprocessing!!!"
-        final_pop = my_ec.evolve(generator = generators.generator_intSetRep,
-                                 evaluator = ec.evaluators.parallel_evaluation_mp,
-                                 mp_evaluator = evaluators.evaluator,
-                                 mp_num_cpus = 8,
-                                 bounder = ec.Bounder(bounds[0], bounds[1]),
-                                 pop_size = confOptimProblem.populationSize,
-                                 max_generations = confOptimProblem.maxGenerations,
-                                 candidate_max_size = confOptimProblem.maxCandidateSize,
-                                 num_elites = confOptimProblem.numElites,
-                                 num_selected = confOptimProblem.populationSelectedSize,
-                                 crossover_rate = confOptimProblem.crossoverRate,
-                                 mutation_rate = confOptimProblem.mutationRate,
-                                 new_candidates_rate = confOptimProblem.newCandidatesRate,
-                                 configuration = confOptimProblem,
-                                 results_file = resultFile,
+        try:
+            nprocs= cpu_count()
+        except NotImplementedError:
+            nprocs = confOptimProblem.populationSize
+
+        final_pop = my_ec.evolve(generator=generators.generator_intSetRep,
+                                 evaluator=ec.evaluators.parallel_evaluation_mp,
+                                 mp_evaluator=evaluators.evaluator,
+                                 mp_nprocs = nprocs,
+                                 pop_size=confOptimProblem.populationSize,
+                                 bounder=ec.Bounder(bounds[0], bounds[1]),
+                                 max_generations=confOptimProblem.maxGenerations,
+                                 candidate_max_size=confOptimProblem.maxCandidateSize,
+                                 num_elites=confOptimProblem.numElites,
+                                 num_selected=confOptimProblem.populationSelectedSize,
+                                 crossover_rate=confOptimProblem.crossoverRate,
+                                 mutation_rate=confOptimProblem.mutationRate,
+                                 new_candidates_rate=confOptimProblem.newCandidatesRate,
+                                 configuration=confOptimProblem,
+                                 results_file=resultFile,
                                  tournament_size=3)
     else:
         final_pop = my_ec.evolve(generator=generators.generator_intSetRep,
@@ -220,11 +216,12 @@ def optimization_intSetRep(confOptimProblem, bounds, resultFile, multiprocessing
                                  new_candidates_rate=confOptimProblem.newCandidatesRate,
                                  configuration=confOptimProblem,
                                  results_file=resultFile,
-                                 tournament_size=3)
+                                 tournament_size=3
+                                 )
     return final_pop
 
 
-def optimization_tupleSetRep(confOptimProblem, bounds, resultFile):
+def optimization_tupleSetRep(confOptimProblem, bounds, resultFile, isMultiProc=False):
     rand = Random()
 
     my_ec = ec.EvolutionaryComputation(rand)
@@ -238,7 +235,6 @@ def optimization_tupleSetRep(confOptimProblem, bounds, resultFile):
     my_ec.terminator = ec.terminators.generation_termination
     my_ec.observer = observers.save_all_results
 
-
     # logger = logging.getLogger('inspyred.ec')
     # logger.setLevel(logging.DEBUG)
     # file_handler = logging.FileHandler('/Volumes/Data/inspyred.log', mode='w')
@@ -247,21 +243,42 @@ def optimization_tupleSetRep(confOptimProblem, bounds, resultFile):
     # file_handler.setFormatter(formatter)
     # logger.addHandler(file_handler)
 
+    if isMultiProc:
+        print "Multiprocessing!!!"
+        try:
+            nprocs = cpu_count()
+        except NotImplementedError:
+            nprocs = confOptimProblem.populationSize
 
-    final_pop = my_ec.evolve(generator = generators.generator_intTupleRep,
-                             evaluator=ec.evaluators.parallel_evaluation_mp,
-                             mp_evaluator=evaluators.evaluator,
-                             mp_num_cpus=8,
-                             bounder = ec.Bounder(bounds[0], bounds[1]),
-                             pop_size = confOptimProblem.populationSize,
-                             max_generations = confOptimProblem.maxGenerations,
-                             candidate_max_size = confOptimProblem.maxCandidateSize,
-                             num_elites = confOptimProblem.numElites,
-                             num_selected = confOptimProblem.populationSelectedSize,
-                             crossover_rate = confOptimProblem.crossoverRate,
-                             mutation_rate = confOptimProblem.mutationRate,
-                             new_candidates_rate = confOptimProblem.newCandidatesRate,
-                             configuration = confOptimProblem,
-                             results_file = resultFile,
-                             tournament_size = 3)
+        final_pop = my_ec.evolve(generator=generators.generator_intTupleRep,
+                                 evaluator=ec.evaluators.parallel_evaluation_mp,
+                                 mp_evaluator=evaluators.evaluator,
+                                 mp_nprocs=nprocs,
+                                 bounder=ec.Bounder(bounds[0], bounds[1]),
+                                 pop_size=confOptimProblem.populationSize,
+                                 max_generations=confOptimProblem.maxGenerations,
+                                 candidate_max_size=confOptimProblem.maxCandidateSize,
+                                 num_elites=confOptimProblem.numElites,
+                                 num_selected=confOptimProblem.populationSelectedSize,
+                                 crossover_rate=confOptimProblem.crossoverRate,
+                                 mutation_rate=confOptimProblem.mutationRate,
+                                 new_candidates_rate=confOptimProblem.newCandidatesRate,
+                                 configuration=confOptimProblem,
+                                 results_file=resultFile,
+                                 tournament_size=3)
+    else:
+        final_pop = my_ec.evolve(generator=generators.generator_intTupleRep,
+                                 evaluator=evaluators.evaluator,
+                                 bounder=ec.Bounder(bounds[0], bounds[1]),
+                                 pop_size=confOptimProblem.populationSize,
+                                 max_generations=confOptimProblem.maxGenerations,
+                                 candidate_max_size=confOptimProblem.maxCandidateSize,
+                                 num_elites=confOptimProblem.numElites,
+                                 num_selected=confOptimProblem.populationSelectedSize,
+                                 crossover_rate=confOptimProblem.crossoverRate,
+                                 mutation_rate=confOptimProblem.mutationRate,
+                                 new_candidates_rate=confOptimProblem.newCandidatesRate,
+                                 configuration=confOptimProblem,
+                                 results_file=resultFile,
+                                 tournament_size=3)
     return final_pop

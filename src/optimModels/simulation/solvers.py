@@ -54,10 +54,8 @@ class odeSolver:
             print odespy.list_available_solvers()
             solver = odespy.Lsoda(func,)
 
-        # increase by default the number of steps for LSODA
-        if self.solverId is odeSolver.LSODA or self.solverId is odeSolver.LSODAR:
-            solver.nsteps = solverParameters[Parameter.N_STEPS]
-
+        # update default parameters
+        solver.nsteps = solverParameters[Parameter.N_STEPS]
         solver.atol = solverParameters[Parameter.ABSOLUTE_TOL]
         solver.rtol = solverParameters[Parameter.RELATIVE_TOL]
 

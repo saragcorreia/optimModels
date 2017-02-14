@@ -1,10 +1,9 @@
 import copy
 
-from optimModels.simulation.simulationProblems import KineticSimulationProblem
 from optimModels.simulation.solvers import odeSolver
 from pandas import  read_csv
 
-from src.optimModels.model.dynamicModel import load_kinetic_model
+from optimModels.model.dynamicModel import load_kinetic_model
 
 class MissingParams(Exception):
     def __init__(self, value):

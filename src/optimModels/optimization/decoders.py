@@ -26,8 +26,8 @@ class decoderReactionsKnockouts(absDecoder):
         koReacs = self.candidate_decoded(candidate, simulProblem.get_model())
 
         if isinstance(simulProblem, stoichiometricSimulationProblem):
-            envConditions = OrderedDict([(r_id,(0.0,0.0)) for r_id in koReacs])
-            override = overrideStoichSimProblem(envConditions=envConditions)
+            modifications = OrderedDict([(r_id,(0.0,0.0)) for r_id in koReacs])
+            override = overrideStoichSimProblem(modifications=modifications)
         elif isinstance(simulProblem, kineticSimulationProblem):
             factors = OrderedDict([(r_id, 0) for r_id in koReacs])
             override = overrideKineticSimProblem(factors=factors)
@@ -50,9 +50,6 @@ class decoderReactionsKnockouts(absDecoder):
         self.__dict__.update(state)
 
 class decoderUnderOverExpression(absDecoder):
-    # def __init__(self):
-    #     levels = None
-    #     self.name_class = "decoderUnderOverExpression"
 
     def __init__ (self, levels):
         self.levels = levels
