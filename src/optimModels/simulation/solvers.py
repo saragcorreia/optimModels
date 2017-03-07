@@ -50,9 +50,6 @@ class odeSolver:
             solver = odespy.Radau5(func)
         elif self.solverId is odeSolver.AdamsBashMoulton2:
             solver = odespy.AdamsBashMoulton2(func)
-        elif self.solverId is 15:
-            print odespy.list_available_solvers()
-            solver = odespy.Lsoda(func,)
 
         # update default parameters
         solver.nsteps = solverParameters[Parameter.N_STEPS]
@@ -61,3 +58,9 @@ class odeSolver:
 
         return solver
 
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)

@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from libsbml import readSBMLFromFile
 from framed.io.sbml import _load_compartments, _load_metabolites, _load_reactions, _load_global_parameters, _load_local_parameters, _load_ratelaws, _load_assignment_rules, _load_concentrations, ODEModel
-
+from math import log
 
 def load_kinetic_model(filename):
     document = readSBMLFromFile(filename)
@@ -56,7 +56,13 @@ class dynamicModel(ODEModel):
                        '    dxdt = [\n' + \
                        ',\n'.join(balances) + '\n' + \
                        '    ]\n\n' + \
+                       '    dxdt = [round(val, 6) for val in dxdt] \n\n' + \
                        '    return dxdt\n'
+                       #'    x = [max(val,1e-9) for val in x] \n\n' + \
+                       #'    print dxdt\n' + \
+                       #'    res = [a * -1.0 if abs(a + b) < 1e-9 else b for (a, b) in zip(x, dxdt)]\n\n'+ \
+                       #'    print res\n' + \
+
 
             self._func_str = func_str
 
@@ -85,8 +91,16 @@ class dynamicModel(ODEModel):
             allFactors.update(factors)
 
         exec self.build_ode() in globals()
+
         ode_func = eval('ode_func')
 
+        print str(self.metabolites.keys())
+
+        print str(r)
+        print str(p)
+        print str(v)
+        print str(allFactors)
+        print str(ode_func)
         f = lambda t, x: ode_func(t, x, r, p, v, allFactors)
         return f
 

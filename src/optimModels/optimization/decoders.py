@@ -19,11 +19,13 @@ class absDecoder:
 
 
 class decoderReactionsKnockouts(absDecoder):
-    def __init__(self):
+    def __init__(self, reactionsIds):
         self.name_class = "decoderReactionsKnockouts"
+        self.reactionsIds = reactionsIds
 
     def get_override_simul_problem(self, candidate, simulProblem):
-        koReacs = self.candidate_decoded(candidate, simulProblem.get_model())
+
+        koReacs = self.candidate_decoded(candidate)
 
         if isinstance(simulProblem, stoichiometricSimulationProblem):
             modifications = OrderedDict([(r_id,(0.0,0.0)) for r_id in koReacs])
@@ -33,13 +35,11 @@ class decoderReactionsKnockouts(absDecoder):
             override = overrideKineticSimProblem(factors=factors)
         else:
             raise Exception ("Unknown  simulation problem type by decoderReactionsKnockouts")
-
         return override
 
     # convert the index reaction for reaction ids
-    def candidate_decoded(self, candidate, model):
-        reacsList = model.reactions.keys()
-        result = [reacsList[x] for x in list(candidate)]
+    def candidate_decoded(self, candidate):
+        result = [self.reactionsIds[x] for x in list(candidate)]
         return result
 
     def __getstate__(self):
@@ -50,8 +50,8 @@ class decoderReactionsKnockouts(absDecoder):
         self.__dict__.update(state)
 
 class decoderUnderOverExpression(absDecoder):
-
-    def __init__ (self, levels):
+    def __init__ (self, reactionsIds,  levels):
+        self.reactionsIds = reactionsIds
         self.levels = levels
         self.name_class = "decoderUnderOverExpression"
 
@@ -60,15 +60,14 @@ class decoderUnderOverExpression(absDecoder):
             pass  # TO DO
 
         elif isinstance(simulProblem, kineticSimulationProblem):
-            solDecoded = self.candidate_decoded(candidate, simulProblem.get_model())
+            solDecoded = self.candidate_decoded(candidate)
             override = overrideKineticSimProblem(factors=solDecoded)
             return override
         else:
             raise Exception ("Unknown  simulation problem type by decoderUnderOverExpression")
 
-    def candidate_decoded(self, candidate, model):
-        reacsList = model.reactions.keys()
-        result = OrderedDict([(reacsList[k], self.levels[v]) for (k, v) in list(candidate)])
+    def candidate_decoded(self, candidate):
+        result = OrderedDict([(self.reactionsIds[k], self.levels[v]) for (k, v) in list(candidate)])
         return result
 
     def __getstate__(self):

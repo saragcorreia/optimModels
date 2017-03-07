@@ -3,11 +3,11 @@ class modelType:
     KINETIC=1
 
 
-# class solverStatus:
-#     """ Enumeration of possible solution status. """
-#     OPTIMAL = 0
-#     UNKNOWN = 1
-#     ERROR = 2
+class solverStatus:
+    """ Enumeration of possible solution status. """
+    OPTIMAL = 0
+    UNKNOWN = 1
+    ERROR = 2
 
 
 
@@ -18,9 +18,9 @@ class Parameter:
     N_STEPS =2
 
 
-solverParameters={Parameter.ABSOLUTE_TOL: 1e-9,
-                  Parameter.RELATIVE_TOL: 1e-9,
-                  Parameter.N_STEPS:100000}
+solverParameters={Parameter.ABSOLUTE_TOL: 1e-6,
+                  Parameter.RELATIVE_TOL: 1e-4,
+                  Parameter.N_STEPS:10000}
 
 
 def set_solver_parameter(parameter, value):

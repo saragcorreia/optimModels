@@ -1,6 +1,6 @@
 from abc import ABCMeta, abstractmethod
 
-class absObjectiveFunction:
+class objectiveFunction:
     __metaclass__ = ABCMeta
 
     @abstractmethod
@@ -22,7 +22,7 @@ class absObjectiveFunction:
     def __setstate__(self, state):
         self.__dict__.update(state)
 
-class targetFlux(absObjectiveFunction):
+class targetFlux(objectiveFunction):
     def __init__(self, targetReactionId):
         self.targetReactionId = targetReactionId
 
@@ -38,7 +38,7 @@ class targetFlux(absObjectiveFunction):
     def method_str(self):
         return "Target Flux: " + self.targetReactionId
 
-class BPCY (absObjectiveFunction):
+class BPCY (objectiveFunction):
     def __init__(self, biomassId, productId, uptakeId):
         self.biomassId = biomassId
         self.productId = productId

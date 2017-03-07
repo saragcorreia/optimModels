@@ -17,6 +17,6 @@ def save_all_results(population, num_generations, num_evaluations, args):
 
     # save all candidates of the population
     for ind in population:
-        solution_decoded = decoder.candidate_decoded(ind.candidate, model)
+        solution_decoded = decoder.candidate_decoded(ind.candidate)
         file.write(("{0};{1};{2};{3} \n").format(num_generations, ind.fitness, ind.candidate, solution_decoded))
     file.close()
