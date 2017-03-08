@@ -1,0 +1,9 @@
+numpy
+matplotlib
+seaborn
+scipy
+sympy
+framed
+inspyred
+python-libsbml
+git+https://github.com/hplgit/odespy.git#egg=odespy
