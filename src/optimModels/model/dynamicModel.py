@@ -46,6 +46,12 @@ class dynamicModel(ODEModel):
                           for r_id in self.reactions]
 
             balances = [' ' * 8 + self.print_balance(m_id) for m_id in self.metabolites]
+            # balances[54] = ' ' * 8 +  str(0)
+            # balances[55] = ' ' * 8 + str(0)
+            # balances[64] = ' ' * 8 + str(0)
+            # balances[65] = ' ' * 8 + str(0)
+            # balances[66] = ' ' * 8 + str(0)
+            # balances[71] = ' ' * 8 + str(0)
 
             rule_exprs = ["    v['{}'] = {}".format(p_id, parsed_rules[p_id])
                           for p_id in self.assignment_rules]
@@ -56,7 +62,6 @@ class dynamicModel(ODEModel):
                        '    dxdt = [\n' + \
                        ',\n'.join(balances) + '\n' + \
                        '    ]\n\n' + \
-                       '    dxdt = [round(val, 6) for val in dxdt] \n\n' + \
                        '    return dxdt\n'
                        #'    x = [max(val,1e-9) for val in x] \n\n' + \
                        #'    print dxdt\n' + \
@@ -65,7 +70,7 @@ class dynamicModel(ODEModel):
 
 
             self._func_str = func_str
-
+           # print self._func_str
         return self._func_str
 
 
@@ -94,13 +99,13 @@ class dynamicModel(ODEModel):
 
         ode_func = eval('ode_func')
 
-        print str(self.metabolites.keys())
+        #print str(self.metabolites.keys())
 
-        print str(r)
-        print str(p)
-        print str(v)
-        print str(allFactors)
-        print str(ode_func)
+        #print str(r)
+        #print str(p)
+        #print str(v)
+        #print str(allFactors)
+        #print str(ode_func)
         f = lambda t, x: ode_func(t, x, r, p, v, allFactors)
         return f
 

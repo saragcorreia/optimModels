@@ -121,11 +121,11 @@ if __name__ == '__main__':
     import warnings
     warnings.filterwarnings('ignore')  # ignore the warnings related to floating points raise from solver!!!
     t1 = time.time()
-    ko_chassagnole(True)
+    ko_jahan(True)
     t2 = time.time()
     t3 = time.time()
     #underover_chassagnole(True)
     t4 = time.time()
-    print "time for 10 generations without multiproccessing" + str(t2 - t1)
+    print "time for 10 generations with multiproccessing" + str(t2 - t1)
     print "time for 10 generations with multiproccessing 904 - " + str(t4 - t3)
     # underover_chassagnole()
