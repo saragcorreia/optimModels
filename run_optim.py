@@ -38,8 +38,8 @@ def ko_chassagnole(sbml_file, filename, isMultiProc=False):
             objectiveFunc=targetFlux("vsersynth"), solverId=odeSolver.LSODA)
 
 
-    prob.set_optim_parameters(popSize=100, maxGenerations=10,
-            popSelectedSize=50, maxCandidateSize=5, crossoverRate=1.0,
+    prob.set_optim_parameters(popSize=50, maxGenerations=5,
+            popSelectedSize=25, maxCandidateSize=3, crossoverRate=1.0,
             mutationRate=0.1, newCandidatesRate=0.1)
 
     # define the max limit for index of reactions and levels
