@@ -12,12 +12,9 @@
 
 from random import Random
 from multiprocessing import cpu_count
-
 from inspyred import ec
 from optimModels.optimization import evaluators, generators, replacers, variators
-
 from optimModels.optimization import observers
-import logging
 
 
 class optimProblemConfiguration():
@@ -182,12 +179,12 @@ def optimization_intSetRep(confOptimProblem, bounds, resultFile, isMultiProc=Fal
     if isMultiProc:
         print "Multiprocessing!!!"
         try:
-            nprocs= cpu_count()
+            nprocs= int(cpu_count()/2)
         except NotImplementedError:
-            nprocs = confOptimProblem.populationSize
+            nprocs = 10
 
         final_pop = my_ec.evolve(generator=generators.generator_intSetRep,
-                                 evaluator=ec.evaluators.parallel_evaluation_mp,
+                                 evaluator=evaluators.parallel_evaluation_mp,
                                  mp_evaluator=evaluators.evaluator,
                                  mp_nprocs = nprocs,
                                  pop_size=confOptimProblem.populationSize,
@@ -246,12 +243,12 @@ def optimization_tupleSetRep(confOptimProblem, bounds, resultFile, isMultiProc=F
     if isMultiProc:
         print "Multiprocessing!!!"
         try:
-            nprocs = cpu_count()
+            nprocs = int (cpu_count()/2)
         except NotImplementedError:
-            nprocs = confOptimProblem.populationSize
+            nprocs = 10
 
         final_pop = my_ec.evolve(generator=generators.generator_intTupleRep,
-                                 evaluator=ec.evaluators.parallel_evaluation_mp,
+                                 evaluator=evaluators.parallel_evaluation_mp,
                                  mp_evaluator=evaluators.evaluator,
                                  mp_nprocs=nprocs,
                                  bounder=ec.Bounder(bounds[0], bounds[1]),

@@ -1,5 +1,28 @@
 from collections import OrderedDict
-from optimModels.model.dynamicModel import load_kinetic_model
+
+import  multiprocessing.pool
+
+class MyTree:
+    "Generic tree node."
+    def __init__(self, name='root', children=None):
+        self.name = name
+        self.children = []
+        if children is not None:
+            for child in children:
+                self.add_child(child)
+
+    def add_child(self, node):
+       # assert isinstance(node, MyTree)
+        self.children.append(node)
+
+def get_order_nodes(tree):
+    if tree.children is None:
+        return [tree.name];
+    else:
+        res = []
+        for child in tree.children:
+            res = res + get_order_nodes(child)
+        return res
 
 def merge_two_dicts(x, y):
     """
@@ -15,18 +38,16 @@ def merge_two_dicts(x, y):
     z.update(y)
     return z
 
-def printModel ():
-    sbmlFile = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/chassagnole2002.xml'
-    #sbmlFile = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed.xml'
-    model = load_kinetic_model(sbmlFile)
 
-    for r in model.reactions:
-        print r +" ----> "+  model.ratelaws[r]
+class NoDaemonProcess(multiprocessing.Process):
+    # make 'daemon' attribute always return False
+    def _get_daemon(self):
+        return False
+    def _set_daemon(self, value):
+        pass
+    daemon = property(_get_daemon, _set_daemon)
 
-    model.build_ode()
-    print model._func_str
-
-
-
-if __name__ == '__main__':
-    printModel()
+# We sub-class multiprocessing.pool.Pool instead of multiprocessing.Pool
+# because the latter is only a wrapper function, not a proper class.
+class MyPool(multiprocessing.pool.Pool):
+    Process = NoDaemonProcess

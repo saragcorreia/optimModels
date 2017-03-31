@@ -3,7 +3,7 @@ SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/E_coli_M
 #SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/chassagnole2002.xml'
 RESULT_DIR = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/'
 
-DIL = 0.1/3600
+#DIL = 0.1/3600
 #DIL = 0.1
 
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
@@ -13,11 +13,10 @@ from optimModels.model.dynamicModel import load_kinetic_model
 from optimModels.simulation.overrideSimulationProblem import overrideKineticSimProblem
 from collections import OrderedDict
 
-import numpy as np
-
 if __name__ == '__main__':
     model = load_kinetic_model(SBML_MODEL)
-    problem = kineticSimulationProblem(model, parameters=None, tSteps = [0,1000], timeout=None)
+
+    problem = kineticSimulationProblem(model, parameters=None, tSteps = [0,1e9], timeout=5)
     print "------------------  ORIGINAL  ------------------"
     #res = problem.simulate(odeSolver.AdamsBashMoulton2)
     #res = problem.simulate(odeSolver.LSODA)
@@ -26,21 +25,62 @@ if __name__ == '__main__':
 
     print res.get_fluxes_distribution()
     print "------------------"
-    #
+
+    # # Chassagnole model
     # print "------------------ KO PGI ------------------"
-    # overrideProblem = overrideKineticSimProblem(factors = OrderedDict([("vPGI",0.0)]))
+    # overrideProblem = overrideKineticSimProblem(factors = OrderedDict([("PGI",0.0)]))
     # res = problem.simulate(odeSolver.LSODA, overrideProblem)
     # print res.get_fluxes_distribution()
     # print "------------------"
     #
     # print "------------------ under vPTS ------------------"
-    # overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("vPTS", 0.005)]))
+    # overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("PTS", 0.005)]))
     # res = problem.simulate(odeSolver.LSODA,overrideProblem)
     # print res.get_fluxes_distribution()
     # print "------------------"
     #
     # print "------------------ over vPTS ------------------"
-    # overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("vPTS", 20)]))
+    # overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("PTS", 20)]))
     # res = problem.simulate(odeSolver.LSODA,overrideProblem)
     # print res.get_fluxes_distribution()
     # print "------------------"
+
+
+
+    #Jahan model
+    # print "------------------ KO vE_Pck ------------------"
+    # overrideProblem = overrideKineticSimProblem(factors = OrderedDict([("vE_Pck",0.0)]))
+    # res = problem.simulate(odeSolver.LSODA, overrideProblem)
+    # print res.get_fluxes_distribution()
+    # print "------------------"
+    #
+    # print "------------------ under vE_Pck ------------------"
+    # overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("vE_Pck", 0.005)]))
+    # res = problem.simulate(odeSolver.LSODA,overrideProblem)
+    # print res.get_fluxes_distribution()
+    # print "------------------"
+    #
+    # print "------------------ over vE_Pck ------------------"
+    # overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("vE_Pck", 20)]))
+    # res = problem.simulate(odeSolver.LSODA,overrideProblem)
+    # print res.get_fluxes_distribution()
+    # print "------------------"
+
+    #Millard model
+    print "------------------ KO PGI ------------------"
+    overrideProblem = overrideKineticSimProblem(factors = OrderedDict([("PGI",0.0)]))
+    res = problem.simulate(odeSolver.LSODA, overrideProblem)
+    print res.get_fluxes_distribution()
+    print "------------------"
+
+    print "------------------ under PGI ------------------"
+    overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("PGI", 0.005)]))
+    res = problem.simulate(odeSolver.LSODA,overrideProblem)
+    print res.get_fluxes_distribution()
+    print "------------------"
+
+    print "------------------ over PGI ------------------"
+    overrideProblem = overrideKineticSimProblem(factors=OrderedDict([("PGI", 20)]))
+    res = problem.simulate(odeSolver.LSODA,overrideProblem)
+    print res.get_fluxes_distribution()
+    print "------------------"

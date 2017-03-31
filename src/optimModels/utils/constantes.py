@@ -18,8 +18,8 @@ class Parameter:
     N_STEPS =2
 
 
-solverParameters={Parameter.ABSOLUTE_TOL: 1e-6,
-                  Parameter.RELATIVE_TOL: 1e-4,
+solverParameters={Parameter.ABSOLUTE_TOL: 1e-9,
+                  Parameter.RELATIVE_TOL: 1e-6,
                   Parameter.N_STEPS:10000}
 
 

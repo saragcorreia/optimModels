@@ -1,6 +1,10 @@
 from collections import OrderedDict
 from libsbml import readSBMLFromFile
-from framed.io.sbml import _load_compartments, _load_metabolites, _load_reactions, _load_global_parameters, _load_local_parameters, _load_ratelaws, _load_assignment_rules, _load_concentrations, ODEModel
+from framed.io.sbml import _load_compartments, _load_metabolites, _load_reactions, _load_global_parameters, _load_local_parameters, _load_ratelaws, _load_assignment_rules, _load_concentrations
+from framed.model.odemodel import ODEModel
+import re
+from  optimModels.utils.utils import MyTree
+
 from math import log
 
 def load_kinetic_model(filename):
@@ -33,12 +37,37 @@ class dynamicModel(ODEModel):
         """
         ODEModel.__init__(self, model_id)
 
+    def parse_rule(self, rule, parsed_rates):
+
+        symbols = '()+*-/,'
+        rule = ' ' + rule + ' '
+        for symbol in symbols:
+            rule = rule.replace(symbol, ' ' + symbol + ' ')
+
+        for i, m_id in enumerate(self.metabolites):
+            rule = rule.replace(' ' + m_id + ' ', ' x[{}] '.format(i))
+
+        for c_id in self.compartments:
+            rule = rule.replace(' ' + c_id + ' ', " p['{}'] ".format(c_id))
+
+        for p_id in self.constant_params:
+            rule = rule.replace(' ' + p_id + ' ', " p['{}'] ".format(p_id))
+
+        for p_id in self.variable_params:
+            rule = rule.replace(' ' + p_id + ' ', " v['{}'] ".format(p_id))
+
+        for r_id in self.reactions:
+            rule = rule.replace(' ' + r_id + ' ', "(factor['{}']*({}))".format(r_id, parsed_rates[r_id]))
+            #rule = rule.replace(' ' + r_id + ' ', "r['{}']".format(r_id))
+
+        return rule
 
     def build_ode(self):
         if not self._func_str:
             parsed_rates = {r_id: self.parse_rate(r_id, ratelaw)
                             for r_id, ratelaw in self.ratelaws.items()}
 
+            #assignment_rules_order =
             parsed_rules = {p_id: self.parse_rule(rule, parsed_rates)
                             for p_id, rule in self.assignment_rules.items()}
 
@@ -46,15 +75,12 @@ class dynamicModel(ODEModel):
                           for r_id in self.reactions]
 
             balances = [' ' * 8 + self.print_balance(m_id) for m_id in self.metabolites]
-            # balances[54] = ' ' * 8 +  str(0)
-            # balances[55] = ' ' * 8 + str(0)
-            # balances[64] = ' ' * 8 + str(0)
-            # balances[65] = ' ' * 8 + str(0)
-            # balances[66] = ' ' * 8 + str(0)
-            # balances[71] = ' ' * 8 + str(0)
+
+            trees = [build_tree_rules(v_id, parsed_rules) for v_id in parsed_rules.keys()]
+            order = get_oder_rules(trees)
 
             rule_exprs = ["    v['{}'] = {}".format(p_id, parsed_rules[p_id])
-                          for p_id in self.assignment_rules]
+                          for p_id in order]
 
             func_str = 'def ode_func(t, x, r, p, v, factor):\n\n' + \
                        '\n'.join(rule_exprs) + '\n\n' + \
@@ -63,22 +89,12 @@ class dynamicModel(ODEModel):
                        ',\n'.join(balances) + '\n' + \
                        '    ]\n\n' + \
                        '    return dxdt\n'
-                       #'    x = [max(val,1e-9) for val in x] \n\n' + \
-                       #'    print dxdt\n' + \
-                       #'    res = [a * -1.0 if abs(a + b) < 1e-9 else b for (a, b) in zip(x, dxdt)]\n\n'+ \
-                       #'    print res\n' + \
-
 
             self._func_str = func_str
-           # print self._func_str
+            print self._func_str
         return self._func_str
 
-
-
-
-
     def get_ode(self, r_dict=None, params=None, factors= None):
-
         p = self.merge_constants()
         v = self.variable_params.copy()
 
@@ -100,12 +116,11 @@ class dynamicModel(ODEModel):
         ode_func = eval('ode_func')
 
         #print str(self.metabolites.keys())
+        #print "------------- // ______________-"
+        #print  str(len(r)) + " --> "+ str(r)
+        #print str(len(p)) + " --> "+ str(p)
+        #print str(len(v)) + " --> "+ str(v)
 
-        #print str(r)
-        #print str(p)
-        #print str(v)
-        #print str(allFactors)
-        #print str(ode_func)
         f = lambda t, x: ode_func(t, x, r, p, v, allFactors)
         return f
 
@@ -116,3 +131,29 @@ class dynamicModel(ODEModel):
 
     def __setstate__(self, state):
         self.__dict__.update(state)
+
+
+# auxiliar functions to build the assignment rules by correct order
+def build_tree_rules(parent, rules):
+    regexp = "v\[\'(.*?)\'\]"
+    children = re.findall(regexp,rules[parent])
+    if len(children) == 0:
+        return MyTree(parent, None)
+    else:
+        childrenTrees = [build_tree_rules(child, rules) for child in children]
+        return MyTree(parent, childrenTrees)
+
+
+def get_oder_rules(trees):
+    res = []
+    for tree in trees:
+        new_elems = get_order_nodes(tree)
+        res = res + [x for x in new_elems if x not in res]
+    return res
+
+def get_order_nodes(tree):
+    res = [tree.name]
+    if len(tree.children) >0:
+        for child in tree.children:
+            res = get_order_nodes(child) + res
+    return res

@@ -1,17 +1,12 @@
 import time
-import copy
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
-
 from numpy import linspace
 from optimModels.utils.utils import merge_two_dicts
+from optimModels.utils.utils import MyPool
 
 from optimModels.simulation.simulationResults import kineticSimulationResult, stoichiometricSimulationResult
 from optimModels.simulation.solvers import odeSolver
-import multiprocessing
-# We must import this explicitly, it is not imported by the top-level
-# multiprocessing module.
-import multiprocessing.pool
 from  optimModels.utils.constantes import solverStatus
 
 try:
@@ -163,7 +158,7 @@ class kineticSimulationProblem(simulationProblem):
                                             self.get_initial_concentrations(),
                                             self.get_time_steps())
         else:
-            p = multiprocessing.pool.ThreadPool(processes=1)
+            p = MyPool(processes=1)
             res = p.apply_async(_my_kinetic_solve, (
             self.get_model(), final_rates, final_params, final_factors, solverId, self.get_initial_concentrations(),
             self.get_time_steps()))
@@ -171,14 +166,18 @@ class kineticSimulationProblem(simulationProblem):
                 sstateRates = res.get(self.timeout)  # Wait timeout seconds for func to complete.
             except Exception:
                 print("Aborting due to timeout")
-                p.terminate()
                 sstateRates = {}
                 status = solverStatus.ERROR
+                p.terminate()
+            p.close()
+            p.join()
         t2 = time.time()
         print "TIME (seconds) simulate: " + str(t2 - t1)
 
         return kineticSimulationResult(self.get_model().id, solverStatus= status, steadysatefluxesDistrib = sstateRates, factors=final_factors,
-                                       timePoint=self.get_time_steps()[- 1])
+                                       timePoint=self.get_time_steps()[-1])
+
+
 
 
 # Auxiliar functions
@@ -188,6 +187,7 @@ def _my_kinetic_solve(model, final_rates, final_params, final_factors, solverId,
 
 
     func = lambda x, t: f(t, x)
+
     solver = odeSolver(solverId).get_solver(func)
     solver.set_initial_condition(initialConc)
     #print "INIT solve"
