@@ -55,9 +55,11 @@ class dynamicModel(ODEModel):
 
         for p_id in self.variable_params:
             rule = rule.replace(' ' + p_id + ' ', " v['{}'] ".format(p_id))
-
+        import re
         for r_id in self.reactions:
-            rule = rule.replace(' ' + r_id + ' ', "(factor['{}']*({}))".format(r_id, parsed_rates[r_id]))
+            nrid = re.sub('\_medium$', '' ,r_id)
+            rule = rule.replace(' ' + r_id + ' ', "(factor['{}']*({}))".format(nrid, parsed_rates[r_id]))
+            #rule = rule.replace(' ' + r_id + ' ', "(factor['{}']*({}))".format(r_id, parsed_rates[r_id]))
             #rule = rule.replace(' ' + r_id + ' ', "r['{}']".format(r_id))
 
         return rule
@@ -67,13 +69,14 @@ class dynamicModel(ODEModel):
             parsed_rates = {r_id: self.parse_rate(r_id, ratelaw)
                             for r_id, ratelaw in self.ratelaws.items()}
 
-            #assignment_rules_order =
             parsed_rules = {p_id: self.parse_rule(rule, parsed_rates)
                             for p_id, rule in self.assignment_rules.items()}
 
-            rate_exprs = ["    r['{}'] = factor['{}']*({})".format(r_id, r_id, parsed_rates[r_id])
+            rate_exprs = ["    r['{}'] = factor['{}']*({})".format(r_id,re.sub('\_medium$', '' ,r_id), parsed_rates[r_id])
                           for r_id in self.reactions]
 
+            # rate_exprs = ["    r['{}'] = factor['{}']*({})".format(r_id, r_id, parsed_rates[r_id])
+            #               for r_id in self.reactions]
             balances = [' ' * 8 + self.print_balance(m_id) for m_id in self.metabolites]
 
             trees = [build_tree_rules(v_id, parsed_rules) for v_id in parsed_rules.keys()]
@@ -106,7 +109,7 @@ class dynamicModel(ODEModel):
         if params:
             p.update(params)
 
-        allFactors =  OrderedDict([(r_id, 1) for r_id in self.reactions])
+        allFactors = OrderedDict([( r_id, 1) for r_id in self.reactions])
 
         if factors:
             allFactors.update(factors)
@@ -120,6 +123,7 @@ class dynamicModel(ODEModel):
         #print  str(len(r)) + " --> "+ str(r)
         #print str(len(p)) + " --> "+ str(p)
         #print str(len(v)) + " --> "+ str(v)
+
 
         f = lambda t, x: ode_func(t, x, r, p, v, allFactors)
         return f
@@ -148,7 +152,8 @@ def get_oder_rules(trees):
     res = []
     for tree in trees:
         new_elems = get_order_nodes(tree)
-        res = res + [x for x in new_elems if x not in res]
+        [res.append(item) for item in new_elems if item not in res]
+    print res
     return res
 
 def get_order_nodes(tree):

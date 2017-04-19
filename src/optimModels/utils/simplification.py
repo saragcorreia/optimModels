@@ -1,7 +1,9 @@
 import copy
 
 from optimModels.simulation.solvers import odeSolver
+from optimModels.simulation.overrideSimulationProblem import overrideKineticSimProblem
 from pandas import  read_csv
+from collections import OrderedDict
 
 from optimModels.model.dynamicModel import load_kinetic_model
 
@@ -12,7 +14,7 @@ class MissingParams(Exception):
     def __str__(self):
         return repr(self.value)
 
-def simplify_solutions(odeProblem, fileRes, fileFinalRes, objFunc, solverId = odeSolver.LSODA, levels=None):
+def simplify_solutions(odeProblem, fileRes, fileFinalRes, objFunc, solverId = odeSolver.LSODA):
     file = open(fileRes, 'r')
     data = read_csv(fileRes, sep=';', header=2)
     maxGen = max(data['Generation'])
@@ -41,71 +43,40 @@ def simplify_solutions(odeProblem, fileRes, fileFinalRes, objFunc, solverId = od
                         finalSolutionIndex.pop(j-desv)
                         desv = desv + 1
             else:
-                if levels is None:
-                    raise MissingParams('Possible levels values required.')
                 desv = 0
                 for j in range(len(solution)):
-                    elem = solution[j]
+                    elem = solution.items()[j]
                     tuples_to_test = copy.copy(finalSolution)
-                    tuples_to_test.remove(elem)
-                    if not _required_under_over(odeProblem, tuples_to_test,fitness, objFunc, solverId, levels):
+                    del tuples_to_test[elem[0]]
+                    if not _required_under_over(odeProblem, tuples_to_test, fitness, objFunc, solverId):
                         print  str(j) + " simplification " + str(solution)
-                        finalSolution.pop(j-desv)
+
+                        del finalSolution[elem[0]]
                         finalSolutionIndex.pop(j-desv)
                         desv = desv + 1
             data2.iloc[i, 2] = str(finalSolutionIndex)
             data2.iloc[i, 3] = str(finalSolution)
     file.close()
-
     #save new data
     data2.to_csv( path_or_buf = fileFinalRes, sep=";", index=False)
 
 
 
 def _required_ko_reaction (odeProblem, ko, fitness, foReac, solverId):
-    odeProblem.reset_parameters()
-    odeProblem.set_reactions_ko(ko)
-    odeProblem.update_obj()
-
-    solver = odeSolver(solverId).get_solver(odeProblem)
-    solver.set_initial_condition(odeProblem.get_initial_concentrations())
-
+    koFactors=[(elem, 0) for elem in ko]
+    override = overrideKineticSimProblem(factors=koFactors)
     try:
-        X, t = solver.solve(odeProblem.get_time_steps())
-    except ValueError, e:
-        print "Oops! Solver problems.  " + e.message
-        return True
-
-    newFitness = odeProblem.get_r_dict()[foReac]
+        res = odeProblem.simulate(solverId, override)
+        newFitness = res.get_fluxes_distribution()[foReac]
+    except Exception:
+        newFitness = -1.0
     return round(fitness, 12) != round(newFitness, 12)
 
-def _required_under_over(odeProblem, tuples, fitness, foReac, solverId, levels):
-    odeProblem.reset_parameters()
-    odeProblem.set_factors(tuples)
-    odeProblem.update_obj()
-    solver = odeSolver(solverId).get_solver(odeProblem)
-    solver.set_initial_condition(odeProblem.get_initial_concentrations())
-
+def _required_under_over(odeProblem, tuples, fitness, foReac, solverId):
+    override = overrideKineticSimProblem(factors = tuples)
     try:
-        X, t = solver.solve(odeProblem.get_time_steps())
-    except ValueError, e:
-        print "Oops! Solver problems.  " + e.message
-    newFitness = odeProblem.get_r_dict()[foReac]
+        res = odeProblem.simulate(solverId, override)
+        newFitness = res.get_fluxes_distribution()[foReac]
+    except Exception:
+        newFitness = -1.0
     return round(fitness, 12) != round(newFitness, 12)
-
-
-if __name__ == '__main__':
-    dirResults = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/"
-    sizes=[1,2,3,4,5,6]
-
-    sbmlFile =  '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/chassagnole2002.xml'
-    model = load_kinetic_model(sbmlFile)
-    dils = [(0.1/3600)]
-
-    problem = KineticSimulationProblem(model, parameters={'Dil': dils[0]}, tSteps=[0, 1e9])
-    levels = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
-
-    for size in sizes:
-        fileRes = dirResults + 'optim_Chassagnole_Serine_size' + str(size) + '.csv'
-        fileFinalRes = dirResults + 'Final_optim_Chassagnole_Serine_size' + str(size) + '.csv'
-        simplify_solutions(problem, fileRes, fileFinalRes, "vsersynth")

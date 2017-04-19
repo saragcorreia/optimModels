@@ -76,7 +76,9 @@ def ko_jahan(isMultiProc=False, size = 1):
     print "vD_SUC in WT ....."
     print res.get_fluxes_distribution()['vD_SUC']
 
-    reactionsToManipulate = [x for x in model.reactions.keys() if "vD_" in x]
+    reactionsToManipulate = [x for x in model.reactions.keys() if "vE_" in x]
+    reactionsToManipulate = reactionsToManipulate + ['vNonPTS', 'vNonPTS_medium', 'vPTS4', 'vPTS4_medium', 'vPTS1']
+    print reactionsToManipulate
     prob = optimProblemConfiguration(problem, decoder=decoderReactionsKnockouts(reactionsToManipulate), objectiveFunc=targetFlux("vD_SUC"),
                                      solverId=odeSolver.LSODA)
 
@@ -102,7 +104,8 @@ def underover_jahan(isMultiProc=False, size=1):
     print "vD_SUC in WT ...."
     print res.get_fluxes_distribution()['vD_SUC']
 
-    reactionsToManipulate = [x for x in model.reactions.keys() if "vD_" in x]
+    reactionsToManipulate = [x for x in model.reactions.keys() if "vE_" in x]
+    reactionsToManipulate = reactionsToManipulate + ['vNonPTS','vNonPTS_medium','vPTS4','vPTS4_medium', 'vPTS1']
     prob = optimProblemConfiguration(problem, decoder=decoderUnderOverExpression(reactionsToManipulate,levels),
                                      objectiveFunc=targetFlux("vD_SUC"),
                                      solverId=odeSolver.LSODA)
@@ -150,7 +153,7 @@ if __name__ == '__main__':
     warnings.filterwarnings('ignore')  # ignore the warnings related to floating points raise from solver!!!
     t1 = time.time()
     size = 1
-    underover_jahan(True, size)
+    ko_jahan(True, size)
     t2 = time.time()
     t3 = time.time()
     #underover_chassagnole(True)
