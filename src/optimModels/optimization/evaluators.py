@@ -1,10 +1,4 @@
-"""
-    ===============================================================
-    :mod:`evaluators` -- evaluation of candidates
-    ===============================================================
-    .. module:: evaluators
-    .. moduleauthor:: Sara Correia <sarag.correia@gmail.com>
-"""
+
 import math
 from optimModels.utils.constantes import solverStatus,Parameter
 from optimModels.utils.utils import MyPool
@@ -14,7 +8,15 @@ except ImportError:
     import pickle
 
 def evaluator(candidates, args):
-    #print "--------- INITEVALUATION-------------"
+    """
+    This function allows evaluation of candidate solutions.
+
+    .. Arguments:
+       candidates -- the candidate solutions
+       args -- a dictionary of keyword arguments
+
+    """
+
     config = args["configuration"]
     decoder = config.get_decoder()
     simulProblem = config.get_simulation_problem()
@@ -28,8 +30,7 @@ def evaluator(candidates, args):
             if res.get_solver_status() == solverStatus.OPTIMAL:
                 fitInd = config.get_objective_function().get_fitness(res)
                 if math.isnan(fitInd):
-                    fitInd = 0.0
-
+                    fitInd = -1.0
         except ValueError, e:
             print "Oops! Solver problems.  " + e.message
         solutions.append(decoder.candidate_decoded(candidate))
@@ -64,7 +65,6 @@ def parallel_evaluation_mp(candidates, args):
        args -- a dictionary of keyword arguments
 
     Required keyword arguments in args:
-
     - *mp_evaluator* -- actual evaluation function to be used (This function
       should have the same signature as any other inspyred evaluation function.)
 

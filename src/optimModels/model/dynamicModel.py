@@ -1,103 +1,191 @@
 from collections import OrderedDict
 from libsbml import readSBMLFromFile
-from framed.io.sbml import _load_compartments, _load_metabolites, _load_reactions, _load_global_parameters, _load_local_parameters, _load_ratelaws, _load_assignment_rules, _load_concentrations
+from framed.io.sbml import _load_compartments, _load_metabolites, _load_reactions, _load_global_parameters, \
+    _load_local_parameters, _load_ratelaws, _load_assignment_rules, _load_concentrations
 from framed.model.odemodel import ODEModel
 import re
+from math import log
 from  optimModels.utils.utils import MyTree
 
-from math import log
 
-def load_kinetic_model(filename):
+def load_kinetic_model(filename, map={}):
+    """ Load a kinetic model SBML file.
+
+        Parameters
+        ----------
+        filename : str
+            Location of the SBML file.
+        map : dictionary
+            Dictionary with the parameters that can be used in the strain optmimization process for each reaction. {id_reaction: [param1, param2]}
+
+        Returns
+        -------
+        dynamicModel
+            contains all information related with the dynamic model (reactions, kinetic eqations, metabolites, compartments, etc.)
+        out : dynamicModel
+            Object of type 'dynamicModel'.
+
+        Raises
+        ------
+        IOError
+            When is not possible load the SBML file.
+
+    """
     document = readSBMLFromFile(filename)
-    sbml_model = document.getModel()
+    sbmlModel = document.getModel()
 
-    if sbml_model is None:
+    if sbmlModel is None:
         raise IOError('Failed to load model.')
 
-    model = dynamicModel(sbml_model.getId())
+    model = dynamicModel(sbmlModel.getId())
 
-    _load_compartments(sbml_model, model)
-    _load_metabolites(sbml_model, model)
-    _load_reactions(sbml_model, model)
-    _load_concentrations(sbml_model, model)
-    _load_global_parameters(sbml_model, model)
-    _load_local_parameters(sbml_model, model)
-    _load_ratelaws(sbml_model, model)
-    _load_assignment_rules(sbml_model, model)
+    _load_compartments(sbmlModel, model)
+    _load_metabolites(sbmlModel, model)
+    _load_reactions(sbmlModel, model)
+    _load_concentrations(sbmlModel, model)
+    _load_global_parameters(sbmlModel, model)
+    _load_local_parameters(sbmlModel, model)
+    _load_ratelaws(sbmlModel, model)
+    _load_assignment_rules(sbmlModel, model)
+
+    # parse rates, rules and xdot expressions
+    model.set_reactions_parameters_association(map)
+    model._set_parsed_attr()
 
     return model
 
 
-
 class dynamicModel(ODEModel):
-    def __init__(self, model_id):
+    """ Class to store information of dynamic models.
+    This class is an extension of ODEModel class from FRAMED package. The methods  *build_ode* and *get_ode* are override to
+    support the manipulations over the parameters or enzyme concentration level during the strain optimization process.
+    The ode function returned by *get_ode* replace the negative concentration, received as argument, by 0 if the concentration is smaller than
+    absolute tolerance or raise an exception if the concentration is significante negative value.
+
+    """
+
+    def __init__(self, modelId):
         """
-        Arguments:
-            model_id (str): a valid unique identifier
+        Create a instance of dynamicModel class.
+         Parameters
+         ----------
+            modelId: str
+            A valid unique identifier
         """
-        ODEModel.__init__(self, model_id)
+        ODEModel.__init__(self, modelId)
+        self._reactionParamsAssociation = None;  # reaction->parameters association
+        self._parsedRates = None;
+        self._parsedRules = None;
+        self._parsedXdot = None;
 
-    def parse_rule(self, rule, parsed_rates):
+    def _set_parsed_attr(self):
+        self._parsedRates = {rId: self.parse_rate(rId, ratelaw)
+                             for rId, ratelaw in self.ratelaws.items()}
 
-        symbols = '()+*-/,'
-        rule = ' ' + rule + ' '
-        for symbol in symbols:
-            rule = rule.replace(symbol, ' ' + symbol + ' ')
+        aux = {pId: self.parse_rule(rule, self._parsedRates)
+               for pId, rule in self.assignment_rules.items()}
 
-        for i, m_id in enumerate(self.metabolites):
-            rule = rule.replace(' ' + m_id + ' ', ' x[{}] '.format(i))
+        trees = [_build_tree_rules(vId, aux) for vId in aux.keys()]
+        order = _get_oder_rules(trees)
 
-        for c_id in self.compartments:
-            rule = rule.replace(' ' + c_id + ' ', " p['{}'] ".format(c_id))
+        self._parsedRules = OrderedDict([(id, aux[id]) for id in order])
 
-        for p_id in self.constant_params:
-            rule = rule.replace(' ' + p_id + ' ', " p['{}'] ".format(p_id))
+        self._parsedXdot = {mId: self.print_balance(mId) for mId in self.metabolites}
 
-        for p_id in self.variable_params:
-            rule = rule.replace(' ' + p_id + ' ', " v['{}'] ".format(p_id))
-        import re
-        for r_id in self.reactions:
-            nrid = re.sub('\_medium$', '' ,r_id)
-            rule = rule.replace(' ' + r_id + ' ', "(factor['{}']*({}))".format(nrid, parsed_rates[r_id]))
-            #rule = rule.replace(' ' + r_id + ' ', "(factor['{}']*({}))".format(r_id, parsed_rates[r_id]))
-            #rule = rule.replace(' ' + r_id + ' ', "r['{}']".format(r_id))
+        print self._parsedRates
+        print self._parsedRules
+        print self._parsedXdot
 
-        return rule
+    def build_ode(self, factors):
+        """
+            Build the ODE system.
+            Parameters
+            ----------
+            factors : OrderedDict
+                OrderedDict where the key is the parameter identifyer and the value is the level of change values
+                between 0 and 1 represent a under expression, above 1 a over expression and 0 to represent the knockouts.
 
-    def build_ode(self):
-        if not self._func_str:
-            parsed_rates = {r_id: self.parse_rate(r_id, ratelaw)
-                            for r_id, ratelaw in self.ratelaws.items()}
+            Returns
+            -------
+            string
+            out : string
+                A string with the ode system.
 
-            parsed_rules = {p_id: self.parse_rule(rule, parsed_rates)
-                            for p_id, rule in self.assignment_rules.items()}
 
-            rate_exprs = ["    r['{}'] = factor['{}']*({})".format(r_id,re.sub('\_medium$', '' ,r_id), parsed_rates[r_id])
-                          for r_id in self.reactions]
+        """
 
-            # rate_exprs = ["    r['{}'] = factor['{}']*({})".format(r_id, r_id, parsed_rates[r_id])
-            #               for r_id in self.reactions]
-            balances = [' ' * 8 + self.print_balance(m_id) for m_id in self.metabolites]
+        # factors: ["vmax1": 0, "vmax2"=2, "ENZYME_ID":0]
+        # divide vmax parameters from enzymes expression levels
+        factorsEnz = OrderedDict([(k, v) for k, v in factors.items() if k in self.metabolites.keys()])
+        factorsParam = OrderedDict([(k, v) for k, v in factors.items() if k not in factorsEnz.keys()])
 
-            trees = [build_tree_rules(v_id, parsed_rules) for v_id in parsed_rules.keys()]
-            order = get_oder_rules(trees)
+        ruleExprs = ["    v['{}'] = {}".format(pId, self._parsedRules[pId])
+                     for pId in self._parsedRules.keys()]
 
-            rule_exprs = ["    v['{}'] = {}".format(p_id, parsed_rules[p_id])
-                          for p_id in order]
+        rateExprs = []
+        for rId in self.reactions.keys():
+            newExp = self._parsedRates[rId]
+            if rId in self._reactionParamsAssociation.keys():
+                toModify = set(factorsParam.keys()).intersection(self._reactionParamsAssociation[rId])
+                if len(toModify) > 0:
+                    for elem in toModify:
+                        newExp = re.sub(r"([pv]\['" + elem + "'\])", str(factorsParam[elem]) + r" * \1", newExp);
+            rateExprs.append("    r['{}'] = {}".format(rId, newExp))
 
-            func_str = 'def ode_func(t, x, r, p, v, factor):\n\n' + \
-                       '\n'.join(rule_exprs) + '\n\n' + \
-                       '\n'.join(rate_exprs) + '\n\n' + \
-                       '    dxdt = [\n' + \
-                       ',\n'.join(balances) + '\n' + \
-                       '    ]\n\n' + \
-                       '    return dxdt\n'
+        balances = []
+        for m_id in self.metabolites.keys():
+            exp = self._parsedXdot[m_id]
+            if m_id in factorsEnz.keys():
+                if factors[m_id] == 0:
+                    newExp = "0"
+                else:
+                    newExp = re.sub(r"\+\s*(\d)", r"+ \1 * " + str(factorsEnz[m_id]), exp);
+                balances.append(' ' * 8 + newExp)
+            else:
+                balances.append(' ' * 8 + exp)
 
-            self._func_str = func_str
-            print self._func_str
-        return self._func_str
+        func_str = 'def ode_func(t, x, r, p, v):\n\n' + \
+                   '    newX = []\n' + \
+                   '    for elem in x: \n' + \
+                   '        if elem > -0.000001 and elem < 0: \n' + \
+                   '            newX.append(0) \n' + \
+                   '        elif  elem < 0: \n' + \
+                   '            raise Exception\n' + \
+                   '        else:  \n' + \
+                   '            newX.append(elem) \n' + \
+                   '    x = newX \n' + \
+                   '\n'.join(ruleExprs) + '\n\n' + \
+                   '\n'.join(rateExprs) + '\n\n' + \
+                   '    dxdt = [\n' + \
+                   ',\n'.join(balances) + '\n' + \
+                   '    ]\n\n' + \
+                   '    return dxdt\n'
+        print func_str
+        return func_str
 
-    def get_ode(self, r_dict=None, params=None, factors= None):
+    def get_ode(self, r_dict=None, params=None, factors=None):
+        """
+            Build the ODE system.
+            Parameters
+            ----------
+            rDict: OrderedDict
+                This variable is used to store the reaction rates.
+
+            params: OrderedDict
+                Parameters and the new values used to replace the original parameters present in the SBML model
+
+            factors : OrderedDict
+                OrderedDict where the key is the parameter identifyer and the value is the level of change values
+                between 0 and 1 represent a under expression, above 1 a over expression and 0 to represent the knockouts.
+
+            Returns
+            -------
+            function
+            out : function
+                A function used to solve the ODE system.
+
+
+        """
         p = self.merge_constants()
         v = self.variable_params.copy()
 
@@ -109,25 +197,30 @@ class dynamicModel(ODEModel):
         if params:
             p.update(params)
 
-        allFactors = OrderedDict([( r_id, 1) for r_id in self.reactions])
-
-        if factors:
-            allFactors.update(factors)
-
-        exec self.build_ode() in globals()
-
+        exec self.build_ode(factors) in globals()
         ode_func = eval('ode_func')
 
-        #print str(self.metabolites.keys())
-        #print "------------- // ______________-"
-        #print  str(len(r)) + " --> "+ str(r)
-        #print str(len(p)) + " --> "+ str(p)
-        #print str(len(v)) + " --> "+ str(v)
-
-
-        f = lambda t, x: ode_func(t, x, r, p, v, allFactors)
+        f = lambda t, x: ode_func(t, x, r, p, v)
         return f
 
+    def set_reactions_parameters_association(self, map):
+        self._reactionParamsAssociation = map
+
+    def get_reactions_parameters_association(self):
+        self._reactionParamsAssociation = map
+
+    def get_parameters_by_reaction(self, reactionId):
+        res = []
+        if reactionId in self._reactionParamsAssociation.keys():
+            res = self._reactionParamsAssociation[reactionId]
+        return res
+
+    def get_reactions_by_parameter(self, paramId):
+        res = []
+        for r in self._reactionParamsAssociation.keys():
+            if paramId in self._reactionParamsAssociation[r]:
+                res = res + [r]
+        return res
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -137,28 +230,29 @@ class dynamicModel(ODEModel):
         self.__dict__.update(state)
 
 
-# auxiliar functions to build the assignment rules by correct order
-def build_tree_rules(parent, rules):
+# auxiliar functions to set the assignment rules by the correct order in the ODE system
+def _build_tree_rules(parent, rules):
     regexp = "v\[\'(.*?)\'\]"
-    children = re.findall(regexp,rules[parent])
+    children = re.findall(regexp, rules[parent])
     if len(children) == 0:
         return MyTree(parent, None)
     else:
-        childrenTrees = [build_tree_rules(child, rules) for child in children]
+        childrenTrees = [_build_tree_rules(child, rules) for child in children]
         return MyTree(parent, childrenTrees)
 
 
-def get_oder_rules(trees):
+def _get_oder_rules(trees):
     res = []
     for tree in trees:
-        new_elems = get_order_nodes(tree)
+        new_elems = _get_order_nodes(tree)
         [res.append(item) for item in new_elems if item not in res]
     print res
     return res
 
-def get_order_nodes(tree):
+
+def _get_order_nodes(tree):
     res = [tree.name]
-    if len(tree.children) >0:
+    if len(tree.children) > 0:
         for child in tree.children:
-            res = get_order_nodes(child) + res
+            res = _get_order_nodes(child) + res
     return res

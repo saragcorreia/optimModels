@@ -69,27 +69,39 @@ def underover_chassagnole(isMultiProc):
     #################
 def ko_jahan(isMultiProc=False, size = 1):
     sbmlFile = basePath+'/Data/Jahan2016_chemostat_fixed.xml'
-    model = load_kinetic_model(sbmlFile)
+    mapParamReacs = {"vE_6PGDH": ["v6PGDH_max"], "vE_Ack": ["vAck_max"], "vE_Ack_medium": ["vAck_max"],
+                     "vE_Cya": ["vCya_max"], "vE_Eda": ["vEda_max"], "vE_Edd": ["vEdd_max"], "vE_Fum": ["Fum"],
+                     "vE_G6PDH": ["vG6PDH_max"], "vE_MDH": ["MDH"], "vE_Pgi": ["vPgi_max"],
+                     "vE_Pgl": ["vPgl_max"], "vE_Pta": ["vPta_max"], "vE_R5PI": ["vR5PI_max"], "vE_Ru5P": ["vRu5P_max"],
+                     "vE_Tal": ["vTal_max"], "vE_TktA": ["vTktA_max"], "vE_TktB": ["vTktB_max"],
+                     "vE_cAMPdegr": ["vcAMPdegr_max"], "vNonPTS": ["vNonPTS_max"], "vNonPTS_medium": ["vNonPTS_max"],
+                     "vPTS4": ["vPTS4_max"], "vPTS4_medium": ["vPTS4_max"], "vE_AceKki": ["AceK"],
+                     "vE_AceKph": ["AceK"], "vE_Acs": ["Acs"], "vE_Acs_medium": ["Acs"], "vE_CS": ["CS"],
+                     "vE_Fba": ["Fba"], "vE_Fbp": ["Fbp"], "vE_GAPDH": ["GAPDH"], "vE_Glk": ["Glk"],
+                     "vE_ICDH": ["ICDH"], "vE_Icl": ["Icl"], "vE_MS": ["MS"], "vE_Mez": ["Mez"], "vE_PDH": ["PDH"],
+                     "vE_Pck": ["Pck"], "vE_Pfk": ["Pfk"], "vE_Ppc": ["Ppc"], "vE_Pps": ["Pps"], "vE_Pyk": ["Pyk"],
+                     "vE_SDH": ["SDH"], "vE_aKGDH": ["aKGDH"]}
 
-    problem = kineticSimulationProblem(model, parameters={'Dil': 0.1}, tSteps=[0, 1e9], timeout = 300)
+    model = load_kinetic_model(sbmlFile, mapParamReacs)
+
+    problem = kineticSimulationProblem(model, parameters={'Dil': 0.1}, tSteps=[0, 1e9], timeout = 100)
     res = problem.simulate(odeSolver.LSODA)
     print "vD_SUC in WT ....."
     print res.get_fluxes_distribution()['vD_SUC']
 
-    reactionsToManipulate = [x for x in model.reactions.keys() if "vE_" in x]
-    reactionsToManipulate = reactionsToManipulate + ['vNonPTS', 'vNonPTS_medium', 'vPTS4', 'vPTS4_medium', 'vPTS1']
-    print reactionsToManipulate
-    prob = optimProblemConfiguration(problem, decoder=decoderReactionsKnockouts(reactionsToManipulate), objectiveFunc=targetFlux("vD_SUC"),
+    toManipulate = sum(mapParamReacs.values(),[])
+
+    prob = optimProblemConfiguration(problem, decoder=decoderReactionsKnockouts(toManipulate), objectiveFunc=targetFlux("vD_SUC"),
                                      solverId=odeSolver.LSODA)
 
-    prob.set_optim_parameters(popSize=100, maxGenerations=500, popSelectedSize=50, maxCandidateSize=int(size),
+    prob.set_optim_parameters(popSize=100, maxGenerations=5, popSelectedSize=50, maxCandidateSize=int(size),
                               crossoverRate=1.0, mutationRate=0.1, newCandidatesRate=0.1)
 
     # define the max limit for index of reactions and levels
-    bounds = [0, len(reactionsToManipulate) - 1]
+    bounds = [0, len(toManipulate) - 1]
 
     final_pop = optimization_intSetRep(prob, bounds,
-                                       basePath+"/Results/optim_Jahan_ko_SUC_size_"+ str(size)+"_" + str(
+                                       basePath+"/Results/optim_Jahan_ko_SUCXXXX_size_"+ str(size)+"_" + str(
                                            isMultiProc) + ".csv",
                                        isMultiProc=isMultiProc)
 
@@ -97,16 +109,33 @@ def ko_jahan(isMultiProc=False, size = 1):
 def underover_jahan(isMultiProc=False, size=1):
     levels = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
     sbmlFile = basePath+'/Data/Jahan2016_chemostat_fixed.xml'
+    mapParamReacs = {"vE_6PGDH": ["v6PGDH_max"], "vE_Ack": ["vAck_max"], "vE_Ack_medium": ["vAck_max"],
+                     "vE_Cya": ["vCya_max"], "vE_Eda": ["vEda_max"], "vE_Edd": ["vEdd_max"], "vE_Fum": ["Fum"],
+                     "vE_G6PDH": ["vG6PDH_max"], "vE_MDH": ["MDH"], "vE_Pgi": ["vPgi_max"],
+                     "vE_Pgl": ["vPgl_max"], "vE_Pta": ["vPta_max"], "vE_R5PI": ["vR5PI_max"], "vE_Ru5P": ["vRu5P_max"],
+                     "vE_Tal": ["vTal_max"], "vE_TktA": ["vTktA_max"], "vE_TktB": ["vTktB_max"],
+                     "vE_cAMPdegr": ["vcAMPdegr_max"], "vNonPTS": ["vNonPTS_max"], "vNonPTS_medium": ["vNonPTS_max"],
+                     "vPTS4": ["vPTS4_max"], "vPTS4_medium": ["vPTS4_max"], "vE_AceKki": ["AceK"],
+                     "vE_AceKph": ["AceK"], "vE_Acs": ["Acs"], "vE_Acs_medium": ["Acs"], "vE_CS": ["CS"],
+                     "vE_Fba": ["Fba"], "vE_Fbp": ["Fbp"], "vE_GAPDH": ["GAPDH"], "vE_Glk": ["Glk"],
+                     "vE_ICDH": ["ICDH"], "vE_Icl": ["Icl"], "vE_MS": ["MS"], "vE_Mez": ["Mez"], "vE_PDH": ["PDH"],
+                     "vE_Pck": ["Pck"], "vE_Pfk": ["Pfk"], "vE_Ppc": ["Ppc"], "vE_Pps": ["Pps"], "vE_Pyk": ["Pyk"],
+                     "vE_SDH": ["SDH"], "vE_aKGDH": ["aKGDH"]}
+
     model = load_kinetic_model(sbmlFile)
+
+    #set associations
+    model.set_reactions_parameters_association(mapParamReacs)
 
     problem = kineticSimulationProblem(model, parameters={'Dil': 0.1}, tSteps=[0, 1e9], timeout = 300)
     res = problem.simulate(odeSolver.LSODA)
     print "vD_SUC in WT ...."
     print res.get_fluxes_distribution()['vD_SUC']
 
-    reactionsToManipulate = [x for x in model.reactions.keys() if "vE_" in x]
-    reactionsToManipulate = reactionsToManipulate + ['vNonPTS','vNonPTS_medium','vPTS4','vPTS4_medium', 'vPTS1']
-    prob = optimProblemConfiguration(problem, decoder=decoderUnderOverExpression(reactionsToManipulate,levels),
+    toManipulate = sum(mapParamReacs.values(), [])
+
+
+    prob = optimProblemConfiguration(problem, decoder=decoderUnderOverExpression(toManipulate,levels),
                                      objectiveFunc=targetFlux("vD_SUC"),
                                      solverId=odeSolver.LSODA)
 
@@ -114,45 +143,20 @@ def underover_jahan(isMultiProc=False, size=1):
                               crossoverRate=1.0, mutationRate=0.1, newCandidatesRate=0.1)
 
     # define the max limit for index of reactions and levels
-    bounds = [[0, 0], [len(reactionsToManipulate) - 1, len(levels) - 1]]
+    bounds = [[0, 0], [len(toManipulate) - 1, len(levels) - 1]]
 
     final_pop = optimization_tupleSetRep(prob, bounds,
                                          resultFile=basePath+"/Results/optim_Jahan_SUC_size_" + str(size)+"_" + str(isMultiProc) + ".csv",
                                          isMultiProc=isMultiProc)
 
     #################
-def ko_millard(isMultiProc=False):
-    sbmlFile = basePath+'/Data/E_coli_Millard2016v2.xml'
-    model = load_kinetic_model(sbmlFile)
-
-    problem = kineticSimulationProblem(model, parameters={'Dil': 0.1}, tSteps=[0, 1e9], timeout = 300)
-    res = problem.simulate(odeSolver.LSODA)
-    print "vD_SUC in WT ....."
-    print res.get_fluxes_distribution()['vD_SUC']
-
-    reactionsToManipulate = []
-    prob = optimProblemConfiguration(problem, decoder=decoderReactionsKnockouts(reactionsToManipulate), objectiveFunc=targetFlux("vD_SUC"),
-                                     solverId=odeSolver.LSODA)
-
-    prob.set_optim_parameters(popSize=10, maxGenerations=10, popSelectedSize=5, maxCandidateSize=5,
-                              crossoverRate=1.0, mutationRate=0.1, newCandidatesRate=0.1)
-
-    # define the max limit for index of reactions and levels
-    bounds = [0, len(reactionsToManipulate) - 1]
-
-    final_pop = optimization_intSetRep(prob, bounds,
-                                       basePath+"Results/optim_Millard_SUC_size5" + str(
-                                           isMultiProc) + ".csv",
-                                       isMultiProc=isMultiProc)
-
-
 
 if __name__ == '__main__':
     import time
     import warnings
     warnings.filterwarnings('ignore')  # ignore the warnings related to floating points raise from solver!!!
     t1 = time.time()
-    size = 1
+    size = 4
     ko_jahan(True, size)
     t2 = time.time()
     t3 = time.time()

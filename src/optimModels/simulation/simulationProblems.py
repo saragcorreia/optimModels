@@ -49,27 +49,44 @@ class stoichiometricSimulationProblem(simulationProblem):
 
 
 class kineticSimulationProblem(simulationProblem):
-    def __init__(self, model, parameters=None, rates=None, factors=None, time=1e9, steps=10000, tSteps=None,
+    """
+        This class contains all required information to perform a simulation of a kinetic metabolic model.
+
+        Attributes
+        ----------
+        model : dynamicModel
+            Metabolic model object.
+
+        parameters: dict (optional)
+            New parameters values to be aplied to the model.
+        factors: dict (optional)
+            Modification
+        time: float
+            final simulation time (optional if t_steps is used instead)
+        steps: int
+            number of simulations steps (default: 100)
+        t_steps: list
+            list of exact time steps to evaluate (optional)
+        timeout: int
+            Maximum time in secounds allowed to perform the simulation.
+
+    """
+    def __init__(self, model, parameters=None, factors=OrderedDict(), time=1e9, steps=10000, tSteps=None,
                  timeout=None):
         self._model = model
         self._parameters = parameters
-        self._rates = rates
         self._factors = factors
         self._time = time
         self._steps = steps
         self._tSteps = tSteps
         self._timeout = timeout
 
-        self._f = self._model.get_ode(r_dict=self.rates, params=self.parameters, factors=self.factors)
-
     def __getstate__(self):
         state = self.__dict__.copy()
-        del state['_f']
         return state
 
     def __setstate__(self, state):
         self.__dict__.update(state)
-        self.update_func()
 
     @property
     def parameters(self):
@@ -78,16 +95,6 @@ class kineticSimulationProblem(simulationProblem):
     @parameters.setter
     def parameters(self, params):
         self._parameters = params
-        self.update_func()
-
-    @property
-    def rates(self):
-        return self._rates
-
-    @rates.setter
-    def rates(self, rates):
-        self._rates = rates
-        self.update_func()
 
     @property
     def factors(self):
@@ -96,7 +103,6 @@ class kineticSimulationProblem(simulationProblem):
     @factors.setter
     def factors(self, factors):
         self._factors = factors
-        self.update_func()
 
     @property
     def timeout(self):
@@ -107,7 +113,7 @@ class kineticSimulationProblem(simulationProblem):
         self._timeout = value
 
     def get_initial_concentrations(self):
-        return self._model.concentrations.values()
+        return self._model.concentrations
 
     def get_time_steps(self):
         if self._tSteps is None:
@@ -120,48 +126,50 @@ class kineticSimulationProblem(simulationProblem):
     def get_model(self):
         return self._model
 
-    def update_func(self):
-        self._f = self._model.get_ode(r_dict=self.rates, params=self.parameters, factors=self.factors)
-
-    def func(self, x, t):
-        # f2 = lambda x, t: self.f(t, x)
-        return self._f(t, x)
-
     def simulate(self, solverId, overrideProblem=None):
+        """
+         bla bla bla
+
+        :param solverId: int
+        :param overrideProblem: overrideKineticSimProblem
+        :return: kineticSimulationResult
+        """
+
         if overrideProblem is None:
-            final_rates = self.rates
             final_params = self.parameters
             final_factors = self.factors
         else:
-            # final_rates = merge_two_dicts(self.rates, overrideProblem.rDict)
-            final_rates = self.rates
             final_params = merge_two_dicts(self.parameters, overrideProblem.parameters)
             final_factors = merge_two_dicts(self.factors, overrideProblem.factors)
 
         # required to have fluxes rates in the end of solver.solve, otherwise the reference given on get_ode function is lost!!!
-        if final_rates is None:
-            final_rates = OrderedDict()
+        final_rates = OrderedDict()
 
-        # build the ODEs with the modification present in the override problem
-        f = self.get_model().get_ode(r_dict=final_rates, params=final_params, factors=final_factors)
+        # update initial concentrations when a [enz] is changed: ==0, up or down regulated
+        initConcentrations = self.get_initial_concentrations().copy()
 
-        #swap the arguments order
-        func = lambda x, t: f(t, x)
-        solver = odeSolver(solverId).get_solver(func)
-        solver.set_initial_condition(self.get_initial_concentrations())
+
+        common = set(self._model.metabolites).intersection(final_factors.keys())
+        if len (common)>0:
+            for enz in common:
+                newVal = initConcentrations[enz] * final_factors[enz]
+                initConcentrations[enz] =newVal
+
+        # print "Initial concentrations"
+        # print initConcentrations
 
         #print self.timeout
         status = solverStatus.OPTIMAL
         t1 = time.time()
         if self.timeout is None:
             sstateRates = _my_kinetic_solve(self.get_model(), final_rates, final_params, final_factors, solverId,
-                                            self.get_initial_concentrations(),
+                                            initConcentrations.values(),
                                             self.get_time_steps())
         else:
             p = MyPool(processes=1)
             res = p.apply_async(_my_kinetic_solve, (
-            self.get_model(), final_rates, final_params, final_factors, solverId, self.get_initial_concentrations(),
-            self.get_time_steps()))
+                self.get_model(), final_rates, final_params, final_factors, solverId, initConcentrations.values(),
+                self.get_time_steps()))
             try:
                 sstateRates = res.get(self.timeout)  # Wait timeout seconds for func to complete.
             except Exception:
@@ -173,7 +181,6 @@ class kineticSimulationProblem(simulationProblem):
             p.join()
         t2 = time.time()
         print "TIME (seconds) simulate: " + str(t2 - t1)
-
         return kineticSimulationResult(self.get_model().id, solverStatus= status, steadysatefluxesDistrib = sstateRates, factors=final_factors,
                                        timePoint=self.get_time_steps()[-1])
 
@@ -184,8 +191,6 @@ class kineticSimulationProblem(simulationProblem):
 # required to avoid the pickling the solver.solve function
 def _my_kinetic_solve(model, final_rates, final_params, final_factors, solverId, initialConc, timePoints):
     f = model.get_ode(r_dict=final_rates, params=final_params, factors=final_factors)
-
-
     func = lambda x, t: f(t, x)
 
     solver = odeSolver(solverId).get_solver(func)
@@ -193,7 +198,7 @@ def _my_kinetic_solve(model, final_rates, final_params, final_factors, solverId,
     #print "INIT solve"
     X, t = solver.solve(timePoints)
     #print "Concentracoes"
-    #print model.metabolites.keys()
+    # print model.metabolites.keys()
     #print X
     return final_rates
 

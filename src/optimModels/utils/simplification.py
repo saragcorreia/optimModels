@@ -64,6 +64,7 @@ def simplify_solutions(odeProblem, fileRes, fileFinalRes, objFunc, solverId = od
 
 def _required_ko_reaction (odeProblem, ko, fitness, foReac, solverId):
     koFactors=[(elem, 0) for elem in ko]
+    #print koFactors
     override = overrideKineticSimProblem(factors=koFactors)
     try:
         res = odeProblem.simulate(solverId, override)
@@ -73,10 +74,12 @@ def _required_ko_reaction (odeProblem, ko, fitness, foReac, solverId):
     return round(fitness, 12) != round(newFitness, 12)
 
 def _required_under_over(odeProblem, tuples, fitness, foReac, solverId):
+    #print tuples
     override = overrideKineticSimProblem(factors = tuples)
     try:
         res = odeProblem.simulate(solverId, override)
         newFitness = res.get_fluxes_distribution()[foReac]
     except Exception:
         newFitness = -1.0
+    print str(tuples) + " --> " + str(fitness) + " -->"+ str(newFitness)
     return round(fitness, 12) != round(newFitness, 12)

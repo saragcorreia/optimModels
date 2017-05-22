@@ -1,18 +1,23 @@
-# Optimization Models Framework
-The Python framework under development will allow the strain design of single and microbial community cultures.
-This documents presents a brief description of the framework and the main options taken during the development.
+optimModels
+======
 
-##Packages
- The framework python files are divided in four main packages:
+*The Python framework under development will allow the strain design of single and microbial community cultures. The main focus is to provide support for different modeling approaches.
 
-###model:
-This package contains functions to load and manipulate metabolic models. The loading of dynamic models (from SBML files) is based on the methods and classes present in the FRAMED framework ().
 
-###simulation:
-This package contains the classes and functions used to simulate different types of metabolic models (Kinetic, stoichiometric, … ) considering different phenotypes. For the dynamic models simulation, we use the Odespy framework, which offers a unified interface to a large collection of software for solving systems of ordinary differential equations (ODEs).
+* Simulation: allows to simulate different types of metabolic models (Kinetic, stoichiometric, … ) considering different phenotypes. For the dynamic models simulation, we use the Odespy framework, which offers a unified interface to a large collection of software for solving systems of ordinary differential equations (ODEs).
+* Optimization: perform the optimization using evolutionary computation. The inspyred framework is used for creating biologically-inspired computational intelligence algorithms in Python, including evolutionary computation.
 
-###optimization:
-Contains all required entities to perform the optimization using evolutionary computation. The inspyred framework is used for creating biologically-inspired computational intelligence algorithms in Python, including evolutionary computation.
 
-###utils:
-Contains a set of generic and auxiliary functions, constants and configurations used by the methods developed in the framework.
+### Documentation
+
+For documentation and API please check: http://optimModelsreadthedocs.io/
+
+### Instalation
+
+```
+pip install optimModels
+```
+
+### Credits and License
+Developed at:
+* Centre of Biological Engineering, University of Minho (2017)
