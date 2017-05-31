@@ -17,8 +17,8 @@ def  generator_intSetRep(random, args):
     out: a new individual
 
     Required  arguments in args:
-    - *candidate_max_size* -- number of integer values which compose a individual.
-    - *_ec* -- configuration of evolutionary computation. The argument bounder is required to get the maximum value allowed for the individual values.
+    - *candidate_max_size* : number of integer values which compose a individual.
+    - *_ec* : configuration of evolutionary computation. The argument bounder is required to get the maximum value allowed for the individual values.
     """
     size = random.randint(1, args["candidate_max_size"])
     bounder = args["_ec"].bounder
