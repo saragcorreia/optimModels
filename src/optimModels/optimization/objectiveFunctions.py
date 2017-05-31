@@ -1,19 +1,23 @@
 from abc import ABCMeta, abstractmethod
 
 class objectiveFunction:
+    """
+    This abstract class should be extended by all implemented objective functions classes.
+
+    """
     __metaclass__ = ABCMeta
 
     @abstractmethod
     def get_fitness(self, simulationResult):
-        pass
+        return
 
     @abstractmethod
     def get_name(self):
-        pass
+        return
 
     @abstractmethod
     def method_str(self):
-        pass
+        return
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -23,6 +27,14 @@ class objectiveFunction:
         self.__dict__.update(state)
 
 class targetFlux(objectiveFunction):
+    """
+    This class implements the "target flux" objective function. The fitness is given by the flux value of the target reaction.
+
+    Attributes
+    ----------
+    targetReactionId : reaction identifier
+
+    """
     def __init__(self, targetReactionId):
         self.targetReactionId = targetReactionId
 
@@ -39,6 +51,17 @@ class targetFlux(objectiveFunction):
         return "Target Flux: " + self.targetReactionId
 
 class BPCY (objectiveFunction):
+    """
+        This class implements the "Biomass-Product Coupled Yield" objective function. The fitness is given by the equation:
+        (biomass_flux * product_flux)/ uptake_flux
+
+        Attributes
+        ----------
+        biomassId : biomass reaction identifier
+        productId : target product reaction identifier
+        uptakeId : reaction of uptake
+
+        """
     def __init__(self, biomassId, productId, uptakeId):
         self.biomassId = biomassId
         self.productId = productId

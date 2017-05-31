@@ -1,6 +1,24 @@
 
 def save_all_results(population, num_generations, num_evaluations, args):
+    """
+    Print the output of the evolutionary computation to a file with the follow fields:
+    - number of generation
+    - fitness of candidate
+    - the solution candidates
+    - the solution encoded candidates
 
+    Parameters
+    -----------
+    population: the population of Individuals
+    num_generations: the number of elapsed generations
+    args: a dictionary of keyword arguments
+
+    Optional keyword arguments in args:
+
+    - *results_file* -- the file path of the result file
+    - *configuration* -- the configuration of the EA algorithm
+
+    """
     resultFile = args["results_file"]
     file = open(resultFile, 'a')
 

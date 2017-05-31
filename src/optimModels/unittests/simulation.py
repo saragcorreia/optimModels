@@ -1,19 +1,23 @@
 #SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/E_coli_Millard2016v2.xml'
-SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed.xml'
+#SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed.xml'
 #SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed_underoverTest.xml'
 #SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed_koTest.xml'
 #SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/chassagnole2002.xml'
 #SBML_MODEL = '/Users/sara/Downloads/Millard2016v2_testing.xml'
+
+
+SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed.xml'
+
 RESULT_DIR = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/'
 
 #DIL = 0.1/3600
 #DIL = 0.1
 
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
-from optimModels.simulation.solvers import odeSolver
+from optimModels.simulation.solvers import odespySolver
 
 from optimModels.model.dynamicModel import load_kinetic_model
-from optimModels.simulation.overrideSimulationProblem import overrideKineticSimProblem
+from optimModels.simulation.overrideSimulationProblem import overrideKineticSimulProblem
 from collections import OrderedDict
 
 if __name__ == '__main__':
@@ -55,7 +59,7 @@ if __name__ == '__main__':
 
     #problem = kineticSimulationProblem(model, factors=OrderedDict([('Pps', 32), ('vPTS4_max', 2)]), tSteps=[0, 1e9])
 
-    res = problem.simulate(odeSolver.LSODA)
+    res = problem.simulate(odespySolver.LSODA)
     print res.get_fluxes_distribution()
     print "------------------"
 

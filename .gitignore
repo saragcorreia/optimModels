@@ -4,6 +4,6 @@
 *.pyc
 *.log
 .idea
-build
+_build
 dist
 src/optimModels.egg-info

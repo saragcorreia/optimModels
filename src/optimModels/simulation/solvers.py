@@ -1,54 +1,56 @@
 import odespy
 
-from optimModels.utils.constantes import solverParameters, Parameter
+from optimModels.utils.constantes import solverParameters, Parameter, solverMethod
 
-class odeSolver:
-    LSODA = 1
-    LSODAR = 2
-    LSODE = 3
-    HEUN = 4
-    EULER = 5
-    RK4 =  6
-    DORMAN_PRINCE = 7
-    RKFehlberg = 8
-    Dopri5 = 9
-    Dop853 = 10
-    Vode = 11
-    Radau5 = 12
-    AdamsBashforth2=13
-    AdamsBashMoulton2=14
 
-    def __init__(self, solverId):
-        self.solverId = solverId
+class odespySolver:
+    """
+    ODE solver method implemented on odespy package.
+    """
+
+    def __init__(self, solverMethod):
+        self.solverMethod = solverMethod
 
     def get_solver(self, func):
-        if self.solverId is odeSolver.LSODA:
+        """
+        Returns the solver method from odespy package.
+
+        Parameters
+        -----------
+        func : function
+            fucntion with ODE system.
+
+        Returns
+        ----------
+            out : as instance of odeSolver.
+        """
+        if self.solverMethod is solverMethod.LSODA:
             solver = odespy.Lsoda(func)
-        elif self.solverId is odeSolver.LSODAR:
+        elif self.solverMethod is solverMethod.LSODAR:
             solver = odespy.Lsodar(func)
-        elif self.solverId is odeSolver.LSODE:
+        elif self.solverMethod is solverMethod.LSODE:
             solver = odespy.Lsode(func)
-        elif self.solverId is odeSolver.HEUN:
+        elif self.solverMethod is solverMethod.HEUN:
             solver = odespy.Heun(func)
-        elif self.solverId is odeSolver.EULER:
+        elif self.solverMethod is solverMethod.EULER:
             solver = odespy.Euler(func)
-        elif self.solverId is odeSolver.RK4:
+        elif self.solverMethod is solverMethod.RK4:
             solver = odespy.RK4(func)
-        elif self.solverId is odeSolver.DORMAN_PRINCE:
+        elif self.solverMethod is solverMethod.DORMAN_PRINCE:
             solver = odespy.DormandPrince(func)
-        elif self.solverId is odeSolver.RKFehlberg:
+        elif self.solverMethod is solverMethod.RKFehlberg:
             solver = odespy.RKFehlberg(func)
-        elif self.solverId is odeSolver.Dopri5:
+        elif self.solverMethod is solverMethod.Dopri5:
             solver = odespy.Dopri5(func)
-        elif self.solverId is odeSolver.Dop853:
+        elif self.solverMethod is solverMethod.Dop853:
              solver = odespy.Dop853(func)
-        elif self.solverId is odeSolver.Vode:
+        elif self.solverMethod is solverMethod.Vode:
             solver = odespy.Vode(func)
-        elif self.solverId is odeSolver.AdamsBashforth2:
+        elif self.solverMethod is solverMethod.AdamsBashforth2:
             solver = odespy.AdamsBashforth2(func, method='bdf')
-        elif self.solverId is odeSolver.Radau5:
+        elif self.solverMethod is solverMethod.Radau5:
             solver = odespy.Radau5(func)
-        elif self.solverId is odeSolver.AdamsBashMoulton2:
+        elif self.solverMethod is solverMethod.AdamsBashMoulton2:
             solver = odespy.AdamsBashMoulton2(func)
 
         # update default parameters
@@ -64,3 +66,5 @@ class odeSolver:
 
     def __setstate__(self, state):
         self.__dict__.update(state)
+
+

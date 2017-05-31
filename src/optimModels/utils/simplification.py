@@ -1,7 +1,7 @@
 import copy
 
-from optimModels.simulation.solvers import odeSolver
-from optimModels.simulation.overrideSimulationProblem import overrideKineticSimProblem
+from optimModels.simulation.solvers import odespySolver
+from optimModels.simulation.overrideSimulationProblem import overrideKineticSimulProblem
 from pandas import  read_csv
 from collections import OrderedDict
 
@@ -14,7 +14,7 @@ class MissingParams(Exception):
     def __str__(self):
         return repr(self.value)
 
-def simplify_solutions(odeProblem, fileRes, fileFinalRes, objFunc, solverId = odeSolver.LSODA):
+def simplify_solutions(odeProblem, fileRes, fileFinalRes, objFunc, solverId = odespySolver.LSODA):
     file = open(fileRes, 'r')
     data = read_csv(fileRes, sep=';', header=2)
     maxGen = max(data['Generation'])
@@ -65,7 +65,7 @@ def simplify_solutions(odeProblem, fileRes, fileFinalRes, objFunc, solverId = od
 def _required_ko_reaction (odeProblem, ko, fitness, foReac, solverId):
     koFactors=[(elem, 0) for elem in ko]
     #print koFactors
-    override = overrideKineticSimProblem(factors=koFactors)
+    override = overrideKineticSimulProblem(factors=koFactors)
     try:
         res = odeProblem.simulate(solverId, override)
         newFitness = res.get_fluxes_distribution()[foReac]
@@ -75,7 +75,7 @@ def _required_ko_reaction (odeProblem, ko, fitness, foReac, solverId):
 
 def _required_under_over(odeProblem, tuples, fitness, foReac, solverId):
     #print tuples
-    override = overrideKineticSimProblem(factors = tuples)
+    override = overrideKineticSimulProblem(factors = tuples)
     try:
         res = odeProblem.simulate(solverId, override)
         newFitness = res.get_fluxes_distribution()[foReac]

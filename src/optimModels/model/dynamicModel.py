@@ -11,24 +11,22 @@ from  optimModels.utils.utils import MyTree
 def load_kinetic_model(filename, map={}):
     """ Load a kinetic model SBML file.
 
-        Parameters
-        ----------
-        filename : str
-            Location of the SBML file.
-        map : dictionary
-            Dictionary with the parameters that can be used in the strain optmimization process for each reaction. {id_reaction: [param1, param2]}
+    Parameters
+    ----------
+    filename : str
+        Location of the SBML file.
+    map : dictionary
+        Dictionary with the parameters that can be used in the strain optmimization process for each reaction. {id_reaction: [param1, param2]}
 
-        Returns
-        -------
-        dynamicModel
-            contains all information related with the dynamic model (reactions, kinetic eqations, metabolites, compartments, etc.)
-        out : dynamicModel
-            Object of type 'dynamicModel'.
+    Returns
+    -------
+    out : dynamicModel
+        Contains all information related with the dynamic model (reactions, kinetic eqations, metabolites, compartments, etc.)
 
-        Raises
-        ------
-        IOError
-            When is not possible load the SBML file.
+    Raises
+    ------
+    IOError
+        When is not possible load the SBML file.
 
     """
     document = readSBMLFromFile(filename)
@@ -65,53 +63,51 @@ class dynamicModel(ODEModel):
     """
 
     def __init__(self, modelId):
-        """
-        Create a instance of dynamicModel class.
-         Parameters
-         ----------
-            modelId: str
-            A valid unique identifier
+        """Create a instance of dynamicModel class.
+
+            Parameters
+            ----------
+                modelId : str
+                A valid unique identifier
+
         """
         ODEModel.__init__(self, modelId)
-        self._reactionParamsAssociation = None;  # reaction->parameters association
-        self._parsedRates = None;
-        self._parsedRules = None;
-        self._parsedXdot = None;
+        self.reactionParamsAssociation = None;  # reaction->parameters association
+        self.parsedRates = None;
+        self.parsedRules = None;
+        self.parsedXdot = None;
 
     def _set_parsed_attr(self):
-        self._parsedRates = {rId: self.parse_rate(rId, ratelaw)
+        self.parsedRates = {rId: self.parse_rate(rId, ratelaw)
                              for rId, ratelaw in self.ratelaws.items()}
 
-        aux = {pId: self.parse_rule(rule, self._parsedRates)
+        aux = {pId: self.parse_rule(rule, self.parsedRates)
                for pId, rule in self.assignment_rules.items()}
 
         trees = [_build_tree_rules(vId, aux) for vId in aux.keys()]
         order = _get_oder_rules(trees)
 
-        self._parsedRules = OrderedDict([(id, aux[id]) for id in order])
+        self.parsedRules = OrderedDict([(id, aux[id]) for id in order])
 
-        self._parsedXdot = {mId: self.print_balance(mId) for mId in self.metabolites}
+        self.parsedXdot = {mId: self.print_balance(mId) for mId in self.metabolites}
 
-        print self._parsedRates
-        print self._parsedRules
-        print self._parsedXdot
+        print self.parsedRates
+        print self.parsedRules
+        print self.parsedXdot
 
     def build_ode(self, factors):
-        """
-            Build the ODE system.
-            Parameters
-            ----------
-            factors : OrderedDict
-                OrderedDict where the key is the parameter identifyer and the value is the level of change values
-                between 0 and 1 represent a under expression, above 1 a over expression and 0 to represent the knockouts.
+        """Build the ODE system.
 
-            Returns
-            -------
-            string
-            out : string
-                A string with the ode system.
+        Parameters
+        ----------
+        factors : dict
+            The key is the parameter identifyer and the value is the level of change values between 0 and 1 represent a under expression, above 1 a over
+        expression and 0 to represent the knockouts.
 
-
+        Returns
+        ---------
+        out : str
+            Returns  a string with the ode system.
         """
 
         # factors: ["vmax1": 0, "vmax2"=2, "ENZYME_ID":0]
@@ -119,14 +115,14 @@ class dynamicModel(ODEModel):
         factorsEnz = OrderedDict([(k, v) for k, v in factors.items() if k in self.metabolites.keys()])
         factorsParam = OrderedDict([(k, v) for k, v in factors.items() if k not in factorsEnz.keys()])
 
-        ruleExprs = ["    v['{}'] = {}".format(pId, self._parsedRules[pId])
-                     for pId in self._parsedRules.keys()]
+        ruleExprs = ["    v['{}'] = {}".format(pId, self.parsedRules[pId])
+                     for pId in self.parsedRules.keys()]
 
         rateExprs = []
         for rId in self.reactions.keys():
-            newExp = self._parsedRates[rId]
-            if rId in self._reactionParamsAssociation.keys():
-                toModify = set(factorsParam.keys()).intersection(self._reactionParamsAssociation[rId])
+            newExp = self.parsedRates[rId]
+            if rId in self.reactionParamsAssociation.keys():
+                toModify = set(factorsParam.keys()).intersection(self.reactionParamsAssociation[rId])
                 if len(toModify) > 0:
                     for elem in toModify:
                         newExp = re.sub(r"([pv]\['" + elem + "'\])", str(factorsParam[elem]) + r" * \1", newExp);
@@ -134,7 +130,7 @@ class dynamicModel(ODEModel):
 
         balances = []
         for m_id in self.metabolites.keys():
-            exp = self._parsedXdot[m_id]
+            exp = self.parsedXdot[m_id]
             if m_id in factorsEnz.keys():
                 if factors[m_id] == 0:
                     newExp = "0"
@@ -164,26 +160,24 @@ class dynamicModel(ODEModel):
         return func_str
 
     def get_ode(self, r_dict=None, params=None, factors=None):
-        """
-            Build the ODE system.
-            Parameters
-            ----------
-            rDict: OrderedDict
-                This variable is used to store the reaction rates.
+        """ Build the ODE system.
 
-            params: OrderedDict
-                Parameters and the new values used to replace the original parameters present in the SBML model
+        Parameters
+        ----------
+        rDict : dict
+            This variable is used to store the reaction rates.
 
-            factors : OrderedDict
-                OrderedDict where the key is the parameter identifyer and the value is the level of change values
-                between 0 and 1 represent a under expression, above 1 a over expression and 0 to represent the knockouts.
+        params : dict
+            Parameters and the new values used to replace the original parameters present in the SBML model
 
-            Returns
-            -------
-            function
-            out : function
-                A function used to solve the ODE system.
+        factors : dict
+            The key is the parameter identifyer and the value is the level of change values
+            between 0 and 1 represent a under expression, above 1 a over expression and 0 to represent the knockouts.
 
+        Returns
+        ----------
+        out : function
+            A function used to solve the ODE system.
 
         """
         p = self.merge_constants()
@@ -204,30 +198,59 @@ class dynamicModel(ODEModel):
         return f
 
     def set_reactions_parameters_association(self, map):
-        self._reactionParamsAssociation = map
+        """ Set a new map with the parameters that can be changed for each reaction.
+
+            Parameters
+            ----------
+            map : dict
+                The keys is the reaction identifier and the value a list of parameters which can be used to simulate modifications( KO, under/ over expression)
+        """
+        self.reactionParamsAssociation = map
 
     def get_reactions_parameters_association(self):
-        self._reactionParamsAssociation = map
+        """ Get the map with the parameters that can be changed for each reaction.
+
+            Returns
+            ----------
+             : list
+                List of parameters identifiers.
+        """
+        return self.reactionParamsAssociation
 
     def get_parameters_by_reaction(self, reactionId):
+        """ Get the parameters list for a specific reaction identifier.
+
+        Returns
+        ----------
+         : list
+            List of parameters identifiers.
+        """
         res = []
-        if reactionId in self._reactionParamsAssociation.keys():
-            res = self._reactionParamsAssociation[reactionId]
+        if reactionId in self.reactionParamsAssociation.keys():
+            res = self.reactionParamsAssociation[reactionId]
         return res
 
     def get_reactions_by_parameter(self, paramId):
+        """
+        Get the list of reactions associated with the parameters identifier.
+
+        Returns
+        ----------
+         : list
+            List of reactions identifiers.
+        """
         res = []
-        for r in self._reactionParamsAssociation.keys():
-            if paramId in self._reactionParamsAssociation[r]:
+        for r in self.reactionParamsAssociation.keys():
+            if paramId in self.reactionParamsAssociation[r]:
                 res = res + [r]
         return res
 
     def __getstate__(self):
-        state = self.__dict__.copy()
+        state = self._dict__.copy()
         return state
 
     def __setstate__(self, state):
-        self.__dict__.update(state)
+        self._dict__.update(state)
 
 
 # auxiliar functions to set the assignment rules by the correct order in the ODE system

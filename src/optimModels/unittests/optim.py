@@ -1,9 +1,9 @@
-from optimModels.optimization.decoders import decoderReactionsKnockouts, decoderUnderOverExpression
+from optimModels.optimization.decoders import decoderKnockouts, decoderUnderOverExpression
 from optimModels.optimization.evolutionaryComputation import optimProblemConfiguration, optimization_intSetRep, \
     optimization_tupleSetRep
 from optimModels.optimization.objectiveFunctions import targetFlux
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
-from optimModels.simulation.solvers import odeSolver
+from optimModels.simulation.solvers import odespySolver
 from optimModels.model.dynamicModel import load_kinetic_model
 
 basePath = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations"
@@ -14,7 +14,7 @@ def ko_chassagnole(isMultiProc=False):
     model = load_kinetic_model(sbmlFile)
 
     problem = kineticSimulationProblem(model, parameters={'Dil': 0.1 / 3600}, tSteps=[0, 1e9])
-    res = problem.simulate(odeSolver.LSODA)
+    res = problem.simulate(odespySolver.LSODA)
     print "Serine in WT ....."
     print res.get_fluxes_distribution()['vsersynth']
 
@@ -23,9 +23,9 @@ def ko_chassagnole(isMultiProc=False):
     print reactionsToManipulate
 
 
-    prob = optimProblemConfiguration(problem, decoder=decoderReactionsKnockouts(reactionsToManipulate),
+    prob = optimProblemConfiguration(problem, decoder=decoderKnockouts(reactionsToManipulate),
                                      objectiveFunc=targetFlux("vsersynth"),
-                                     solverId=odeSolver.LSODA)
+                                     solverId=odespySolver.LSODA)
 
 
     prob.set_optim_parameters(popSize=100, maxGenerations=10, popSelectedSize=50, maxCandidateSize=5,
@@ -46,14 +46,14 @@ def underover_chassagnole(isMultiProc):
     model = load_kinetic_model(sbmlFile)
 
     problem = kineticSimulationProblem(model, parameters={'Dil': 0.1 / 3600}, tSteps=[0, 1e9])
-    res = problem.simulate(odeSolver.LSODA)
+    res = problem.simulate(odespySolver.LSODA)
     print "Serine in WT ...ko_chassagnole.."
     print res.get_fluxes_distribution()['vsersynth']
 
     reactionsToManipulate =['vPTS', 'vPGI', 'vPGM', 'vG6PDH', 'vPFK', 'vTA', 'vTKA', 'vTKB', 'vMURSyNTH', 'vALDO', 'vGAPDH', 'vTIS', 'vTRPSYNTH', 'vG3PDH', 'vPGK', 'vsersynth', 'vrpGluMu', 'vENO', 'vPK', 'vpepCxylase', 'vSynth1', 'vSynth2', 'vDAHPS', 'vPDH', 'vMethSynth', 'vPGDH', 'vR5PI', 'vRu5P', 'vPPK', 'vG1PAT']
     prob = optimProblemConfiguration(problem, decoder=decoderUnderOverExpression(reactionsToManipulate,levels),
                                      objectiveFunc=targetFlux("vsersynth"),
-                                     solverId=odeSolver.LSODA)
+                                     solverId=odespySolver.LSODA)
 
     prob.set_optim_parameters(popSize=100, maxGenerations=10, popSelectedSize=50, maxCandidateSize=5,
                               crossoverRate=1.0, mutationRate=0.1, newCandidatesRate=0.1)
@@ -85,14 +85,14 @@ def ko_jahan(isMultiProc=False, size = 1):
     model = load_kinetic_model(sbmlFile, mapParamReacs)
 
     problem = kineticSimulationProblem(model, parameters={'Dil': 0.1}, tSteps=[0, 1e9], timeout = 100)
-    res = problem.simulate(odeSolver.LSODA)
+    res = problem.simulate(odespySolver.LSODA)
     print "vD_SUC in WT ....."
     print res.get_fluxes_distribution()['vD_SUC']
 
     toManipulate = sum(mapParamReacs.values(),[])
 
-    prob = optimProblemConfiguration(problem, decoder=decoderReactionsKnockouts(toManipulate), objectiveFunc=targetFlux("vD_SUC"),
-                                     solverId=odeSolver.LSODA)
+    prob = optimProblemConfiguration(problem, decoder=decoderKnockouts(toManipulate), objectiveFunc=targetFlux("vD_SUC"),
+                                     solverId=odespySolver.LSODA)
 
     prob.set_optim_parameters(popSize=100, maxGenerations=5, popSelectedSize=50, maxCandidateSize=int(size),
                               crossoverRate=1.0, mutationRate=0.1, newCandidatesRate=0.1)
@@ -128,7 +128,7 @@ def underover_jahan(isMultiProc=False, size=1):
     model.set_reactions_parameters_association(mapParamReacs)
 
     problem = kineticSimulationProblem(model, parameters={'Dil': 0.1}, tSteps=[0, 1e9], timeout = 300)
-    res = problem.simulate(odeSolver.LSODA)
+    res = problem.simulate(solverMethod=odespySolver.LSODA)
     print "vD_SUC in WT ...."
     print res.get_fluxes_distribution()['vD_SUC']
 
@@ -137,7 +137,7 @@ def underover_jahan(isMultiProc=False, size=1):
 
     prob = optimProblemConfiguration(problem, decoder=decoderUnderOverExpression(toManipulate,levels),
                                      objectiveFunc=targetFlux("vD_SUC"),
-                                     solverId=odeSolver.LSODA)
+                                     solverMethod=odespySolver.LSODA)
 
     prob.set_optim_parameters(popSize=100, maxGenerations=500, popSelectedSize=50, maxCandidateSize=int(size),
                               crossoverRate=1.0, mutationRate=0.1, newCandidatesRate=0.1)

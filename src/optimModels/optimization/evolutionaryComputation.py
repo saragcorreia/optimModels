@@ -1,15 +1,3 @@
-"""
-    =================================================================================
-    :mod:`` -- optimization of Metabolic Models using Evolutinary Computation
-    =================================================================================
-
-    This module provides the framework for metabolic models optimization.
-
-    .. Copyright 2016 Sara Correia
-    .. module:: optimization
-    .. moduleauthor:: Sara Correia <sarag.correia@gmail.com>
-"""
-
 from random import Random
 from multiprocessing import cpu_count
 from inspyred import ec
@@ -18,13 +6,19 @@ from optimModels.optimization import observers
 
 
 class optimProblemConfiguration():
-    def __init__(self, simulationProblem=None, decoder=None, objectiveFunc=None, solverId=None):
-        if objectiveFunc is None or solverId is None:
+    """
+        Attributes
+        ------------
+        simulProblem :
+        decoder :
+        objectiveFunc :
+    """
+    def __init__(self, simulationProblem=None, decoder=None, objectiveFunc=None):
+        if objectiveFunc is None:
             raise Exception("You must indicate the objective function and the solver id.")
         self.simulProblem = simulationProblem
         self.decoder = decoder
         self.objectiveFunc = objectiveFunc
-        self.solverId = solverId
 
     def get_simulation_problem(self):
         return self.simulProblem
@@ -167,6 +161,7 @@ def optimization_intSetRep(confOptimProblem, bounds, resultFile, isMultiProc=Fal
     my_ec.replacer = replacers.new_candidates_no_duplicates_replacement
     my_ec.terminator = ec.terminators.generation_termination
     my_ec.observer = observers.save_all_results
+    ec.observers.archive_observer()
 
     # logger = logging.getLogger('inspyred.ec')
     # logger.setLevel(logging.DEBUG)

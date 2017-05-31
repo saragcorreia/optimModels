@@ -10,12 +10,13 @@ def new_candidates_replacement(random, population, parents, offspring, args):
     that they replace. Moreover a new set of candidates random generated
     will be added to the population
 
-    .. Arguments:
-       random -- the random number generator object
-       population -- the population of individuals
-       parents -- the list of parent individuals
-       offspring -- the list of offspring individuals
-       args -- a dictionary of keyword arguments
+    Parameters
+    -----------
+    random : the random number generator object
+    population : the population of individuals
+    parents : the list of parent individuals
+    offspring : the list of offspring individuals
+    args : a dictionary of keyword arguments
 
     """
     population.sort()
@@ -44,13 +45,13 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
     will be added to the population. The duplicated candidates are
     replaced by new ones randomly generated.
 
-    .. Arguments:
-       random -- the random number generator object
-       population -- the population of individuals
-       parents -- the list of parent individuals
-       offspring -- the list of offspring individuals
-       args -- a dictionary of keyword arguments
-
+    Parameters
+    -----------
+    random : the random number generator object
+    population : the population of individuals
+    parents : the list of parent individuals
+    offspring : the list of offspring individuals
+    args : a dictionary of keyword arguments
     """
 
     population.sort()

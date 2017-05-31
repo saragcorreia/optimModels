@@ -54,15 +54,17 @@ def parallel_evaluation_mp(candidates, args):
     candidate to its own job, all of which are then distributed to the
     available processing units.
 
-    .. note::
+    Notes
+    -----
 
        All arguments to the evaluation function must be pickleable.
        Those that are not will not be sent through the ``args`` variable
        and will be unavailable to your function.
 
-    .. Arguments:
-       candidates -- the candidate solutions
-       args -- a dictionary of keyword arguments
+    Parameters
+    -----
+    candidates : list the candidate solutions
+    args : a dictionary of keyword arguments
 
     Required keyword arguments in args:
     - *mp_evaluator* -- actual evaluation function to be used (This function

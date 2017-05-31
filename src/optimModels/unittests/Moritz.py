@@ -5,20 +5,19 @@ sys.path.insert(0, join(dirname(__file__), "src"))
 
 from optimModels.model.dynamicModel import load_kinetic_model
 from optimModels.optimization.decoders import (
-    decoderReactionsKnockouts, decoderUnderOverExpression)
+    decoderKnockouts, decoderUnderOverExpression)
 from optimModels.optimization.evolutionaryComputation import (
     optimization_intSetRep, optimization_tupleSetRep, optimProblemConfiguration)
 from optimModels.optimization.objectiveFunctions import targetFlux
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
-from optimModels.simulation.solvers import odeSolver
-
+from optimModels.utils.constantes import solverMethod
 
 def ko_chassagnole(sbml_file, filename, isMultiProc=False):
     model = load_kinetic_model(sbml_file)
 
     problem = kineticSimulationProblem(model, parameters={'Dil': 0.1 / 3600},
-            tSteps=[0, 1e9])
-    res = problem.simulate(odeSolver.LSODA)
+            tSteps=[0, 1e9], solverMethod= solverMethod.LSODA)
+    res = problem.simulate()
     print "Serine in WT ....."
     print res.get_fluxes_distribution()['vsersynth']
 
@@ -32,8 +31,8 @@ def ko_chassagnole(sbml_file, filename, isMultiProc=False):
 
 
     prob = optimProblemConfiguration(problem,
-            decoder=decoderReactionsKnockouts(reactionsToManipulate),
-            objectiveFunc=targetFlux("vsersynth"), solverId=odeSolver.LSODA)
+                                     decoder=decoderKnockouts(reactionsToManipulate),
+                                     objectiveFunc=targetFlux("vsersynth"))
 
 
     prob.set_optim_parameters(popSize=50, maxGenerations=5,
