@@ -19,13 +19,16 @@ class decoder:
         pass
 
 
-
-
 class decoderKnockouts(decoder):
     """ Class to decode to convert a candidate solution in a list of identifiers used to simulate the KO reactions.
+
+    Attributes
+    ---------
+    ids : list of str
+
     """
     def __init__(self, ids):
-        self.name_class = "decoderKnockouts"
+
         self.ids = ids
 
     def get_override_simul_problem(self, candidate, simulProblem):
@@ -33,15 +36,15 @@ class decoderKnockouts(decoder):
 
         Parameters
         -----------
-            candidate : list of int
-                index of parameters .
-            simulProblem : simulationProblem object
-                contains all information required to perform a simulation of the model.
+        candidate : list of int
+            index of parameters .
+        simulProblem : simulationProblem object
+            contains all information required to perform a simulation of the model.
 
         Returns
         ---------
-            out : overrideKineticSimulProblem
-                object with the modifications to be applied over the simulation Problem.
+        out : overrideKineticSimulProblem
+            object with the modifications to be applied over the simulation Problem.
 
         """
         ko = self.candidate_decoded(candidate)
@@ -76,28 +79,34 @@ class decoderKnockouts(decoder):
         self.__dict__.update(state)
 
 class decoderUnderOverExpression(decoder):
-    """ Class to decode to convert a candidate solution in a list of identifiers used to simulate the under/ over enzyme expression.
+    """ Class to convert a candidate solution repre identifiers used to simulate the under/ over enzyme expression.
+
+    Attributes
+    ---------
+    ids : list of str
+        parameters identifiers to be used in the optimization
+    levels : list of float
+        levels of expression
 
     """
     def __init__ (self, ids,  levels):
         self.ids = ids
         self.levels = levels
-        self.name_class = "decoderUnderOverExpression"
 
     def get_override_simul_problem(self, candidate, simulProblem):
         """ Build the override simulation problem which will contains the modifications that must be applied to the model in order to simulate the under/over enzymes expression.
 
         Parameters
         -----------
-            candidate : map of type *{parameterIndex : levelIndex}*
-                candidate represented using indexes.
-            simulProblem : simulationProblem object
-                contains all information required to perform a simulation of the model.
+        candidate : map of type *{parameterIndex : levelIndex}*
+            candidate represented using indexes.
+        simulProblem : simulationProblem object
+            contains all information required to perform a simulation of the model.
 
         Returns
         ---------
-            out : overrideKineticSimulProblem
-                object with the modifications to be applied over the simulation Problem.
+        out : overrideKineticSimulProblem
+            object with the modifications to be applied over the simulation Problem.
         """
         if isinstance(simulProblem, kineticSimulationProblem):
             solDecoded = self.candidate_decoded(candidate)
@@ -118,7 +127,7 @@ class decoderUnderOverExpression(decoder):
             out : map
                 the key is the parameter id and the value is the level of expression with values between 0 and 1 to represent under expression or higher that 1 to represent the over expression.
         """
-        result = OrderedDict([(self.ids[k], self.levels[v]) for (k, v) in list(candidate)])
+        result = {self.ids[k]: self.levels[v] for (k, v) in list(candidate)}
         return result
 
     def __getstate__(self):

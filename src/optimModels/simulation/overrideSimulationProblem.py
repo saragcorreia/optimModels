@@ -6,8 +6,8 @@ class overrideKineticSimulProblem():
 
         Attributes
         ----------
-        factors  : dict
-            Factors to be multiplied with vmax present in the model.
+        factors  : OrderedDict {id_param : factor_value}
+            Factors to be multiplied with vmax parameter present in the model.
             (KO simulation: factor = 0, under expression: factor > 0 and <1, over expression factor >1)
 
     """

@@ -1,11 +1,7 @@
-
-
-# generate the indidual of a population where the max size, max index reaction and number of expression
-# levels are passed as argument
-
 def  generator_intSetRep(random, args):
     """
-    Function to generate a new individual using the integer set representation. The function returns a set of integer values of length given by *candidate_max_size*.
+    Function to generate a new individual using the integer set representation.
+    The function returns a set of integer values with a maximum of *candidate_max_size* elements.
 
     Parameters
     ------------
@@ -26,6 +22,23 @@ def  generator_intSetRep(random, args):
     return representation
 
 def generator_intTupleRep(random, args):
+    """
+    Function to generate a new individual using the integer tuple representation.
+    The function returns a set of tuples values with a maximum of *candidate_max_size* elements.
+
+    Parameters
+    ------------
+    random : the random number generator object
+    args : a dictionary of keyword arguments
+
+    Returns
+    --------
+    out: a new individual
+
+    Required  arguments in args:
+    - *candidate_max_size* : number of integer values which compose a individual.
+    - *_ec* : configuration of evolutionary computation. The argument bounder is required to get the maximum value allowed for the individual values.
+    """
     size = random.randint(1, args["candidate_max_size"])
     # first element of array has the lowers bounds and second element the upper bounds.
     bounder = args["_ec"].bounder

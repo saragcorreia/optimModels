@@ -1,5 +1,5 @@
 from optimModels.utils.constantes import solverMethod
-from optimModels.optimization.objectiveFunctions import BPCY, targetFlux
+
 
 
 class kineticConfigurations:
@@ -28,7 +28,3 @@ class EAConfigurations:
                 EAConfigurations.MUTATION_RATE, EAConfigurations.NEW_CANDIDATES_RATE, EAConfigurations.NUM_ELITES]
 
 
-class objFunctions:
-    ids = [targetFlux.get_name(), BPCY.get_name()]
-    parameters = {0: targetFlux.get_parameters_ids(),
-                  1: BPCY.get_parameters_ids()}

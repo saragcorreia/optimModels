@@ -11,9 +11,10 @@ def save_all_results(population, num_generations, num_evaluations, args):
 
     Parameters
     -----------
-    population: the population of Individuals
-    num_generations: the number of elapsed generations
-    args: a dictionary of keyword arguments
+    population : the population of Individuals
+    num_generations : the number of elapsed generations
+    num_evaluations : the number of evaluations already performed
+    args : a dictionary of keyword arguments
 
     Optional keyword arguments in args:
 
@@ -32,7 +33,7 @@ def save_all_results(population, num_generations, num_evaluations, args):
     if num_generations == 0:
         file.write("population_size;candidate_max_size;crossover_rate; mutation_rate;new_candidates_rate; num_elites\n")
         file.write(";".join(map(str,EAConfigurations.get_default_config())))
-        file.write("Generation;Fitness;Candidate;Reactions \n")
+        file.write("Generation;Fitness;Candidate;Reactions\n")
 
     # save all candidates of the population
     for ind in population:

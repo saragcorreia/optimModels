@@ -5,6 +5,7 @@ from framed.io.sbml import _load_compartments, _load_metabolites, _load_reaction
 from framed.model.odemodel import ODEModel
 import re
 from math import log
+from optimModels.utils.constantes import solverParameters, Parameter
 from  optimModels.utils.utils import MyTree
 
 
@@ -86,11 +87,8 @@ class dynamicModel(ODEModel):
 
 
     def _set_parsed_attr(self):
-        print  self.ratelaws
-
         self.parsedRates = {rId: self.parse_rate(rId, ratelaw)
                              for rId, ratelaw in self.ratelaws.items()}
-
         aux = {pId: self.parse_rule(rule, self.parsedRates)
                for pId, rule in self.assignment_rules.items()}
 
@@ -98,12 +96,8 @@ class dynamicModel(ODEModel):
         order = _get_oder_rules(trees)
 
         self.parsedRules = OrderedDict([(id, aux[id]) for id in order])
-
         self.parsedXdot = {mId: self.print_balance(mId) for mId in self.metabolites}
 
-        print self.parsedRates
-        print self.parsedRules
-        print self.parsedXdot
 
     def build_ode(self, factors):
         """Build the ODE system.
@@ -152,7 +146,7 @@ class dynamicModel(ODEModel):
         func_str = 'def ode_func(t, x, r, p, v):\n\n' + \
                    '    newX = []\n' + \
                    '    for elem in x: \n' + \
-                   '        if elem > - 0.000001 and elem < 0: \n' + \
+                   '        if elem > - '+ str(solverParameters[Parameter.ABSOLUTE_TOL])+ ' and elem < 0: \n' + \
                    '            newX.append(0) \n' + \
                    '        elif  elem < 0: \n' + \
                    '            raise Exception\n' + \

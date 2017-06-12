@@ -30,7 +30,8 @@ class targetFlux(objectiveFunction):
 
     Attributes
     ----------
-    targetReactionId : reaction identifier
+    targetReactionId : str
+        Reaction identifier of the target compound production.
 
     """
     def __init__(self, targetReactionId):
@@ -63,9 +64,12 @@ class BPCY (objectiveFunction):
 
         Attributes
         ----------
-        biomassId : biomass reaction identifier
-        productId : target product reaction identifier
-        uptakeId : reaction of uptake
+        biomassId : str
+            biomass reaction identifier
+        productId : str
+            target product reaction identifier
+        uptakeId : str
+            reaction of uptake
 
         """
     def __init__(self, biomassId, productId, uptakeId):
@@ -95,6 +99,15 @@ class BPCY (objectiveFunction):
 
 
 def build_objective_function(id, args):
+    """
+    Parameters
+    -----------
+    id : str
+        name of the objective function. The implemented objective functions should be registed in constants.objFunctions class
+    args : list of str
+        the number of arguments depends of the objective function chosen by user.
+
+    """
 
     if id == BPCY.get_name():
         objFunc = BPCY(args[0],args[1],args[2])

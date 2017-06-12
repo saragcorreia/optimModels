@@ -14,14 +14,17 @@ from optimModels.utils.configurations import EAConfigurations
 class optimProblemConfiguration():
     """
     This class contains all information to perform a strain optimization
+
     Attributes
     ------------
     simulProblem : kineticSimulationProblem
         Configuration of a kinetic simulation problem (model and modifications over the parameters)
     decoder : an instance of decoderKnockouts or decoderUnderOverExpression class
-        Responsible to convet a set of integers (int set representation) or a set of tuples (tuples of 2 integers) to knockouts or under/over levels of enzymes expression.
+        Responsible to convert a set of integers (int set representation) or a set of tuples (tuples of 2 integers) to knockouts or under/over levels of enzymes expression.
     objectiveFunc : an instance of targetFlux or BCPY class
-        Function to calculate the fitness value of each candidate during the optimization process
+        Function to calculate the fitness value of each candidate during the optimization process.
+    criticalGenes: set of str
+        Set of parameters that can not be manipulated during the optimization process.
     """
     def __init__(self, simulationProblem=None, decoder=None, objectiveFunc=None, criticalGenes = None):
         if simulationProblem is None or decoder is None or objectiveFunc is None:
@@ -51,15 +54,18 @@ class optimProblemConfiguration():
         self.__dict__.update(state)
 
 
-def optimization_intSetRep(confOptimProblem, resultFile, isMultiProc=False):
+def optimization_intSetRep(confOptimProblem, resultFile= None, isMultiProc=False):
     """
     Function to perform the optimization using the integer set representation to the candidates solutions.
 
     Parameters
     -----------
-    confOptimProblem : an instance of optimProblemConfiguration
-    bounds : minimum and maximum integer value allowed for
-
+    confOptimProblem : an instance of optimProblemConfiguration.
+        This object contains all information to perform the strain optimization task.
+    resultFile : str
+        The path file to store all the results obtained during the optimization (default results are not saved into a file)
+    isMultiProc : boolean value.
+        True, if the user wants parallelize the population evaluation. (default False)
 
     """
     rand = Random()
@@ -72,7 +78,9 @@ def optimization_intSetRep(confOptimProblem, resultFile, isMultiProc=False):
 
     my_ec.replacer = replacers.new_candidates_no_duplicates_replacement
     my_ec.terminator = ec.terminators.generation_termination
-    my_ec.observer = observers.save_all_results
+
+    if resultFile is not None:
+        my_ec.observer = observers.save_all_results
 
     bounds = [0, len(confOptimProblem.get_decoder().ids) - 1]
     if isMultiProc:
@@ -119,7 +127,20 @@ def optimization_intSetRep(confOptimProblem, resultFile, isMultiProc=False):
     return best_solutions
 
 
-def optimization_tupleSetRep(confOptimProblem, resultFile, isMultiProc=False):
+def optimization_tupleSetRep(confOptimProblem, resultFile= None, isMultiProc=False):
+    """
+    Function to perform the optimization using the tuple set representation to the candidates solutions.
+
+    Parameters
+    -----------
+    confOptimProblem : an instance of optimProblemConfiguration.
+        This object contains all information to perform the strain optimization task.
+    resultFile : str
+        The path file to store all the results obtained during the optimization (default results are not saved into a file)
+    isMultiProc : boolean value.
+        True, if the user wants parallelize the population evaluation. (default False)
+
+    """
     rand = Random()
     my_ec = ec.EvolutionaryComputation(rand)
     my_ec.selector = ec.selectors.tournament_selection
@@ -129,7 +150,9 @@ def optimization_tupleSetRep(confOptimProblem, resultFile, isMultiProc=False):
                       variators.single_mutation_intTupleRep]
     my_ec.replacer = replacers.new_candidates_no_duplicates_replacement
     my_ec.terminator = ec.terminators.generation_termination
-    my_ec.observer = observers.save_all_results
+    if resultFile is not None:
+        my_ec.observer = observers.save_all_results
+
 
     bounds = [[0, 0], [len(confOptimProblem.get_decoder().ids) - 1, len(confOptimProblem.get_decoder().levels) - 1]]
 

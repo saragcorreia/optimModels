@@ -74,12 +74,12 @@ class kineticSimulationProblem(simulationProblem):
         Parameters
         -----------
         overrideProblem : overrideKineticSimProblem
-            Modification over the kinetic model
+            Modification over the kinetic model.
 
         Returns
         --------
         out : kineticSimulationResult
-            Returns an object of type kineticSimulationResult with the steady-state flux distribution.
+            Returns an object of type kineticSimulationResult with the steady-state flux distribution and concentrations.
         """
 
         if overrideSimulProblem is None:
@@ -129,14 +129,11 @@ def _my_kinetic_solve(model, final_rates, final_factors, initialConc, timePoints
 
     solver = odespySolver(kineticConfigurations.SOLVER_METHOD).get_solver(func)
     solver.set_initial_condition(initialConc)
-    # print "INIT solve"
+
     try:
         X, t = solver.solve(timePoints)
     except Exception:
         print "Error on solver!!!"
         return {},[], solverStatus.ERROR
 
-    print "concentrations"
-    # print model.metabolites.keys()
-    print X
     return final_rates, X[1],solverStatus.OPTIMAL

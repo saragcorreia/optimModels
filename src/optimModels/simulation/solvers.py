@@ -18,7 +18,7 @@ class odespySolver:
         Parameters
         -----------
         func : function
-            fucntion with ODE system.
+            function with ODE system.
 
         Returns
         ----------

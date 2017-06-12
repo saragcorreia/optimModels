@@ -29,9 +29,6 @@ def new_candidates_replacement(random, population, parents, offspring, args):
     newCandidates = _generateNewCandidates(numNewCandidates, random, args)
     population[:len(newCandidates)] = newCandidates
 
-    #print population
-    #print len(population)
-    #print " END population"
     return population
 
 
@@ -78,9 +75,6 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
     newCandidates = _generateNewCandidates(numNewCandidates, random, args)
     newPopulation = newPopulation + newCandidates
 
-    #print population
-    #print len(population)
-    #print " END population"
     return newPopulation
 
 def _generateNewCandidates(numCandidates, random, args):

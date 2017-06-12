@@ -1,3 +1,5 @@
+from optimModels.optimization.objectiveFunctions import BPCY, targetFlux
+
 class solverMethod:
     LSODA = 1
     LSODAR = 2
@@ -21,6 +23,12 @@ class solverMethod:
 
     def get_solver_method_name(self, id):
         return solverMethod.methods.get(id)
+
+
+class objFunctions:
+    ids = [targetFlux.get_name(), BPCY.get_name()]
+    parameters = {0: targetFlux.get_parameters_ids(),
+                  1: BPCY.get_parameters_ids()}
 
 class solverStatus:
     """ Enumeration of possible solution status. """

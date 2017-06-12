@@ -6,7 +6,7 @@ from inspyred.ec.variators.mutators import mutator
 
 @mutator
 def grow_mutation_intSetRep(random, candidate, args):
-    """Return the mutant produced by a grow mutation on the candidate (when the representation is a set of integers).
+    """Returns the mutant produced by a grow mutation on the candidate (when the representation is a set of integers).
     If a candidate solution has the maximum size candidate allowed, this function leaves it unchanged.
 
     Parameters
@@ -42,8 +42,8 @@ def grow_mutation_intSetRep(random, candidate, args):
 
 @mutator
 def shrink_mutation(random, candidate, args):
-    """Return the mutant produced by shrink mutation on the candidate.
-    If a candidate solution has length 1, this function leaves it unchanged.
+    """Returns the mutant produced by shrink mutation on the candidate.
+    If a candidate solution has length of 1, this function leaves it unchanged.
 
     Parameters
     ----------
@@ -75,7 +75,7 @@ def shrink_mutation(random, candidate, args):
 
 @mutator
 def single_mutation_intSetRep(random, candidate, args):
-    """Return the mutant produced by a single mutation on the candidate (when the representation is a set of integers).
+    """Returns the mutant produced by a single mutation on the candidate (when the representation is a set of integers).
     The candidate size is maintained.
 
     Parameters
@@ -94,7 +94,6 @@ def single_mutation_intSetRep(random, candidate, args):
     """
 
     bounder = args["_ec"].bounder
-    # bounder = inspyred.ec.Bounder(0,10)
     mutRate = args.setdefault("mutation_rate", 0.1)
     if random.random() > mutRate:
         return candidate
@@ -112,7 +111,7 @@ def single_mutation_intSetRep(random, candidate, args):
 
 @mutator
 def grow_mutation_intTupleRep(random, candidate, args):
-    """Return the mutant produced by a grow mutation on the candidate (when the representation is a set of tuples).
+    """Returns the mutant produced by a grow mutation on the candidate (when the representation is a set of tuples).
     If a candidate solution has the maximum size candidate allowed, this function leaves it unchanged.
 
     Parameters
@@ -131,10 +130,8 @@ def grow_mutation_intTupleRep(random, candidate, args):
     """
     bounder = args["_ec"].bounder
     mutRate = args.setdefault("mutation_rate", 0.1)
-    # bounder = inspyred.ec.Bounder([0, 0], [47, 10])
     if random.random() > mutRate:
         return candidate
-
 
     maxSize = args["candidate_max_size"]
     mutant = copy.copy(candidate)
@@ -148,7 +145,7 @@ def grow_mutation_intTupleRep(random, candidate, args):
 
 @mutator
 def single_mutation_intTupleRep(random, candidate, args):
-    """Return the mutant produced by a single mutation on the candidate (when the representation is a set of tuples).
+    """Returns the mutant produced by a single mutation on the candidate (when the representation is a set of tuples).
     The candidate size is maintained.
 
     Parameters
@@ -166,14 +163,11 @@ def single_mutation_intTupleRep(random, candidate, args):
     - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
     """
     bounder = args["_ec"].bounder
-    # bounder = inspyred.ec.Bounder([0,0],[47,10])
     mutRate = args.setdefault("mutation_rate", 0.1)
     if random.random() > mutRate:
         return candidate
     mutant = copy.copy(candidate)
-
     index = random.randint(0, len(mutant) - 1)
-
     mutantL = list(mutant)
     mutantL[index] = _generate_new_tupple(random, mutant, bounder)
     mutant = set(mutantL)
@@ -243,21 +237,3 @@ def uniform_crossover(random, mom, dad, args):
     # print str(mom) + " ; "+str(dad)
     # print str(child1) + " ; " + str(child2)
     return children
-
-# if __name__ == '__main__':
-#     from Random import random
-#     candidate = [{1,2,3,6},{2,4,5},{1},{7,8}]
-#     candidate= [{(1,2),(22,3),(3,2)},{(2,4),(5,1)},{(1,1)},{(7,1),(8,1)}]
-#     print candidate
-#
-#
-#     args = {"candidate_max_size":5, "mutation_rate":1.0}
-#     rand = Random()
-#     print "----- grow mutation ------"
-#     grow_mutation_intTupleRep(rand, candidate, args)
-#     print "----- shrink mutation ------"
-#     shrink_mutation(rand, candidate, args)
-#     print "----- single muation ------"
-#     single_mutation_intTupleRep(rand, candidate, args)
-#     print "----- uniform crossover ------"
-#     uniform_crossover(rand, candidate, args)
