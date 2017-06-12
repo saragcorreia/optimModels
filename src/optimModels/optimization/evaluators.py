@@ -1,7 +1,10 @@
 
 import math
-from optimModels.utils.constantes import solverStatus,Parameter
+import logging
+import time
+from optimModels.utils.constantes import solverStatus
 from optimModels.utils.utils import MyPool
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -11,34 +14,36 @@ def evaluator(candidates, args):
     """
     This function allows evaluation of candidate solutions.
 
-    .. Arguments:
-       candidates -- the candidate solutions
-       args -- a dictionary of keyword arguments
+    Parameters
+    -----------
+    candidates : list
+        A list of candidate solutions
+    args : dict
+       A dictionary of keyword arguments
 
+    Returns
+    ----------
+    out: list of floats
+        a list of fitness values
     """
 
     config = args["configuration"]
     decoder = config.get_decoder()
     simulProblem = config.get_simulation_problem()
     fitness = []
-    solutions = []
     for candidate in candidates:
         overrideProblem = decoder.get_override_simul_problem(candidate, simulProblem)
         fitInd = -1.0
         try:
-            res = simulProblem.simulate(config.get_solver_id(), overrideProblem)
+            res = simulProblem.simulate(overrideProblem)
             if res.get_solver_status() == solverStatus.OPTIMAL:
                 fitInd = config.get_objective_function().get_fitness(res)
                 if math.isnan(fitInd):
                     fitInd = -1.0
         except ValueError, e:
             print "Oops! Solver problems.  " + e.message
-        solutions.append(decoder.candidate_decoded(candidate))
+            logging.getLogger('optimModels').warning( "Oops! Solver problems.  " + e.message)
         fitness.append(fitInd)
-
-    #print "---------EVALUATION-------------"
-    #print "thread ID : " + str(os.getpid()) + "\n"+ str(candidates)+ "\n"+ str(fitness)
-    #print "---------END EVALUATION-------------"
     return fitness
 
 
@@ -76,19 +81,19 @@ def parallel_evaluation_mp(candidates, args):
       cpu count)
 
     """
-    import time
-    import multiprocessing
-    logger = args['_ec'].logger
+
+    logger = logging.getLogger('optimModels')
 
     try:
         evaluator = args['mp_evaluator']
     except KeyError:
-        logger.error('parallel_evaluation_mp requires \'mp_evaluator\' be defined in the keyword arguments list')
+        logger.error('parallel_evaluation_mp requires \'mp_evaluator\' be defined in the keyword arguments list.')
         raise
     try:
         nprocs = args['mp_nprocs']
     except KeyError:
-        nprocs = multiprocessing.cpu_count()
+        logger.error('parallel_evaluation_mp requires \'mp_nprocs\' be defined in the keyword arguments list.')
+        raise
 
     pickled_args = {}
     for key in args:
@@ -101,7 +106,6 @@ def parallel_evaluation_mp(candidates, args):
 
     start = time.time()
     try:
-        print "Num procs" + str(nprocs)
         pool = MyPool(processes=nprocs)
         results = [pool.apply_async(evaluator, ([c], pickled_args)) for c in candidates]
         pool.close()

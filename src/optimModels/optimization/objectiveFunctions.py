@@ -11,9 +11,6 @@ class objectiveFunction:
     def get_fitness(self, simulationResult):
         return
 
-    @abstractmethod
-    def get_name(self):
-        return
 
     @abstractmethod
     def method_str(self):
@@ -25,6 +22,7 @@ class objectiveFunction:
 
     def __setstate__(self, state):
         self.__dict__.update(state)
+
 
 class targetFlux(objectiveFunction):
     """
@@ -44,11 +42,19 @@ class targetFlux(objectiveFunction):
             raise ValueError("Reaction id is not present i the fluxes distribution. Please check id objective function is correct.")
         return fluxes[self.targetReactionId]
 
-    def get_name(self):
-        return "Target Flux"
-
     def method_str(self):
         return "Target Flux: " + self.targetReactionId
+
+    @staticmethod
+    def get_name():
+        return "Target Flux"
+
+    @staticmethod
+    def get_parameters_ids():
+        return ["Target reaction id"]
+
+
+
 
 class BPCY (objectiveFunction):
     """
@@ -73,8 +79,28 @@ class BPCY (objectiveFunction):
             raise ValueError("Reaction ids is not present in the fluxes distribution. Please check id objective function is correct.")
         return (ssFluxes[self.biomass] * ssFluxes[self.productId])/ssFluxes[self.uptakeId]
 
-    def get_name(self):
-        return "Biomass-Product Coupled Yield"
+
 
     def method_str(self):
-        return "BPCY =  (" + self.biomassId + " * " + self.productId +") / " + self.uptakeId
+        return "BPCY =  (" + self.biomassId +  " * " + self.productId +") / " + self.uptakeId
+
+
+    @staticmethod
+    def get_name():
+        return "Biomass-Product Coupled Yield"
+
+    @staticmethod
+    def get_parameters_ids():
+        return ["Biomass id", "Product id", "Uptake id"]
+
+
+def build_objective_function(id, args):
+
+    if id == BPCY.get_name():
+        objFunc = BPCY(args[0],args[1],args[2])
+    elif id == targetFlux.get_name():
+        objFunc = targetFlux(args[0])
+    else:
+        raise Exception("Wrong objective function!")
+
+    return objFunc

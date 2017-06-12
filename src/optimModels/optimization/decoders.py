@@ -1,8 +1,8 @@
 from abc import ABCMeta, abstractmethod
 from collections import OrderedDict
 
-from optimModels.simulation.simulationProblems import kineticSimulationProblem,stoichiometricSimulationProblem
-from optimModels.simulation.overrideSimulationProblem import overrideKineticSimulProblem, overrideStoichSimulProblem
+from optimModels.simulation.simulationProblems import kineticSimulationProblem
+from optimModels.simulation.overrideSimulationProblem import overrideKineticSimulProblem
 
 class decoder:
     """ Abstract class to define the required methods that must be implemented by all decoders.
@@ -46,14 +46,11 @@ class decoderKnockouts(decoder):
         """
         ko = self.candidate_decoded(candidate)
 
-        if isinstance(simulProblem, stoichiometricSimulationProblem):
-            modifications = OrderedDict([(r_id,(0.0,0.0)) for r_id in ko])
-            override = overrideStoichSimulProblem(modifications=modifications)
-        elif isinstance(simulProblem, kineticSimulationProblem):
+        if isinstance(simulProblem, kineticSimulationProblem):
             factors = OrderedDict([(r_id, 0) for r_id in ko])
             override = overrideKineticSimulProblem(factors=factors)
         else:
-            raise Exception ("Unknown  simulation problem type by decoderKnockouts")
+            raise Exception ("Unknown simulation problem type by decoderKnockouts.")
         return override
 
     def candidate_decoded(self, candidate):
@@ -102,10 +99,7 @@ class decoderUnderOverExpression(decoder):
             out : overrideKineticSimulProblem
                 object with the modifications to be applied over the simulation Problem.
         """
-        if isinstance(simulProblem, stoichiometricSimulationProblem):
-            pass  # TO DO
-
-        elif isinstance(simulProblem, kineticSimulationProblem):
+        if isinstance(simulProblem, kineticSimulationProblem):
             solDecoded = self.candidate_decoded(candidate)
             override = overrideKineticSimulProblem(factors=solDecoded)
             return override

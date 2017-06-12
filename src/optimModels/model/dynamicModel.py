@@ -8,7 +8,7 @@ from math import log
 from  optimModels.utils.utils import MyTree
 
 
-def load_kinetic_model(filename, map={}):
+def load_kinetic_model(filename, map=None):
     """ Load a kinetic model SBML file.
 
     Parameters
@@ -47,18 +47,25 @@ def load_kinetic_model(filename, map={}):
     _load_assignment_rules(sbmlModel, model)
 
     # parse rates, rules and xdot expressions
-    model.set_reactions_parameters_association(map)
     model._set_parsed_attr()
+
+
+    if map is not None:
+        model.set_reactions_parameters_factors(map)
+    else:
+        aux = OrderedDict([(rId ,  [rId+"_"+x for x in re.findall("(rmax\w*)", ratelaw)]) for rId, ratelaw in model.ratelaws.items()])
+        model.reacParamsFactors = OrderedDict([(rId , params) for rId, params in aux.items() if len(params) > 0])
+        #model.reacParamsFactors = OrderedDict([(rId ,  re.findall("(vMax\w*)", ratelaw)) for rId, ratelaw in model.ratelaws.items()])
 
     return model
 
 
 class dynamicModel(ODEModel):
     """ Class to store information of dynamic models.
-    This class is an extension of ODEModel class from FRAMED package. The methods  *build_ode* and *get_ode* are override to
+    This class is an extension of ODEModel class from FRAMED package. The methods  *build_ode* and *get_ode* are overrided to
     support the manipulations over the parameters or enzyme concentration level during the strain optimization process.
-    The ode function returned by *get_ode* replace the negative concentration, received as argument, by 0 if the concentration is smaller than
-    absolute tolerance or raise an exception if the concentration is significante negative value.
+    The ode function returned by *get_ode* replace the negative concentrations, received as argument, by 0 if the concentration is smaller than
+    absolute tolerance or raise an exception if the concentration is a significante negative value.
 
     """
 
@@ -72,12 +79,15 @@ class dynamicModel(ODEModel):
 
         """
         ODEModel.__init__(self, modelId)
-        self.reactionParamsAssociation = None;  # reaction->parameters association
+        self.reacParamsFactors = None;  # reaction->parameters association
         self.parsedRates = None;
         self.parsedRules = None;
         self.parsedXdot = None;
 
+
     def _set_parsed_attr(self):
+        print  self.ratelaws
+
         self.parsedRates = {rId: self.parse_rate(rId, ratelaw)
                              for rId, ratelaw in self.ratelaws.items()}
 
@@ -97,7 +107,6 @@ class dynamicModel(ODEModel):
 
     def build_ode(self, factors):
         """Build the ODE system.
-
         Parameters
         ----------
         factors : dict
@@ -121,8 +130,8 @@ class dynamicModel(ODEModel):
         rateExprs = []
         for rId in self.reactions.keys():
             newExp = self.parsedRates[rId]
-            if rId in self.reactionParamsAssociation.keys():
-                toModify = set(factorsParam.keys()).intersection(self.reactionParamsAssociation[rId])
+            if rId in self.reacParamsFactors.keys():
+                toModify = set(factorsParam.keys()).intersection(self.reacParamsFactors[rId])
                 if len(toModify) > 0:
                     for elem in toModify:
                         newExp = re.sub(r"([pv]\['" + elem + "'\])", str(factorsParam[elem]) + r" * \1", newExp);
@@ -143,7 +152,7 @@ class dynamicModel(ODEModel):
         func_str = 'def ode_func(t, x, r, p, v):\n\n' + \
                    '    newX = []\n' + \
                    '    for elem in x: \n' + \
-                   '        if elem > -0.000001 and elem < 0: \n' + \
+                   '        if elem > - 0.000001 and elem < 0: \n' + \
                    '            newX.append(0) \n' + \
                    '        elif  elem < 0: \n' + \
                    '            raise Exception\n' + \
@@ -156,7 +165,7 @@ class dynamicModel(ODEModel):
                    ',\n'.join(balances) + '\n' + \
                    '    ]\n\n' + \
                    '    return dxdt\n'
-        print func_str
+        #print func_str
         return func_str
 
     def get_ode(self, r_dict=None, params=None, factors=None):
@@ -197,7 +206,7 @@ class dynamicModel(ODEModel):
         f = lambda t, x: ode_func(t, x, r, p, v)
         return f
 
-    def set_reactions_parameters_association(self, map):
+    def set_reactions_parameters_factors(self, map):
         """ Set a new map with the parameters that can be changed for each reaction.
 
             Parameters
@@ -205,9 +214,9 @@ class dynamicModel(ODEModel):
             map : dict
                 The keys is the reaction identifier and the value a list of parameters which can be used to simulate modifications( KO, under/ over expression)
         """
-        self.reactionParamsAssociation = map
+        self.reacParamsFactors = OrderedDict(map)
 
-    def get_reactions_parameters_association(self):
+    def get_reactions_parameters_factors(self):
         """ Get the map with the parameters that can be changed for each reaction.
 
             Returns
@@ -215,7 +224,7 @@ class dynamicModel(ODEModel):
              : list
                 List of parameters identifiers.
         """
-        return self.reactionParamsAssociation
+        return self.reacParamsFactors
 
     def get_parameters_by_reaction(self, reactionId):
         """ Get the parameters list for a specific reaction identifier.
@@ -226,8 +235,8 @@ class dynamicModel(ODEModel):
             List of parameters identifiers.
         """
         res = []
-        if reactionId in self.reactionParamsAssociation.keys():
-            res = self.reactionParamsAssociation[reactionId]
+        if reactionId in self.reacParamsFactors.keys():
+            res = self.reacParamsFactors[reactionId]
         return res
 
     def get_reactions_by_parameter(self, paramId):
@@ -240,17 +249,17 @@ class dynamicModel(ODEModel):
             List of reactions identifiers.
         """
         res = []
-        for r in self.reactionParamsAssociation.keys():
-            if paramId in self.reactionParamsAssociation[r]:
+        for r in self.reacParamsFactors.keys():
+            if paramId in self.reacParamsFactors[r]:
                 res = res + [r]
         return res
 
     def __getstate__(self):
-        state = self._dict__.copy()
+        state = self.__dict__.copy()
         return state
 
     def __setstate__(self, state):
-        self._dict__.update(state)
+        self.__dict__.update(state)
 
 
 # auxiliar functions to set the assignment rules by the correct order in the ODE system

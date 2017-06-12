@@ -1,13 +1,3 @@
-class modelType:
-    STOICHIOMETRIC=0
-    KINETIC=1
-
-
-class solverId:
-    ODESPY = 0
-    CPLEX = 1
-    GLPK = 2
-
 class solverMethod:
     LSODA = 1
     LSODAR = 2
@@ -38,14 +28,21 @@ class solverStatus:
     UNKNOWN = 1
     ERROR = 2
 
-
+    @staticmethod
+    def get_status_str(id):
+        if solverStatus.ERROR == id :
+            str="Error"
+        elif solverStatus.OPTIMAL == id:
+            str = "Optimal"
+        else:
+            str = "Unknown"
+        return str
 
 class Parameter:
     """ Enumeration of parameters. """
     ABSOLUTE_TOL = 0
     RELATIVE_TOL = 1
     N_STEPS =2
-
 
 solverParameters={Parameter.ABSOLUTE_TOL: 1e-9,
                   Parameter.RELATIVE_TOL: 1e-6,

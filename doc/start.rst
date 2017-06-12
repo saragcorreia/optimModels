@@ -2,6 +2,9 @@
 Getting started
 ===============
 
+Default Configurations
+-----------------------
+The default configurations used in the optimization/simulation processes are in the optimModels.utils.configuration file.
 
 Loading Kinetic models
 -----------------------
@@ -9,13 +12,17 @@ Loading Kinetic models
 *optimModels*, at the moment supports kinetic metabolic models. In the future, other kind of metabolic models, sucha as communities models and ME-models, will be supported by the package.
 The process of loading a model is quite simple, and are based on the classes available on the *framed* package.
 
-Despite the SBML file path which contains the metabolic model itself, the user must provide a dictionary with the information of the parameters (vMax or enzyme identifier) which will be used to perform the strain optimization.
+.. Despite the SBML file path which contains the metabolic model itself, the user must provide a dictionary with the information of the parameters (vMax or enzyme identifier) which will be used to perform the strain optimization.
+.. If the *map* argument is not given, we assume that the vMax parameters associeted to each reaction has the follow identifier "vMax**<id of reaction>**".
+
+We assume that the vMax parameters associeted to each reaction has the follow identifier "vMax**<id of reaction>**".
 
 ::
 
     from optimModels import load_kinetic_model
+    model = load_kinetic_model('TinyModel_RHS.xml')
 
-    map = {"vE_6PGDH": ["v6PGDH_max"], "vE_Ack": ["vAck_max"], "vE_Ack_medium": ["vAck_max"],
+  ..  map = {"vE_6PGDH": ["v6PGDH_max"], "vE_Ack": ["vAck_max"], "vE_Ack_medium": ["vAck_max"],
          "vE_Cya": ["vCya_max"], "vE_Eda": ["vEda_max"], "vE_Edd": ["vEdd_max"], "vE_Fum": ["Fum"],
          "vE_G6PDH": ["vG6PDH_max"], "vE_MDH": ["MDH"], "vE_Pgi": ["vPgi_max"],
          "vE_Pgl": ["vPgl_max"], "vE_Pta": ["vPta_max"], "vE_R5PI": ["vR5PI_max"], "vE_Ru5P": ["vRu5P_max"],
@@ -28,5 +35,6 @@ Despite the SBML file path which contains the metabolic model itself, the user m
          "vE_Pck": ["Pck"], "vE_Pfk": ["Pfk"], "vE_Ppc": ["Ppc"], "vE_Pps": ["Pps"], "vE_Pyk": ["Pyk"],
          "vE_SDH": ["SDH"], "vE_aKGDH": ["aKGDH"]}
 
-    model = load_kinetic_model('chassagnole_2002.xml',map)
+    .. model = load_kinetic_model('jahan.xml', map)
+
 

@@ -1,0 +1,34 @@
+from optimModels.utils.constantes import solverMethod
+from optimModels.optimization.objectiveFunctions import BPCY, targetFlux
+
+
+class kineticConfigurations:
+    STEADY_STATE_TIME = 1e9
+    SOLVER_METHOD = solverMethod.LSODA  # ode solver method used in the phenotype simulation
+    SOLVER_TIMEOUT = 300  # maximum time allowed by simulation
+
+
+class EAConfigurations:
+    # Configuration of EA algorithm
+    MAX_GENERATIONS = 10
+    POPULATION_SIZE = 10
+    MAX_CANDIDATE_SIZE = 6
+    POPULATION_SELECTED_SIZE = 5
+    NUM_ELITES = 1
+    CROSSOVER_RATE = 0.9
+    MUTATION_RATE = 0.1
+    NEW_CANDIDATES_RATE = 0.1
+    TOURNAMENT_SIZE = 3
+    NUM_CPUS = 2
+    NUM_BEST_SOLUTIONS = 2
+
+    @staticmethod
+    def get_default_config():
+        return [EAConfigurations.POPULATION_SIZE, EAConfigurations.MAX_CANDIDATE_SIZE, EAConfigurations.CROSSOVER_RATE,
+                EAConfigurations.MUTATION_RATE, EAConfigurations.NEW_CANDIDATES_RATE, EAConfigurations.NUM_ELITES]
+
+
+class objFunctions:
+    ids = [targetFlux.get_name(), BPCY.get_name()]
+    parameters = {0: targetFlux.get_parameters_ids(),
+                  1: BPCY.get_parameters_ids()}

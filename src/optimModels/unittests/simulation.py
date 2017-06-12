@@ -2,11 +2,11 @@
 #SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed.xml'
 #SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed_underoverTest.xml'
 #SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed_koTest.xml'
-#SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/chassagnole2002.xml'
+SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/chassagnole2002.xml'
 #SBML_MODEL = '/Users/sara/Downloads/Millard2016v2_testing.xml'
 
 
-SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed.xml'
+#SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/Jahan2016_chemostat_fixed.xml'
 
 RESULT_DIR = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/'
 
@@ -17,10 +17,22 @@ from optimModels.simulation.simulationProblems import kineticSimulationProblem
 from optimModels.simulation.solvers import odespySolver
 
 from optimModels.model.dynamicModel import load_kinetic_model
+from framed.io.sbml import load_odemodel
 from optimModels.simulation.overrideSimulationProblem import overrideKineticSimulProblem
 from collections import OrderedDict
 
+
+def basic_simulation():
+    model = load_kinetic_model(SBML_MODEL)
+    problem = kineticSimulationProblem(model, tSteps = [0,1e9], timeout=None)
+    override = overrideKineticSimulProblem(factors = {'vPTS_rmaxPTS':0, 'vTKA_rmaxTKa':0})
+    res = problem.simulate(override)
+    res.print_result()
+
+
 if __name__ == '__main__':
+    basic_simulation()
+
     mapParamReacs = {"vE_6PGDH": ["v6PGDH_max"], "vE_Ack": ["vAck_max"], "vE_Ack_medium": ["vAck_max"],
                      "vE_Cya": ["vCya_max"], "vE_Eda": ["vEda_max"], "vE_Edd": ["vEdd_max"], "vE_Fum": ["Fum"],
                      "vE_G6PDH": ["vG6PDH_max"], "vE_MDH": ["MDH"], "vE_Pgi": ["vPgi_max"],
@@ -33,8 +45,10 @@ if __name__ == '__main__':
                      "vE_ICDH": ["ICDH"], "vE_Icl": ["Icl"], "vE_MS": ["MS"], "vE_Mez": ["Mez"], "vE_PDH": ["PDH"],
                      "vE_Pck": ["Pck"], "vE_Pfk": ["Pfk"], "vE_Ppc": ["Ppc"], "vE_Pps": ["Pps"], "vE_Pyk": ["Pyk"],
                      "vE_SDH": ["SDH"], "vE_aKGDH": ["aKGDH"]}
-
-    model = load_kinetic_model(SBML_MODEL, mapParamReacs)
+    model = load_odemodel(SBML_MODEL)
+    model.build_ode()
+    print "--------------------"
+    model = load_kinetic_model(SBML_MODEL)
     #model = load_kinetic_model(SBML_MODEL)
     print model.metabolites.keys()
 
@@ -59,7 +73,7 @@ if __name__ == '__main__':
 
     #problem = kineticSimulationProblem(model, factors=OrderedDict([('Pps', 32), ('vPTS4_max', 2)]), tSteps=[0, 1e9])
 
-    res = problem.simulate(odespySolver.LSODA)
+    res = problem.simulate()
     print res.get_fluxes_distribution()
     print "------------------"
 

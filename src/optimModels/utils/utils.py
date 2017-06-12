@@ -24,6 +24,7 @@ def get_order_nodes(tree):
             res = res + get_order_nodes(child)
         return res
 
+
 def merge_two_dicts(x, y):
     """
         Merge two dictinaries, if the key are present in both, value of y[key] are maintained
