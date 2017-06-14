@@ -11,7 +11,7 @@ setup(
         'framed'],
     author = 'Sara Correia',
     author_email = 'sarag.correia@gmail.com',
-    description = 'optimModels - strain optimization',
+    description = 'optimModels - strain optimization using kinetic models',
     keywords = 'metabolism modeling',
     url = 'https://github.com/saragcorreia/optimModels.git',
     long_description = open('README.rst').read(),

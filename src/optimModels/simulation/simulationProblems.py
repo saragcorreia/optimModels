@@ -21,17 +21,17 @@ class simulationProblem:
     def simulate(self, solverId, overrideProblem):
         return
 
+
 class kineticSimulationProblem(simulationProblem):
     """
         This class contains all required information to perform a simulation of a kinetic metabolic model.
 
         Attributes
         ------------------
-        model : dynamicModel
+        model : kineticModel
             Metabolic model object.
-        factors : dict (optional)
-            Factors to be multiplied with vMax parameters present in the model.
-            (KO simulation: factor = 0, under expression: factor > 0 and < 1, over expression factor >1.
+        parameters : dict (optional)
+            New values for the parameters present in the model.
         t_steps : list
             list of exact time steps to evaluate (default: [0,1e9])
         timeout : int
@@ -39,9 +39,9 @@ class kineticSimulationProblem(simulationProblem):
 
     """
 
-    def __init__(self, model, factors=OrderedDict(), tSteps=[0, 1e9], timeout=None):
+    def __init__(self, model, parameters=None, tSteps=[0, 1e9], timeout=None):
         self.model = model
-        self.factors = factors
+        self.parameters = parameters
         self.tSteps = tSteps
         self.timeout = timeout
 
@@ -82,33 +82,29 @@ class kineticSimulationProblem(simulationProblem):
             Returns an object of type kineticSimulationResult with the steady-state flux distribution and concentrations.
         """
 
-        if overrideSimulProblem is None:
-            final_factors = self.factors
-        else:
-            final_factors = merge_two_dicts(self.factors, overrideSimulProblem.factors)
-
-        # required to have fluxes rates in the end of solver.solve, otherwise the reference given on get_ode function is lost!!!
-        final_rates = OrderedDict()
-
+        final_factors = {}
+        if overrideSimulProblem:
+            final_factors = overrideSimulProblem.factors
         # update initial concentrations when a [enz] is changed: == 0, up or down regulated
         initConcentrations = self.get_initial_concentrations().copy()
 
-        status = solverStatus.OPTIMAL
         t1 = time.time()
         if self.timeout is None:
-            sstateRates, sstateConc, status = _my_kinetic_solve(self.get_model(), final_rates, final_factors,
-                                            initConcentrations.values(),
-                                            self.get_time_steps())
+            sstateRates, sstateConc, status = _my_kinetic_solve(self.get_model(), self.parameters,
+                                                                final_factors,
+                                                                initConcentrations.values(),
+                                                                self.get_time_steps())
         else:
             p = MyPool(processes=1)
             res = p.apply_async(_my_kinetic_solve, (
-                self.get_model(), final_rates, final_factors, initConcentrations.values(),
+                self.get_model(), self.parameters, final_factors, initConcentrations.values(),
                 self.get_time_steps()))
             try:
                 sstateRates, sstateConc, status = res.get(self.timeout)  # Wait timeout seconds for func to complete.
             except Exception:
                 print("Aborting due to timeout")
                 sstateRates = {}
+                sstateConc = {}
                 status = solverStatus.ERROR
                 p.terminate()
             p.close()
@@ -117,14 +113,15 @@ class kineticSimulationProblem(simulationProblem):
         print "TIME (seconds) simulate: " + str(t2 - t1)
 
         return kineticSimulationResult(self.get_model().id, solverStatus=status, ssFluxesDistrib=sstateRates,
-                                       ssConcentrations = sstateConc,
+                                       ssConcentrations=sstateConc,
                                        overrideSimulProblem=overrideSimulProblem)
 
 
-# Auxiliar functions
+# auxiliary functions
 # required to avoid the pickling the solver.solve function
-def _my_kinetic_solve(model, final_rates, final_factors, initialConc, timePoints):
-    f = model.get_ode(r_dict=final_rates, factors=final_factors)
+def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoints):
+    finalRates = OrderedDict()
+    f = model.get_ode(r_dict=finalRates, params=finalParameters, factors=finalFactors)
     func = lambda x, t: f(t, x)
 
     solver = odespySolver(kineticConfigurations.SOLVER_METHOD).get_solver(func)
@@ -134,6 +131,9 @@ def _my_kinetic_solve(model, final_rates, final_factors, initialConc, timePoints
         X, t = solver.solve(timePoints)
     except Exception:
         print "Error on solver!!!"
-        return {},[], solverStatus.ERROR
+        #print X
+        #print finalRates
+        return {}, {}, solverStatus.ERROR
 
-    return final_rates, X[1],solverStatus.OPTIMAL
+    conc = OrderedDict(zip(model.metabolites.keys(), X[1]))
+    return finalRates, conc, solverStatus.OPTIMAL

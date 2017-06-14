@@ -6,12 +6,12 @@ class overrideKineticSimulProblem():
 
         Attributes
         ----------
-        factors  : OrderedDict {id_param : factor_value}
+        factors  : dict {id_param : factor_value}
             Factors to be multiplied with vmax parameter present in the model.
             (KO simulation: factor = 0, under expression: factor > 0 and <1, over expression factor >1)
 
     """
-    def __init__(self, factors = None):
+    def __init__(self, factors = {}):
         self.factors = factors
 
     def get_factors(self):

@@ -21,7 +21,7 @@ def load_kinetic_model(filename, map=None):
 
     Returns
     -------
-    out : dynamicModel
+    out : kineticModel
         Contains all information related with the dynamic model (reactions, kinetic eqations, metabolites, compartments, etc.)
 
     Raises
@@ -36,7 +36,7 @@ def load_kinetic_model(filename, map=None):
     if sbmlModel is None:
         raise IOError('Failed to load model.')
 
-    model = dynamicModel(sbmlModel.getId())
+    model = kineticModel(sbmlModel.getId())
 
     _load_compartments(sbmlModel, model)
     _load_metabolites(sbmlModel, model)
@@ -61,7 +61,7 @@ def load_kinetic_model(filename, map=None):
     return model
 
 
-class dynamicModel(ODEModel):
+class kineticModel(ODEModel):
     """ Class to store information of dynamic models.
     This class is an extension of ODEModel class from FRAMED package. The methods  *build_ode* and *get_ode* are overrided to
     support the manipulations over the parameters or enzyme concentration level during the strain optimization process.
@@ -115,6 +115,7 @@ class dynamicModel(ODEModel):
 
         # factors: ["vmax1": 0, "vmax2"=2, "ENZYME_ID":0]
         # divide vmax parameters from enzymes expression levels
+
         factorsEnz = OrderedDict([(k, v) for k, v in factors.items() if k in self.metabolites.keys()])
         factorsParam = OrderedDict([(k, v) for k, v in factors.items() if k not in factorsEnz.keys()])
 
@@ -144,15 +145,6 @@ class dynamicModel(ODEModel):
                 balances.append(' ' * 8 + exp)
 
         func_str = 'def ode_func(t, x, r, p, v):\n\n' + \
-                   '    newX = []\n' + \
-                   '    for elem in x: \n' + \
-                   '        if elem > - '+ str(solverParameters[Parameter.ABSOLUTE_TOL])+ ' and elem < 0: \n' + \
-                   '            newX.append(0) \n' + \
-                   '        elif  elem < 0: \n' + \
-                   '            raise Exception\n' + \
-                   '        else:  \n' + \
-                   '            newX.append(elem) \n' + \
-                   '    x = newX \n' + \
                    '\n'.join(ruleExprs) + '\n\n' + \
                    '\n'.join(rateExprs) + '\n\n' + \
                    '    dxdt = [\n' + \
@@ -256,7 +248,7 @@ class dynamicModel(ODEModel):
         self.__dict__.update(state)
 
 
-# auxiliar functions to set the assignment rules by the correct order in the ODE system
+# auxiliary functions to set the assignment rules by the correct order in the ODE system
 def _build_tree_rules(parent, rules):
     regexp = "v\[\'(.*?)\'\]"
     children = re.findall(regexp, rules[parent])

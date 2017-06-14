@@ -46,6 +46,18 @@ class solverStatus:
             str = "Unknown"
         return str
 
+
+def set_solver_parameter(parameter, value):
+    """ Change the value for a given parameter (see list of supported parameters).
+    Parameters
+    -----------
+    parameter : parameter type
+    value : parameter value
+    """
+    global solverParameters
+    solverParameters[parameter] = value
+
+
 class Parameter:
     """ Enumeration of parameters. """
     ABSOLUTE_TOL = 0
@@ -57,12 +69,3 @@ solverParameters={Parameter.ABSOLUTE_TOL: 1e-9,
                   Parameter.N_STEPS:10000}
 
 
-def set_solver_parameter(parameter, value):
-    """ Change the value for a given parameter (see list of supported parameters).
-    Parameters
-    -----------
-    parameter : parameter type
-    value : parameter value
-    """
-    global solverParameters
-    solverParameters[parameter] = value

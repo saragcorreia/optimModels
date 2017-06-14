@@ -2,61 +2,42 @@
 Strain optimization
 =====================
 
-Stoichiometric models optimization
-----------------------------
-To be done!!
-
-
-
 Kinetic models optimization
 ----------------------------
 
-*optimModels* implements some basic (and experimental) support for working with strain optimization of metabolic models.
+*optimModels* implements some basic (and experimental) support for working with strain optimization using Kinetic
+metabolic models.
 
-It now also supports models that contain assignment rules (see for example the
-`Chassagnole 2002 <https://www.ebi.ac.uk/biomodels-main/BIOMD0000000051>`_ *E. coli* model).
+The optimization use several parameters which are configured in the optimModels.utils.configurations module.
 
+Objective Function
+~~~~~~~~~~~~~~~~~~~
+Before start the strain optimization, it is required the definition of an objective function.
+The objective function is responsible for calculate the fitness value for each candidate solution obtained during the
+optimization process.
+
+At the moment there are two objective functions available:
+- *targetFlux* : the fitness value is the flux of a given target reaction.
+- *BPCY* : the fitness value is the Biomass-Product Coupled Yield. In this case the user must
+specify 3 reactions identifiers (biomass, product and uptake).
+
+::
+
+    from optimModels import build_objective_function
+
+    objFunc = build_objective_function("targetFlux", ["vsersynth"])
 
 Knockouts
 ~~~~~~~~~~~
-
-Throught   (uses scipy
-`odeint <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html>`_):
+The strain optimization using the knockouts can be performed calling the *strain_optim* function.
 
 ::
 
-    from optimModels import
-    T, X = time_course(model, time=100)
+    from optimModels import strain_optim
 
+    result = strain_optim(model, objFunc=objFunc)
+    for r in result:
+        print r.print_result()
 
-You can change the number of integration steps:
-
-::
-
-    time_course(model, time=100, steps=1000)
-
-You can override model parameters without changing the model:
-
-::
-
-    time_course(model, time=100, parameters={'Vmax1': 10.0, 'Vmax2': 20.0})
-
-
-Under/over expression
+Under/Over expression
 ~~~~~~~~~~~~~~~~~~~~~~
-
-Find the steady-state metabolite concentrations and reaction rates:
-
-::
-
-    from framed import find_steady_state
-    x_ss, v_ss = find_steady_state(model)
-
-Again, you can easily override model parameters for simulation purposes:
-
-::
-
-    find_steady_state(model, parameters={'Vmax1': 10.0})
-
-
-

@@ -1,9 +1,6 @@
 from random import Random
 from multiprocessing import cpu_count
 from inspyred import ec
-from collections import OrderedDict
-
-
 
 from optimModels.optimization import evaluators, generators, replacers, variators, observers
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
@@ -54,13 +51,13 @@ class optimProblemConfiguration():
         self.__dict__.update(state)
 
 
-def optimization_intSetRep(confOptimProblem, resultFile= None, isMultiProc=False):
+def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False):
     """
     Function to perform the optimization using the integer set representation to the candidates solutions.
 
     Parameters
     -----------
-    confOptimProblem : an instance of optimProblemConfiguration.
+    optimProbConf : an instance of optimProblemConfiguration.
         This object contains all information to perform the strain optimization task.
     resultFile : str
         The path file to store all the results obtained during the optimization (default results are not saved into a file)
@@ -82,7 +79,7 @@ def optimization_intSetRep(confOptimProblem, resultFile= None, isMultiProc=False
     if resultFile is not None:
         my_ec.observer = observers.save_all_results
 
-    bounds = [0, len(confOptimProblem.get_decoder().ids) - 1]
+    bounds = [0, len(optimProbConf.get_decoder().ids) - 1]
     if isMultiProc:
         try:
             nprocs= int(cpu_count()/2)
@@ -102,7 +99,7 @@ def optimization_intSetRep(confOptimProblem, resultFile= None, isMultiProc=False
                                  crossover_rate=EAConfigurations.CROSSOVER_RATE,
                                  mutation_rate=EAConfigurations.MUTATION_RATE,
                                  new_candidates_rate=EAConfigurations.NEW_CANDIDATES_RATE,
-                                 configuration=confOptimProblem,
+                                 configuration=optimProbConf,
                                  results_file=resultFile,
                                  tournament_size=EAConfigurations.TOURNAMENT_SIZE)
     else:
@@ -117,23 +114,20 @@ def optimization_intSetRep(confOptimProblem, resultFile= None, isMultiProc=False
                                  crossover_rate=EAConfigurations.CROSSOVER_RATE,
                                  mutation_rate=EAConfigurations.MUTATION_RATE,
                                  new_candidates_rate=EAConfigurations.NEW_CANDIDATES_RATE,
-                                 configuration=confOptimProblem,
+                                 configuration=optimProbConf,
                                  results_file=resultFile,
                                  tournament_size=EAConfigurations.TOURNAMENT_SIZE
                                  )
-
-    best_solutions = findBestSolutions(final_pop)
-
-    return best_solutions
+    return final_pop
 
 
-def optimization_tupleSetRep(confOptimProblem, resultFile= None, isMultiProc=False):
+def optimization_tupleSetRep(optimProbConf, resultFile= None, isMultiProc=False):
     """
     Function to perform the optimization using the tuple set representation to the candidates solutions.
 
     Parameters
     -----------
-    confOptimProblem : an instance of optimProblemConfiguration.
+    optimProbConf : an instance of optimProblemConfiguration.
         This object contains all information to perform the strain optimization task.
     resultFile : str
         The path file to store all the results obtained during the optimization (default results are not saved into a file)
@@ -154,7 +148,7 @@ def optimization_tupleSetRep(confOptimProblem, resultFile= None, isMultiProc=Fal
         my_ec.observer = observers.save_all_results
 
 
-    bounds = [[0, 0], [len(confOptimProblem.get_decoder().ids) - 1, len(confOptimProblem.get_decoder().levels) - 1]]
+    bounds = [[0, 0], [len(optimProbConf.get_decoder().ids) - 1, len(optimProbConf.get_decoder().levels) - 1]]
 
     if isMultiProc:
         try:
@@ -175,7 +169,7 @@ def optimization_tupleSetRep(confOptimProblem, resultFile= None, isMultiProc=Fal
                                  crossover_rate=EAConfigurations.CROSSOVER_RATE,
                                  mutation_rate=EAConfigurations.MUTATION_RATE,
                                  new_candidates_rate=EAConfigurations.NEW_CANDIDATES_RATE,
-                                 configuration=confOptimProblem,
+                                 configuration=optimProbConf,
                                  results_file=resultFile,
                                  tournament_size=EAConfigurations.TOURNAMENT_SIZE)
     else:
@@ -190,41 +184,11 @@ def optimization_tupleSetRep(confOptimProblem, resultFile= None, isMultiProc=Fal
                                  crossover_rate=EAConfigurations.CROSSOVER_RATE,
                                  mutation_rate=EAConfigurations.MUTATION_RATE,
                                  new_candidates_rate=EAConfigurations.NEW_CANDIDATES_RATE,
-                                 configuration=confOptimProblem,
+                                 configuration=optimProbConf,
                                  results_file=resultFile,
                                  tournament_size=EAConfigurations.TOURNAMENT_SIZE)
 
+    return final_pop
 
-    best_solutions= findBestSolutions(final_pop)
 
-    return best_solutions
-
-def findBestSolutions(population):
-    """
-    Function to get the best individuals of a populations according to their fitness value. The number of individuals
-    to return is given by  EAConfigurations.NUM_BEST_SOLUTIONS parameter.
-
-    Parameters
-    ------------
-    population : list of individuals returned by EA
-
-    Returns
-    --------
-    out : list of best individuals
-    """
-    bestPop = {}
-    bestFitnessOrder = [-1] * EAConfigurations.NUM_BEST_SOLUTIONS
-    minFitness = -1
-
-    for ind in population:
-        if ind.fitness > minFitness:
-            minFitness = ind.fitness
-            bestFitnessOrder.sort(reverse=True)
-            toRem = bestFitnessOrder.pop()
-            bestFitnessOrder.append(ind.fitness)
-            if len(bestPop) >= EAConfigurations.NUM_BEST_SOLUTIONS:
-                del bestPop[toRem]
-            bestPop[ind.fitness] = ind
-
-    return bestPop.values()
 

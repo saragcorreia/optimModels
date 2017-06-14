@@ -1,15 +1,37 @@
-import copy
+from collections import OrderedDict
 
-from optimModels.model.dynamicModel import load_kinetic_model
+
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
 from optimModels.optimization.decoders import decoderKnockouts,decoderUnderOverExpression
 from optimModels.optimization.evolutionaryComputation import optimization_intSetRep,optimization_tupleSetRep,optimProblemConfiguration
 from optimModels.utils.configurations import kineticConfigurations
+from optimModels.utils.configurations import EAConfigurations
 
+def strain_optim(model, objFunc=None, levels=None, criticalGenes=[], isMultiProc=False, resultFile=None):
+    """
+    Function to perform the strain optimization using kinetic metabolic models.
 
-def strain_optim(SBMLFile, objFunc=None, levels=None, criticalGenes=[], isMultiProc=False, resultFile=None):
-    model = load_kinetic_model(SBMLFile)
+    Parameters
+    ----------
+    model : kineticModel
+        The kinetic metabolic model.
+    objFunc : objectiveFunction
+        Function used to calculate the fitness value.
+    levels : list of floats
+        List of values that can be used to multiply by the vMax parameters in over/under expression enzymes levels.
+    criticalGenes : list of str
+        List of parameters identifiers which can not be manipulated.
+    isMultiProc : boolean
+        Boolean variable used to paralallize the evaluation of candidates.
 
+    Returns
+    -------
+    out : list of kineticSimulationResults
+        The function returns the best solutions found in strain optimization. The kineticSimulationResults have the
+        flux distribution and metabolites concentration on steady-state, and the modifications made over the
+        original model.
+
+    """
     simulProblem = kineticSimulationProblem(model, tSteps=[0, kineticConfigurations.STEADY_STATE_TIME])
 
     # assumption: the reactionParamsAssociation obj : id_reac--> vMax_paramaeter. The critical Genes are identify by the vMax parameter name
@@ -23,33 +45,81 @@ def strain_optim(SBMLFile, objFunc=None, levels=None, criticalGenes=[], isMultiP
         decoder = decoderKnockouts(idsToManipulate)
 
     #build optimization configuration problem
-    prob = optimProblemConfiguration(simulProblem, decoder=decoder, objectiveFunc=objFunc, criticalGenes=criticalGenes)
+    optimProbConf = optimProblemConfiguration(simulProblem, decoder=decoder, objectiveFunc=objFunc, criticalGenes=criticalGenes)
 
     #run optimization
     if levels:
-        best_solutions = optimization_tupleSetRep(prob, resultFile = resultFile, isMultiProc=isMultiProc)
+        final_pop = optimization_tupleSetRep(optimProbConf, resultFile = resultFile, isMultiProc=isMultiProc)
     else:
-        best_solutions = optimization_intSetRep(prob, resultFile = resultFile, isMultiProc=isMultiProc)
+        final_pop = optimization_intSetRep(optimProbConf, resultFile = resultFile, isMultiProc=isMultiProc)
+
+
+    best_solutions = findBestSolutions(final_pop)
 
     #simplify solutions
-    result = simplifySolutions(prob, best_solutions)
+    result = simplifySolutions(optimProbConf, best_solutions)
 
     return result
 
+def findBestSolutions(population):
+    """
+    Function to get the best individuals of a populations according to their fitness value. The number of individuals
+    to return is given by  EAConfigurations.NUM_BEST_SOLUTIONS parameter.
+
+    Parameters
+    ------------
+    population : list of individuals returned by EA
+
+    Returns
+    --------
+    out : list of best individuals
+    """
+    bestPop = {}
+    bestFitnessOrder = [-1] * EAConfigurations.NUM_BEST_SOLUTIONS
+    minFitness = -1
+
+    for ind in population:
+        if ind.fitness > minFitness:
+            minFitness = ind.fitness
+            bestFitnessOrder.sort(reverse=True)
+            toRem = bestFitnessOrder.pop()
+            bestFitnessOrder.append(ind.fitness)
+            if len(bestPop) >= EAConfigurations.NUM_BEST_SOLUTIONS:
+                del bestPop[toRem]
+            bestPop[ind.fitness] = ind
+
+    return bestPop.values()
 
 
-def simplifySolutions(confOptimProblem, population):
-    simulProblem = confOptimProblem.get_simulation_problem()
-    decoder = confOptimProblem.get_decoder()
-    objFunction = confOptimProblem.get_objective_function()
+def simplifySolutions(optimProbConf, population):
+    """
+    This function removes the modifications (KO or under/expression of an enzyme) which not influence the fitness value of the candidate solution.
+
+    Parameters
+    -----------
+    optimProbConf: an instance of optimProblemConfiguration
+        The configuration problem.
+    population: list of individuals
+        List of individuals returned by EA algorithm.
+
+    Returns
+    -------
+    out : list of kineticSimulationResults
+        The function returns the best solutions found in strain optimization. The kineticSimulationResults have the
+        flux distribution and metabolites concentration on steady-state, and the modifications made over the
+        original model.
+    """
+    simulProblem = optimProbConf.get_simulation_problem()
+    decoder = optimProbConf.get_decoder()
+    objFunction = optimProbConf.get_objective_function()
     solutions = []
 
     for ind in population:
         overrideProblem = decoder.get_override_simul_problem(ind.candidate, simulProblem)
         fitness = ind.fitness
 
-        factorsOrig = copy.copy(overrideProblem.get_factors())
-        factorsFinal = copy.copy(overrideProblem.get_factors())
+        factorsOrig = OrderedDict(overrideProblem.get_factors())
+        factorsFinal = OrderedDict(overrideProblem.get_factors())
 
         # do not simplify solutions with fitness == 0 and with a single modification
         if fitness > 0.0 and len(factorsOrig) > 1:

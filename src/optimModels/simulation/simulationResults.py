@@ -78,9 +78,15 @@ class kineticSimulationResult():
         print "fluxes: "
         for k,v in self.ssFluxesDistrib.items():
             print "     " + k + " = " + str(v)
-        print "mofifications:"
-        for k,v in self.overrideSimulProblem.get_factors().items():
+
+        print "concentrations: "
+        for k, v in self.ssConcentrations.items():
             print "     " + k + " = " + str(v)
+
+        if self.overrideSimulProblem:
+            print "mofifications:"
+            for k,v in self.overrideSimulProblem.get_factors().items():
+                print "     " + k + " = " + str(v)
         print"------------------------"
 
 

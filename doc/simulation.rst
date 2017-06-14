@@ -10,53 +10,53 @@ It now also supports models that contain assignment rules (see for example the
 Stoichiometric Simulation
 --------------------------
 The phenotype simulation of stoichiometric metabolic models are out of scope of this package.
-For the strain optimization prupose, we use the available methods on *framed* package,  developed by Daniel Machado.
+For the strain optimization prupose, you can use the available methods on *framed* package,  developed by Daniel Machado.
 
 For more information see: http://framed.readthedocs.io/en/latest/
 
 Kinetic Simulation
 ------------------
 
-Wild- type phenotype simulation
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Wild-type simulation
+~~~~~~~~~~~~~~~~~~~~~~
 
-Running a simple time-course simulation (uses scipy
-`odeint <https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.odeint.html>`_):
-
-::
-
-    from framed import time_course
-    T, X = time_course(model, time=100)
-
-
-You can change the number of integration steps:
+Running a simple steady state simulation (uses odespy package, LSODA method):
 
 ::
 
-    time_course(model, time=100, steps=1000)
+    from optimModels import steady_state_simulation
 
-You can override model parameters without changing the model:
+    result = steady_state_simulation(model)
+
+    result.print_result()
+
+Simulation with diferent parameters
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+It is possible override model parameters without changing the model:
 
 ::
 
-    time_course(model, time=100, parameters={'Vmax1': 10.0, 'Vmax2': 20.0})
+    result = steady_state_simulation(model, parameters = {'Dil' : 0.2/3600})
 
+    result.print()
 
 Knockouts simulation
 ~~~~~~~~~~~~~~~~~~~~~
 
-Find the steady-state metabolite concentrations and reaction rates:
-
+The simulation of reaction knockouts is done by multiplying vMax parameter with the factor 0,
+for instance maxG6PDH = 0 will be knockout the reaction vG6PDH:
 ::
 
-    from framed import find_steady_state
-    x_ss, v_ss = find_steady_state(model)
+    result = steady_state_simulation(model, factors={'maxG6PDH': 0.0})
 
-Again, you can easily override model parameters for simulation purposes:
+    result.print_result()
 
+Under/Over expression simulation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The simulation of under (over) expression enzymes is done by multiplying vMax parameter with the factor less than 1 (higher than 1)
 ::
 
-    find_steady_state(model, parameters={'Vmax1': 10.0})
+    result = steady_state_simulation(model, factors={'maxG6PDH': 2.0})
 
-
-
+    result.print_result()

@@ -47,6 +47,10 @@ class targetFlux(objectiveFunction):
         return "Target Flux: " + self.targetReactionId
 
     @staticmethod
+    def get_id():
+        return "targetFlux"
+
+    @staticmethod
     def get_name():
         return "Target Flux"
 
@@ -88,6 +92,9 @@ class BPCY (objectiveFunction):
     def method_str(self):
         return "BPCY =  (" + self.biomassId +  " * " + self.productId +") / " + self.uptakeId
 
+    @staticmethod
+    def get_id():
+        return "BPCY"
 
     @staticmethod
     def get_name():
@@ -109,9 +116,9 @@ def build_objective_function(id, args):
 
     """
 
-    if id == BPCY.get_name():
+    if id == BPCY.get_id():
         objFunc = BPCY(args[0],args[1],args[2])
-    elif id == targetFlux.get_name():
+    elif id == targetFlux.get_id():
         objFunc = targetFlux(args[0])
     else:
         raise Exception("Wrong objective function!")

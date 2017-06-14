@@ -1,21 +1,25 @@
 SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/chassagnole2002.xml'
-RESULT_DIR = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/'
 
-
-
-from optimModels.simulation.simulationProblems import kineticSimulationProblem
-from optimModels.model.dynamicModel import load_kinetic_model
-from optimModels.simulation.overrideSimulationProblem import overrideKineticSimulProblem
-
-
-def basic_simulation():
-    model = load_kinetic_model(SBML_MODEL)
-    problem = kineticSimulationProblem(model, tSteps = [0,1e9], timeout=None)
-    override = overrideKineticSimulProblem(factors = {'vPTS_rmaxPTS':0, 'vTKA_rmaxTKa':0})
-    res = problem.simulate(override)
-    res.print_result()
+from optimModels.simulation.run import steady_state_simulation
+from optimModels.model.kineticModel import load_kinetic_model
 
 
 if __name__ == '__main__':
-    basic_simulation()
+    #load Model
+    model = load_kinetic_model(SBML_MODEL)
 
+    # wild-type simulation
+    result = steady_state_simulation(model)
+    result.print_result()  # KO simulation
+
+    # Change parameters
+    result = steady_state_simulation(model, parameters={'Dil': 0.2 / 3600})
+    result.print_result()
+
+    #Knockouts
+    result = steady_state_simulation(model, factors={'maxG6PDH': 0.0})
+    result.print_result()
+
+    # Under/over expression
+    result = steady_state_simulation(model, factors={'maxG6PDH': 2.0})
+    result.print_result()
