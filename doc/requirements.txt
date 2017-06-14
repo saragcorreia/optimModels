@@ -1,4 +1,2 @@
 framed
 multiprocessing
-odespy
-inspyred
