@@ -6,7 +6,6 @@ from optimModels.simulation.overrideSimulationProblem import overrideKineticSimu
 
 class decoder:
     """ Abstract class to define the required methods that must be implemented by all decoders.
-
     """
     __metaclass__ = ABCMeta
 
@@ -23,7 +22,7 @@ class decoderKnockouts(decoder):
     """ Class to decode to convert a candidate solution in a list of identifiers used to simulate the KO reactions.
 
     Attributes
-    ---------
+    -----------
     ids : list of str
 
     """
@@ -83,7 +82,7 @@ class decoderUnderOverExpression(decoder):
     """ Class to convert a candidate solution repre identifiers used to simulate the under/ over enzyme expression.
 
     Attributes
-    ---------
+    -----------
     ids : list of str
         parameters identifiers to be used in the optimization
     levels : list of float
@@ -121,13 +120,13 @@ class decoderUnderOverExpression(decoder):
 
         Parameters
         -----------
-            candidate : map
-                the key is the parameter index and the value is the level of expression index.
+        candidate : map
+            The key is the parameter index and the value is the level of expression index.
 
         Returns
         --------
-            out : map
-                the key is the parameter id and the value is the level of expression with values between 0 and 1 to represent under expression or higher that 1 to represent the over expression.
+        out : map
+            The key is the parameter id and the value is the level of expression with values between 0 and 1 to represent under expression or higher that 1 to represent the over expression.
         """
         result = {self.ids[k]: self.levels[v] for (k, v) in list(candidate)}
         return result

@@ -22,7 +22,7 @@ def evaluator(candidates, args):
        A dictionary of keyword arguments
 
     Returns
-    ----------
+    --------
     out: list of floats
         a list of fitness values
     """
@@ -67,7 +67,7 @@ def parallel_evaluation_mp(candidates, args):
        and will be unavailable to your function.
 
     Parameters
-    -----
+    ----------
     candidates : list the candidate solutions
     args : a dictionary of keyword arguments
 

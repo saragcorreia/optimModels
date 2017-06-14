@@ -3,14 +3,12 @@ from optimModels.optimization.run import strain_optim
 from optimModels.model.kineticModel import load_kinetic_model
 from optimModels.simulation.simulationResults import print_simul_result
 
-BASE_PATH ="/Volumes/Data/Documents/Projects/DeCaF/Optimizations"
-SAVE_RESULT_FILE = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_dummy.csv"
 LEVELS = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
 
 
 def ko_chassagnole():
-    sbmlFile = BASE_PATH+'/Data/chassagnole2002.xml'
-    fileRes = BASE_PATH +"/Results/optim_Chassagnole_Serine.csv"
+    sbmlFile = '../../../examples/models/chassagnole2002.xml'
+    fileRes = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_ko.csv"
 
 
     model = load_kinetic_model(sbmlFile)
@@ -23,8 +21,8 @@ def ko_chassagnole():
 
 
 def under_over_chassagnole():
-    sbmlFile = BASE_PATH+'/Data/chassagnole2002.xml'
-    fileRes = BASE_PATH +"/Results/optim_Chassagnole_Serine_under.csv"
+    sbmlFile = '../../../examples/models/chassagnole2002.xml'
+    fileRes = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_underover.csv"
 
     model = load_kinetic_model(sbmlFile)
 

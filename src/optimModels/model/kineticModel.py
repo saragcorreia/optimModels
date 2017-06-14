@@ -73,10 +73,10 @@ class kineticModel(ODEModel):
     def __init__(self, modelId):
         """Create a instance of dynamicModel class.
 
-            Parameters
-            ----------
-                modelId : str
-                A valid unique identifier
+        Parameters
+        ----------
+        modelId : str
+            A valid unique identifier
 
         """
         ODEModel.__init__(self, modelId)
@@ -101,6 +101,7 @@ class kineticModel(ODEModel):
 
     def build_ode(self, factors):
         """Build the ODE system.
+
         Parameters
         ----------
         factors : dict
@@ -108,7 +109,7 @@ class kineticModel(ODEModel):
         expression and 0 to represent the knockouts.
 
         Returns
-        ---------
+        -------
         out : str
             Returns  a string with the ode system.
         """
@@ -161,16 +162,14 @@ class kineticModel(ODEModel):
         ----------
         rDict : dict
             This variable is used to store the reaction rates.
-
         params : dict
             Parameters and the new values used to replace the original parameters present in the SBML model
-
         factors : dict
             The key is the parameter identifyer and the value is the level of change values
             between 0 and 1 represent a under expression, above 1 a over expression and 0 to represent the knockouts.
 
         Returns
-        ----------
+        --------
         out : function
             A function used to solve the ODE system.
 
@@ -195,10 +194,10 @@ class kineticModel(ODEModel):
     def set_reactions_parameters_factors(self, map):
         """ Set a new map with the parameters that can be changed for each reaction.
 
-            Parameters
-            ----------
-            map : dict
-                The keys is the reaction identifier and the value a list of parameters which can be used to simulate modifications( KO, under/ over expression)
+        Parameters
+        ----------
+        map : dict
+            The keys is the reaction identifier and the value a list of parameters which can be used to simulate modifications( KO, under/ over expression)
         """
         self.reacParamsFactors = OrderedDict(map)
 

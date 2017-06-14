@@ -3,7 +3,7 @@
 .pydevproject
 *.pyc
 *.log
-.idea
+.idea/*
 _build
 dist
 src/optimModels.egg-info

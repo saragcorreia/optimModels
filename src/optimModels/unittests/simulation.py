@@ -1,25 +1,27 @@
-SBML_MODEL = '/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/chassagnole2002.xml'
 
 from optimModels.simulation.run import steady_state_simulation
+from optimModels.simulation.simulationResults import print_simul_result
 from optimModels.model.kineticModel import load_kinetic_model
 
 
 if __name__ == '__main__':
+    SBML_MODEL = '../../../examples/models/chassagnole2002.xml'
+
     #load Model
     model = load_kinetic_model(SBML_MODEL)
 
     # wild-type simulation
     result = steady_state_simulation(model)
-    result.print_result()  # KO simulation
+    print_simul_result(result)
 
     # Change parameters
     result = steady_state_simulation(model, parameters={'Dil': 0.2 / 3600})
-    result.print_result()
+    print_simul_result(result)
 
-    #Knockouts
-    result = steady_state_simulation(model, factors={'maxG6PDH': 0.0})
-    result.print_result()
+    #Knockouts (the local parameters has the sufix of reactioId)
+    result = steady_state_simulation(model, factors={'vG6PDH_rmaxG6PDH': 0.0})
+    print_simul_result(result)
 
-    # Under/over expression
-    result = steady_state_simulation(model, factors={'maxG6PDH': 2.0})
-    result.print_result()
+    # Under/over expression (the local parameters has the sufix of reactioId)
+    result = steady_state_simulation(model, factors={'vG6PDH_rmaxG6PDH': 2.0})
+    print_simul_result(result)

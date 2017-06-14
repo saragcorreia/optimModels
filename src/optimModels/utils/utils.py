@@ -3,7 +3,8 @@ from collections import OrderedDict
 import  multiprocessing.pool
 
 class MyTree:
-    "Generic tree node."
+    """Class to implement a generic tree."""
+
     def __init__(self, name='root', children=None):
         self.name = name
         self.children = []
@@ -12,10 +13,17 @@ class MyTree:
                 self.add_child(child)
 
     def add_child(self, node):
-       # assert isinstance(node, MyTree)
         self.children.append(node)
 
 def get_order_nodes(tree):
+    """
+    Returns the order of nodes
+
+    Parameters
+    -----------
+        tree : instance of MyTree
+
+    """
     if tree.children is None:
         return [tree.name];
     else:
@@ -36,14 +44,20 @@ def merge_two_dicts(x, y):
 
 
 class NoDaemonProcess(multiprocessing.Process):
-    # make 'daemon' attribute always return False
+    """
+    Extension of class *multiprocessing.Process* which make 'daemon' attribute always return False
+    """
+
     def _get_daemon(self):
         return False
     def _set_daemon(self, value):
         pass
     daemon = property(_get_daemon, _set_daemon)
 
-# We sub-class multiprocessing.pool.Pool instead of multiprocessing.Pool
-# because the latter is only a wrapper function, not a proper class.
+
 class MyPool(multiprocessing.pool.Pool):
+    """
+    Note : sub-class multiprocessing.pool.Pool instead of multiprocessing.Pool
+    because the latter is only a wrapper function, not a proper class.
+    """
     Process = NoDaemonProcess

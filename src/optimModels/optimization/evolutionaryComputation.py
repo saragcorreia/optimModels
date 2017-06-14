@@ -13,7 +13,7 @@ class optimProblemConfiguration():
     This class contains all information to perform a strain optimization
 
     Attributes
-    ------------
+    -----------
     simulProblem : kineticSimulationProblem
         Configuration of a kinetic simulation problem (model and modifications over the parameters)
     decoder : an instance of decoderKnockouts or decoderUnderOverExpression class
@@ -56,7 +56,7 @@ def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False):
     Function to perform the optimization using the integer set representation to the candidates solutions.
 
     Parameters
-    -----------
+    ----------
     optimProbConf : an instance of optimProblemConfiguration.
         This object contains all information to perform the strain optimization task.
     resultFile : str
@@ -65,7 +65,7 @@ def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False):
         True, if the user wants parallelize the population evaluation. (default False)
 
     Returns
-    ---------
+    --------
     out : list of individuals
         The function returns the last population of EA.
 
@@ -140,7 +140,7 @@ def optimization_tupleSetRep(optimProbConf, resultFile= None, isMultiProc=False)
         True, if the user wants parallelize the population evaluation. (default False)
 
     Returns
-    ---------
+    --------
     out : list of individuals
         The function returns the last population of EA.
 

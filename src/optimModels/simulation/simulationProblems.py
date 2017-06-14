@@ -117,9 +117,12 @@ class kineticSimulationProblem(simulationProblem):
                                        overrideSimulProblem=overrideSimulProblem)
 
 
-# auxiliary functions
-# required to avoid the pickling the solver.solve function
+
 def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoints):
+    """
+    Private function: auxiliary function required to avoid the pickling the solver.solve function
+
+    """
     finalRates = OrderedDict()
     f = model.get_ode(r_dict=finalRates, params=finalParameters, factors=finalFactors)
     func = lambda x, t: f(t, x)
