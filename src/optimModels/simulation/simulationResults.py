@@ -70,24 +70,6 @@ class kineticSimulationResult():
         """
         return self.ssConcentrations
 
-    def print_result(self):
-        print "Phenotype Simulation"
-        print"------------------------"
-        print "model id: " + self.modelId
-        print "status: " + solverStatus.get_status_str(self.solverStatus)
-        print "fluxes: "
-        for k,v in self.ssFluxesDistrib.items():
-            print "     " + k + " = " + str(v)
-
-        print "concentrations: "
-        for k, v in self.ssConcentrations.items():
-            print "     " + k + " = " + str(v)
-
-        if self.overrideSimulProblem:
-            print "mofifications:"
-            for k,v in self.overrideSimulProblem.get_factors().items():
-                print "     " + k + " = " + str(v)
-        print"------------------------"
 
 
     def __getstate__(self):
@@ -97,3 +79,22 @@ class kineticSimulationResult():
     def __setstate__(self, state):
         self.__dict__.update(state)
 
+
+def print_simul_result(kineticSimulResult):
+    print "Phenotype Simulation"
+    print"------------------------"
+    print "model id: " + kineticSimulResult.modelId
+    print "status: " + solverStatus.get_status_str(kineticSimulResult.solverStatus)
+    print "fluxes: "
+    for k,v in kineticSimulResult.ssFluxesDistrib.items():
+        print "     " + k + " = " + str(v)
+
+    print "concentrations: "
+    for k, v in kineticSimulResult.ssConcentrations.items():
+        print "     " + k + " = " + str(v)
+
+    if kineticSimulResult.overrideSimulProblem:
+        print "mofifications:"
+        for k,v in kineticSimulResult.overrideSimulProblem.get_factors().items():
+            print "     " + k + " = " + str(v)
+    print"------------------------"

@@ -81,7 +81,7 @@ class BPCY (objectiveFunction):
         self.productId = productId
         self.uptakeId = uptakeId
 
-    def get_fitenss(self, simulResult):
+    def get_fitness(self, simulResult):
         ssFluxes= simulResult.get_fluxes_distribution()
         if self.biomassId not in ssFluxes.keys or self.productId not in ssFluxes.keys:
             raise ValueError("Reaction ids is not present in the fluxes distribution. Please check id objective function is correct.")

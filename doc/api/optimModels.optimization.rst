@@ -28,14 +28,6 @@ optimModels.optimization.evolutionaryComputation module
     :undoc-members:
     :show-inheritance:
 
-optimModels.optimization.exp module
------------------------------------
-
-.. automodule:: optimModels.optimization.exp
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 optimModels.optimization.generators module
 ------------------------------------------
 
@@ -64,6 +56,14 @@ optimModels.optimization.replacers module
 -----------------------------------------
 
 .. automodule:: optimModels.optimization.replacers
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+optimModels.optimization.run module
+-----------------------------------
+
+.. automodule:: optimModels.optimization.run
     :members:
     :undoc-members:
     :show-inheritance:

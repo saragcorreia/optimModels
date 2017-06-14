@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
+from optimModels.optimization.objectiveFunctions import targetFlux,BPCY
 from optimModels.optimization.decoders import decoderKnockouts,decoderUnderOverExpression
 from optimModels.optimization.evolutionaryComputation import optimization_intSetRep,optimization_tupleSetRep,optimProblemConfiguration
 from optimModels.utils.configurations import kineticConfigurations
@@ -27,8 +28,8 @@ def strain_optim(model, objFunc=None, levels=None, criticalGenes=[], isMultiProc
     Returns
     -------
     out : list of kineticSimulationResults
-        The function returns the best solutions found in strain optimization. The kineticSimulationResults have the
-        flux distribution and metabolites concentration on steady-state, and the modifications made over the
+        The function returns the best solutions found in strain optimization. The kineticSimulationResults object has the
+        flux distribution and metabolites concentration at steady-state, and the modifications made over the
         original model.
 
     """
@@ -105,8 +106,8 @@ def simplifySolutions(optimProbConf, population):
     Returns
     -------
     out : list of kineticSimulationResults
-        The function returns the best solutions found in strain optimization. The kineticSimulationResults have the
-        flux distribution and metabolites concentration on steady-state, and the modifications made over the
+        The function returns the best solutions found in strain optimization. The kineticSimulationResults object has the
+        flux distribution and metabolites concentration at steady-state, and the modifications made over the
         original model.
     """
     simulProblem = optimProbConf.get_simulation_problem()
@@ -116,6 +117,7 @@ def simplifySolutions(optimProbConf, population):
 
     for ind in population:
         overrideProblem = decoder.get_override_simul_problem(ind.candidate, simulProblem)
+
         fitness = ind.fitness
 
         factorsOrig = OrderedDict(overrideProblem.get_factors())
@@ -129,9 +131,14 @@ def simplifySolutions(optimProbConf, population):
 
                 try:
                     res = simulProblem.simulate(overrideProblem)
-                    newFitness = objFunction.get_fitenss(res)
+                    print objFunction.get_name()
+
+                    newFitness = objFunction.get_fitness(res)
                 except Exception:
                     newFitness = -1.0
+
+                print fitness
+                print newFitness
                 if round(fitness, 12) != round(newFitness, 12):
                     factorsFinal[k]=v
 

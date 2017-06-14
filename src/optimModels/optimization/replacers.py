@@ -18,6 +18,11 @@ def new_candidates_replacement(random, population, parents, offspring, args):
     offspring : the list of offspring individuals
     args : a dictionary of keyword arguments
 
+    Returns
+    --------
+    out : list of individuals
+        Returns the new population that will be used to next generation.
+
     """
     population.sort()
    # print "population"
@@ -49,6 +54,12 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
     parents : the list of parent individuals
     offspring : the list of offspring individuals
     args : a dictionary of keyword arguments
+
+    Returns
+    --------
+    out : list of individuals
+        Returns the new population that will be used to next generation.
+
     """
 
     population.sort()

@@ -1,10 +1,11 @@
 from optimModels.optimization.objectiveFunctions import build_objective_function
 from optimModels.optimization.run import strain_optim
 from optimModels.model.kineticModel import load_kinetic_model
+from optimModels.simulation.simulationResults import print_simul_result
 
 BASE_PATH ="/Volumes/Data/Documents/Projects/DeCaF/Optimizations"
 SAVE_RESULT_FILE = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_dummy.csv"
-LEVELS = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
+LEVELS = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
 
 
 def ko_chassagnole():
@@ -18,7 +19,7 @@ def ko_chassagnole():
 
     result = strain_optim(model, objFunc=objFunc, levels=None, criticalGenes=[], isMultiProc=False, resultFile=fileRes)
     for r in result:
-        print r.print_result()
+        print print_simul_result(r)
 
 
 def under_over_chassagnole():
@@ -31,7 +32,7 @@ def under_over_chassagnole():
 
     result = strain_optim(model, objFunc=objFunc, levels=LEVELS, criticalGenes=[], isMultiProc=False, resultFile=fileRes)
     for r in result:
-        print r.print_result()
+        print print_simul_result(r)
 
 
 

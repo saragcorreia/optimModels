@@ -24,11 +24,11 @@ Running a simple steady state simulation (uses odespy package, LSODA method):
 
 ::
 
-    from optimModels import steady_state_simulation
+    from optimModels import steady_state_simulation, print_simul_result
 
     result = steady_state_simulation(model)
 
-    result.print_result()
+    print_simul_result(result)
 
 Simulation with diferent parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -38,7 +38,7 @@ It is possible override model parameters without changing the model:
 
     result = steady_state_simulation(model, parameters = {'Dil' : 0.2/3600})
 
-    result.print()
+    print_simul_result(result)
 
 Knockouts simulation
 ~~~~~~~~~~~~~~~~~~~~~
@@ -49,7 +49,7 @@ for instance maxG6PDH = 0 will be knockout the reaction vG6PDH:
 
     result = steady_state_simulation(model, factors={'maxG6PDH': 0.0})
 
-    result.print_result()
+    print_simul_result(result)
 
 Under/Over expression simulation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -59,4 +59,4 @@ The simulation of under (over) expression enzymes is done by multiplying vMax pa
 
     result = steady_state_simulation(model, factors={'maxG6PDH': 2.0})
 
-    result.print_result()
+    print_simul_result(result)

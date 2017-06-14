@@ -64,6 +64,11 @@ def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False):
     isMultiProc : boolean value.
         True, if the user wants parallelize the population evaluation. (default False)
 
+    Returns
+    ---------
+    out : list of individuals
+        The function returns the last population of EA.
+
     """
     rand = Random()
     my_ec = ec.EvolutionaryComputation(rand)
@@ -133,6 +138,12 @@ def optimization_tupleSetRep(optimProbConf, resultFile= None, isMultiProc=False)
         The path file to store all the results obtained during the optimization (default results are not saved into a file)
     isMultiProc : boolean value.
         True, if the user wants parallelize the population evaluation. (default False)
+
+    Returns
+    ---------
+    out : list of individuals
+        The function returns the last population of EA.
+
 
     """
     rand = Random()

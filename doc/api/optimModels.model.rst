@@ -4,10 +4,10 @@ optimModels.model package
 Submodules
 ----------
 
-optimModels.model.dynamicModel module
+optimModels.model.kineticModel module
 -------------------------------------
 
-.. automodule:: optimModels.model.dynamicModel
+.. automodule:: optimModels.model.kineticModel
     :members:
     :undoc-members:
     :show-inheritance:

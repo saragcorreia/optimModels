@@ -42,7 +42,7 @@ class decoderKnockouts(decoder):
             contains all information required to perform a simulation of the model.
 
         Returns
-        ---------
+        --------
         out : overrideKineticSimulProblem
             object with the modifications to be applied over the simulation Problem.
 
@@ -63,6 +63,7 @@ class decoderKnockouts(decoder):
         -----------
             candidate : list of int
                 indexes of parameters .
+
         Returns
         --------
             out : list of str
@@ -122,6 +123,7 @@ class decoderUnderOverExpression(decoder):
         -----------
             candidate : map
                 the key is the parameter index and the value is the level of expression index.
+
         Returns
         --------
             out : map

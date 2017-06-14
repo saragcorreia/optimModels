@@ -4,3 +4,5 @@ from optimModels.simulation.run import steady_state_simulation
 
 from optimModels.optimization.objectiveFunctions import build_objective_function
 from optimModels.optimization.run import strain_optim
+
+from optimModels.simulation.simulationResults import print_simul_result

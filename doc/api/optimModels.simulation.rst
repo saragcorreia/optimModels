@@ -12,6 +12,14 @@ optimModels.simulation.overrideSimulationProblem module
     :undoc-members:
     :show-inheritance:
 
+optimModels.simulation.run module
+---------------------------------
+
+.. automodule:: optimModels.simulation.run
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 optimModels.simulation.simulationProblems module
 ------------------------------------------------
 

@@ -4,18 +4,18 @@ optimModels.utils package
 Submodules
 ----------
 
-optimModels.utils.constantes module
------------------------------------
+optimModels.utils.configurations module
+---------------------------------------
 
-.. automodule:: optimModels.utils.constantes
+.. automodule:: optimModels.utils.configurations
     :members:
     :undoc-members:
     :show-inheritance:
 
-optimModels.utils.simplification module
----------------------------------------
+optimModels.utils.constantes module
+-----------------------------------
 
-.. automodule:: optimModels.utils.simplification
+.. automodule:: optimModels.utils.constantes
     :members:
     :undoc-members:
     :show-inheritance:

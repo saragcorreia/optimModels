@@ -37,7 +37,16 @@ The strain optimization using the knockouts can be performed calling the *strain
 
     result = strain_optim(model, objFunc=objFunc)
     for r in result:
-        print r.print_result()
+        print_simul_result(result)
 
 Under/Over expression
 ~~~~~~~~~~~~~~~~~~~~~~
+To performe a under/over expression optimization the multiplied factors levels should be given as argument.
+
+::
+
+    levels = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
+
+    result = strain_optim(model, objFunc=objFunc, levels = levels)
+    for r in result:
+        print_simul_result(result)
