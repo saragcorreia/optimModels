@@ -17,7 +17,9 @@ The objective function is responsible for calculate the fitness value for each c
 optimization process.
 
 At the moment there are two objective functions available:
+
 - *targetFlux* : the fitness value is the flux of a given target reaction.
+
 - *BPCY* : the fitness value is the Biomass-Product Coupled Yield. In this case the user must
 specify 3 reactions identifiers (biomass, product and uptake).
 
@@ -35,8 +37,8 @@ The strain optimization using the knockouts can be performed calling the *strain
 
     from optimModels import strain_optim
 
-    result = strain_optim(model, objFunc=objFunc)
-    for r in result:
+    results = strain_optim(model, objFunc=objFunc)
+    for result in results:
         print_simul_result(result)
 
 Under/Over expression
@@ -47,6 +49,6 @@ To performe a under/over expression optimization the multiplied factors levels s
 
     levels = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
 
-    result = strain_optim(model, objFunc=objFunc, levels = levels)
-    for r in result:
+    results = strain_optim(model, objFunc=objFunc, levels = levels)
+    for result in results:
         print_simul_result(result)
