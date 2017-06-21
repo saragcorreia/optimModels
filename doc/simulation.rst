@@ -60,3 +60,4 @@ The simulation of under (over) expression enzymes is done by multiplying vMax pa
     result = steady_state_simulation(model, factors={'maxG6PDH': 2.0})
 
     print_simul_result(result)
+
