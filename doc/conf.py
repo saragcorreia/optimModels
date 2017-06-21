@@ -18,8 +18,6 @@
 #
 import os
 import sys
-import numpy
-import numpydoc
 
 sys.path.insert(0, os.path.abspath('../src/'))
 
