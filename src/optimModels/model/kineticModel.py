@@ -5,7 +5,6 @@ from framed.io.sbml import _load_compartments, _load_metabolites, _load_reaction
 from framed.model.odemodel import ODEModel
 import re
 from math import log
-from optimModels.utils.constantes import solverParameters, Parameter
 from  optimModels.utils.utils import MyTree
 
 

@@ -3,3 +3,4 @@ multiprocessing
 framed
 inspyred
 python-libsbml
+numpy
