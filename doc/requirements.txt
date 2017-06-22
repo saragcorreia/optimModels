@@ -4,3 +4,6 @@ framed
 inspyred
 python-libsbml
 numpy
+scipy
+sympy
+seaborn
