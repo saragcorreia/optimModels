@@ -1,7 +1,6 @@
 optimModels.utils package
 =========================
 
-
 Submodules
 ----------
 

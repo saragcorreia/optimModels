@@ -1,7 +1,6 @@
 optimModels.model package
 =========================
 
-
 Submodules
 ----------
 

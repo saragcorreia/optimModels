@@ -1,7 +1,6 @@
 optimModels.unittests package
 =============================
 
-
 Submodules
 ----------
 

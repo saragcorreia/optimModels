@@ -1,7 +1,6 @@
 optimModels.simulation package
 ==============================
 
-
 Submodules
 ----------
 

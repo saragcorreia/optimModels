@@ -1,7 +1,6 @@
 optimModels package
 ===================
 
-
 Subpackages
 -----------
 
