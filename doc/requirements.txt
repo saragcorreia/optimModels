@@ -1,10 +1,1 @@
-numpydoc==0.6.0
-multiprocessing
-framed
-inspyred
-python-libsbml
-numpy
-scipy
-sympy
-seaborn
-odespy
+numpydoc==0.6
