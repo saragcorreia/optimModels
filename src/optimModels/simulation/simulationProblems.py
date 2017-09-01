@@ -6,8 +6,7 @@ from optimModels.utils.utils import merge_two_dicts, MyPool
 from optimModels.simulation.simulationResults import kineticSimulationResult
 from optimModels.simulation.solvers import odespySolver
 from optimModels.utils.configurations import kineticConfigurations
-from optimModels.utils.constantes import solverStatus
-
+from optimModels.utils.constantes import solverStatus, Parameter,solverParameters
 try:
     import cPickle as pickle
 except ImportError:
@@ -39,7 +38,7 @@ class kineticSimulationProblem(simulationProblem):
 
     """
 
-    def __init__(self, model, parameters=None, tSteps=[0, 1e9], timeout=None):
+    def __init__(self, model, parameters=None, tSteps=[0, 1e9], timeout=kineticConfigurations.SOLVER_TIMEOUT):
         self.model = model
         self.parameters = parameters
         self.tSteps = tSteps
@@ -87,7 +86,9 @@ class kineticSimulationProblem(simulationProblem):
             final_factors = overrideSimulProblem.factors
         # update initial concentrations when a [enz] is changed: == 0, up or down regulated
         initConcentrations = self.get_initial_concentrations().copy()
-
+        print "------conc ----"
+        print initConcentrations
+        print "------conc ----"
         t1 = time.time()
         if self.timeout is None:
             sstateRates, sstateConc, status = _my_kinetic_solve(self.get_model(), self.parameters,
@@ -138,5 +139,8 @@ def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoi
         #print finalRates
         return {}, {}, solverStatus.ERROR
 
+    print finalRates
+    # values bellow solver precision will be set to 0
+    finalRates.update({k: 0 for k, v in finalRates.items() if v < solverParameters[Parameter.RELATIVE_TOL] and v > - solverParameters[Parameter.RELATIVE_TOL]})
     conc = OrderedDict(zip(model.metabolites.keys(), X[1]))
     return finalRates, conc, solverStatus.OPTIMAL

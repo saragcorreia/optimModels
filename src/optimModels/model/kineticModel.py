@@ -112,7 +112,6 @@ class kineticModel(ODEModel):
         out : str
             Returns  a string with the ode system.
         """
-
         # factors: ["vmax1": 0, "vmax2"=2, "ENZYME_ID":0]
         # divide vmax parameters from enzymes expression levels
 
@@ -151,7 +150,7 @@ class kineticModel(ODEModel):
                    ',\n'.join(balances) + '\n' + \
                    '    ]\n\n' + \
                    '    return dxdt\n'
-        #print func_str
+        print func_str
         return func_str
 
     def get_ode(self, r_dict=None, params=None, factors=None):
@@ -186,7 +185,10 @@ class kineticModel(ODEModel):
 
         exec self.build_ode(factors) in globals()
         ode_func = eval('ode_func')
-
+        print "Parameters"
+        print p
+        print v
+        print "-----"
         f = lambda t, x: ode_func(t, x, r, p, v)
         return f
 
