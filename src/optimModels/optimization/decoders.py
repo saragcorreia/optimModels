@@ -14,7 +14,7 @@ class decoder:
         pass
 
     @abstractmethod
-    def candidate_decoded(self, candidate, model):
+    def candidate_decoded(self, candidate):
         pass
 
 
@@ -56,7 +56,7 @@ class decoderKnockouts(decoder):
         return override
 
     def candidate_decoded(self, candidate):
-        """ Convert the list of index into a list of ientifiers.
+        """ Convert the list of index into a list of identifiers.
 
         Parameters
         -----------
@@ -69,6 +69,23 @@ class decoderKnockouts(decoder):
                 parameters identifiers.
         """
         result = [self.ids[x] for x in list(candidate)]
+        return result
+
+    def candidate_decoded_ids_to_index(self, candidate):
+        """ Convert the list of identifiers into a list of integers (indexes).
+
+        Parameters
+        -----------
+            candidate : list of str
+                ids of parameters .
+
+        Returns
+        --------
+            out : list of int
+                indexes of parameters.
+        """
+        result =  [self.ids.index(x) for x in candidate]
+
         return result
 
     def __getstate__(self):
@@ -129,6 +146,24 @@ class decoderUnderOverExpression(decoder):
             The key is the parameter id and the value is the level of expression with values between 0 and 1 to represent under expression or higher that 1 to represent the over expression.
         """
         result = {self.ids[k]: self.levels[v] for (k, v) in list(candidate)}
+        return result
+
+
+    def candidate_decoded_ids_to_index(self, candidate):
+        """ Convert the list of identifiers into a list of integers (indexes).
+
+        Parameters
+        -----------
+            candidate : list of str
+                ids of parameters .
+
+        Returns
+        --------
+            out : list of int
+                indexes of parameters.
+        """
+        result =  [(self.ids.index(x),self.levels.index(y))  for x,y in candidate.items()]
+
         return result
 
     def __getstate__(self):
