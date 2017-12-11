@@ -17,7 +17,7 @@ class simulationProblem:
     __metaclass__ = ABCMeta
 
     @abstractmethod
-    def simulate(self, solverId, overrideProblem):
+    def simulate(self, overrideProblem):
         return
 
 
@@ -86,9 +86,9 @@ class kineticSimulationProblem(simulationProblem):
             final_factors = overrideSimulProblem.factors
         # update initial concentrations when a [enz] is changed: == 0, up or down regulated
         initConcentrations = self.get_initial_concentrations().copy()
-        print "------conc ----"
-        print initConcentrations
-        print "------conc ----"
+       # print "------conc ----"
+       # print initConcentrations
+       # print "------conc ----"
         t1 = time.time()
         if self.timeout is None:
             sstateRates, sstateConc, status = _my_kinetic_solve(self.get_model(), self.parameters,
@@ -111,7 +111,7 @@ class kineticSimulationProblem(simulationProblem):
             p.close()
             p.join()
         t2 = time.time()
-        print "TIME (seconds) simulate: " + str(t2 - t1)
+        print ("TIME (seconds) simulate: " + str(t2 - t1))
 
         return kineticSimulationResult(self.get_model().id, solverStatus=status, ssFluxesDistrib=sstateRates,
                                        ssConcentrations=sstateConc,
@@ -129,17 +129,16 @@ def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoi
     func = lambda x, t: f(t, x)
 
     solver = odespySolver(kineticConfigurations.SOLVER_METHOD).get_solver(func)
-    solver.set_initial_condition(initialConc)
-
+    solver.set_initial_condition(list(initialConc))
     try:
         X, t = solver.solve(timePoints)
     except Exception:
-        print "Error on solver!!!"
+        print ("Error on solver!!!")
         #print X
         #print finalRates
         return {}, {}, solverStatus.ERROR
 
-    print finalRates
+    print (finalRates)
     # values bellow solver precision will be set to 0
     finalRates.update({k: 0 for k, v in finalRates.items() if v < solverParameters[Parameter.RELATIVE_TOL] and v > - solverParameters[Parameter.RELATIVE_TOL]})
     conc = OrderedDict(zip(model.metabolites.keys(), X[1]))

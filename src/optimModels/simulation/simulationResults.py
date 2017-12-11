@@ -81,20 +81,20 @@ class kineticSimulationResult():
 
 
 def print_simul_result(kineticSimulResult):
-    print "Phenotype Simulation"
-    print"------------------------"
-    print "model id: " + kineticSimulResult.modelId
-    print "status: " + solverStatus.get_status_str(kineticSimulResult.solverStatus)
-    print "fluxes: "
+    print("Phenotype Simulation")
+    print("------------------------")
+    print("model id: " + kineticSimulResult.modelId)
+    print("status: " + solverStatus.get_status_str(kineticSimulResult.solverStatus))
+    print("fluxes: ")
     for k,v in kineticSimulResult.ssFluxesDistrib.items():
-        print "     " + k + " = " + str(v)
+        print("     " + k + " = " + str(v))
 
-    print "concentrations: "
+    print("concentrations: ")
     for k, v in kineticSimulResult.ssConcentrations.items():
-        print "     " + k + " = " + str(v)
+        print("     " + k + " = " + str(v))
 
     if kineticSimulResult.overrideSimulProblem:
-        print "mofifications:"
+        print("mofifications:")
         for k,v in kineticSimulResult.overrideSimulProblem.get_factors().items():
-            print "     " + k + " = " + str(v)
-    print"------------------------"
+            print("     " + k + " = " + str(v))
+    print("------------------------")

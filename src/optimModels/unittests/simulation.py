@@ -1,14 +1,16 @@
 
 from optimModels.simulation.run import steady_state_simulation
 from optimModels.simulation.simulationResults import print_simul_result
+
 from optimModels.model.kineticModel import load_kinetic_model
 
 
 if __name__ == '__main__':
-    SBML_MODEL = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/TinyModel_RHS.xml"
+    #SBML_MODEL = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Data/TinyModel_RHS.xml"
 
+    SBML_MODEL = '../../../examples/models/Millard2016v2.xml'
+    #SBML_MODEL = '../../../examples/models/Jahan2016_chemostat_fixed.xml'
     #SBML_MODEL = '../../../examples/models/chassagnole2002.xml'
-
     #load Model
     model = load_kinetic_model(SBML_MODEL)
 

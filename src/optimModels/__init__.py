@@ -1,8 +1,8 @@
-from optimModels.model.kineticModel import load_kinetic_model
+from .model.kineticModel import load_kinetic_model
 
-from optimModels.simulation.run import steady_state_simulation
+from .simulation.run import steady_state_simulation
 
-from optimModels.optimization.objectiveFunctions import build_objective_function
-from optimModels.optimization.run import strain_optim
+from .optimization.objectiveFunctions import build_objective_function
+from .optimization.run import strain_optim
 
-from optimModels.simulation.simulationResults import print_simul_result
+from .simulation.simulationResults import print_simul_result

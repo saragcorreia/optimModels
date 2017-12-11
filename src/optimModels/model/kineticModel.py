@@ -1,6 +1,6 @@
 from collections import OrderedDict
 from libsbml import readSBMLFromFile
-from framed.io.sbml import _load_compartments, _load_metabolites, _load_reactions, _load_global_parameters, \
+from framed.io.sbml import  _load_compartments, _load_metabolites, _load_reactions, _load_global_parameters, \
     _load_local_parameters, _load_ratelaws, _load_assignment_rules, _load_concentrations
 from framed.model.odemodel import ODEModel
 import re
@@ -53,7 +53,7 @@ def load_kinetic_model(filename, map=None):
     if map is not None:
         model.set_reactions_parameters_factors(map)
     else:
-        aux = OrderedDict([(rId ,  [rId+"_"+x for x in re.findall("(rmax\w*)", ratelaw)]) for rId, ratelaw in model.ratelaws.items()])
+        aux = OrderedDict([(rId ,  [rId+"_"+x for x in re.findall("(rmax\w*)", ratelaw)]) for rId, ratelaw in model.ratelaws.items()])#CHASSAGNOLE
         model.reacParamsFactors = OrderedDict([(rId , params) for rId, params in aux.items() if len(params) > 0])
         #model.reacParamsFactors = OrderedDict([(rId ,  re.findall("(vMax\w*)", ratelaw)) for rId, ratelaw in model.ratelaws.items()])
 
@@ -150,7 +150,6 @@ class kineticModel(ODEModel):
                    ',\n'.join(balances) + '\n' + \
                    '    ]\n\n' + \
                    '    return dxdt\n'
-        print func_str
         return func_str
 
     def get_ode(self, r_dict=None, params=None, factors=None):
@@ -183,12 +182,14 @@ class kineticModel(ODEModel):
         if params:
             p.update(params)
 
-        exec self.build_ode(factors) in globals()
+        exec(self.build_ode(factors), globals())
         ode_func = eval('ode_func')
-        print "Parameters"
-        print p
-        print v
-        print "-----"
+
+        #print "Parameters"
+        #print p
+        #print v
+        #print "-----"
+        print (self.build_ode(factors))
         f = lambda t, x: ode_func(t, x, r, p, v)
         return f
 
@@ -264,7 +265,7 @@ def _get_oder_rules(trees):
     for tree in trees:
         new_elems = _get_order_nodes(tree)
         [res.append(item) for item in new_elems if item not in res]
-    print res
+    #print res
     return res
 
 

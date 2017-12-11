@@ -40,8 +40,8 @@ def evaluator(candidates, args):
                 fitInd = config.get_objective_function().get_fitness(res)
                 if math.isnan(fitInd):
                     fitInd = -1.0
-        except ValueError, e:
-            print "Oops! Solver problems.  " + e.message
+        except (ValueError):
+            print ("Oops! Solver problems.  " + e.message)
             logging.getLogger('optimModels').warning( "Oops! Solver problems.  " + e.message)
         fitness.append(fitInd)
     return fitness

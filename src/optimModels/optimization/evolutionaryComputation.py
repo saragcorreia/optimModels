@@ -51,7 +51,7 @@ class optimProblemConfiguration():
         self.__dict__.update(state)
 
 
-def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False):
+def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False, population = None, nextGen = 0):
     """
     Function to perform the optimization using the integer set representation to the candidates solutions.
 
@@ -85,11 +85,14 @@ def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False):
         my_ec.observer = observers.save_all_results
 
     bounds = [0, len(optimProbConf.get_decoder().ids) - 1]
+
     if isMultiProc:
         try:
             nprocs= int(cpu_count()/2)
         except NotImplementedError:
             nprocs = EAConfigurations.NUM_CPUS
+        print("###########")
+        print(EAConfigurations.MAX_CANDIDATE_SIZE)
 
         final_pop = my_ec.evolve(generator=generators.generator_intSetRep,
                                  evaluator=evaluators.parallel_evaluation_mp,
@@ -106,6 +109,8 @@ def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False):
                                  new_candidates_rate=EAConfigurations.NEW_CANDIDATES_RATE,
                                  configuration=optimProbConf,
                                  results_file=resultFile,
+                                 SGC_candidates=population,
+                                 SGC_numGen=nextGen,
                                  tournament_size=EAConfigurations.TOURNAMENT_SIZE)
     else:
         final_pop = my_ec.evolve(generator=generators.generator_intSetRep,
@@ -121,12 +126,14 @@ def optimization_intSetRep(optimProbConf, resultFile= None, isMultiProc=False):
                                  new_candidates_rate=EAConfigurations.NEW_CANDIDATES_RATE,
                                  configuration=optimProbConf,
                                  results_file=resultFile,
+                                 SGC_candidates=population,
+                                 SGC_numGen=nextGen,
                                  tournament_size=EAConfigurations.TOURNAMENT_SIZE
                                  )
     return final_pop
 
 
-def optimization_tupleSetRep(optimProbConf, resultFile= None, isMultiProc=False):
+def optimization_tupleSetRep(optimProbConf, resultFile= None, isMultiProc=False, population = None, nextGen = 0):
     """
     Function to perform the optimization using the tuple set representation to the candidates solutions.
 
@@ -182,6 +189,8 @@ def optimization_tupleSetRep(optimProbConf, resultFile= None, isMultiProc=False)
                                  new_candidates_rate=EAConfigurations.NEW_CANDIDATES_RATE,
                                  configuration=optimProbConf,
                                  results_file=resultFile,
+                                 SGC_candidates = population,
+                                 SGC_numGen = nextGen,
                                  tournament_size=EAConfigurations.TOURNAMENT_SIZE)
     else:
         final_pop = my_ec.evolve(generator=generators.generator_intTupleRep,
@@ -197,6 +206,8 @@ def optimization_tupleSetRep(optimProbConf, resultFile= None, isMultiProc=False)
                                  new_candidates_rate=EAConfigurations.NEW_CANDIDATES_RATE,
                                  configuration=optimProbConf,
                                  results_file=resultFile,
+                                 SGC_candidates=population,
+                                 SGC_numGen=nextGen,
                                  tournament_size=EAConfigurations.TOURNAMENT_SIZE)
 
     return final_pop

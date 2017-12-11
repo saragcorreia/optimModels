@@ -150,16 +150,16 @@ class decoderUnderOverExpression(decoder):
 
 
     def candidate_decoded_ids_to_index(self, candidate):
-        """ Convert the list of identifiers into a list of integers (indexes).
+        """ Convert the list of tupples of identifiers into a list of tuples of integers (indexes).
 
         Parameters
         -----------
-            candidate : list of str
+            candidate : list of tuples
                 ids of parameters .
 
         Returns
         --------
-            out : list of int
+            out : list of tuples
                 indexes of parameters.
         """
         result =  [(self.ids.index(x),self.levels.index(y))  for x,y in candidate.items()]

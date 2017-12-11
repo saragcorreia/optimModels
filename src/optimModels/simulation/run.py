@@ -1,9 +1,9 @@
-import copy
+#import copy
 
-from optimModels.model.kineticModel import load_kinetic_model
+#from optimModels.model.kineticModel import load_kinetic_model
 from optimModels.simulation.simulationProblems import kineticSimulationProblem
 from optimModels.simulation.overrideSimulationProblem import overrideKineticSimulProblem
-from optimModels.utils.configurations import EAConfigurations
+#from optimModels.utils.configurations import EAConfigurations
 
 def steady_state_simulation(model, parameters = None, factors = None, time = 1e9):
     """
@@ -29,7 +29,7 @@ def steady_state_simulation(model, parameters = None, factors = None, time = 1e9
 
     """
 
-    simulProblem = kineticSimulationProblem(model, parameters = parameters , tSteps=[0, time])
+    simulProblem = kineticSimulationProblem(model, parameters = parameters , tSteps=[0, time], timeout=None)
 
     if factors:
         override = overrideKineticSimulProblem(factors = factors)

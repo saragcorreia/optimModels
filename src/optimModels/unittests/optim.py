@@ -2,22 +2,25 @@ from optimModels.optimization.objectiveFunctions import build_objective_function
 from optimModels.optimization.run import strain_optim
 from optimModels.model.kineticModel import load_kinetic_model
 from optimModels.simulation.simulationResults import print_simul_result
+from optimModels.utils.configurations import EAConfigurations
+from collections import OrderedDict
 
 LEVELS = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
-
+#basePath = "/home/scorreia/Decaf/"
+basePath = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/"
 
 def ko_chassagnole():
     sbmlFile = '../../../examples/models/chassagnole2002.xml'
-    fileRes = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_ko.csv"
+    fileRes = basePath + "Results/optim_Chassagnole_Serine_ko.csv"
 
 
     model = load_kinetic_model(sbmlFile)
 
     objFunc = build_objective_function("targetFlux", ["vsersynth"])
 
-    result = strain_optim(model, objFunc=objFunc, levels=None, criticalGenes=[], isMultiProc=False, resultFile=fileRes)
+    result = strain_optim(model, objFunc=objFunc, levels=None, isMultiProc=False, resultFile=fileRes)
     for r in result:
-        print print_simul_result(r)
+        print (print_simul_result(r))
 
 
 def under_over_chassagnole():
@@ -30,7 +33,7 @@ def under_over_chassagnole():
 
     result = strain_optim(model, objFunc=objFunc, levels=LEVELS, criticalGenes=[], isMultiProc=False, resultFile=fileRes)
     for r in result:
-        print print_simul_result(r)
+        print (print_simul_result(r))
 
 
 def ko_jahan():
@@ -53,20 +56,84 @@ def ko_jahan():
 
     objFunc = build_objective_function("targetFlux", ["vD_SUC"])
 
-    result = strain_optim(model, objFunc=objFunc, levels=LEVELS, criticalGenes=[], isMultiProc=False, resultFile=fileRes)
+    result = strain_optim(model, objFunc=objFunc, levels=LEVELS, isMultiProc=False, resultFile=fileRes)
     for r in result:
-        print print_simul_result(r)
+        print (print_simul_result(r))
+
+def ko_millard(isMultiProc=False, size=1):
+    EAConfigurations.MAX_CANDIDATE_SIZE = size;
+
+    sbmlFile = '../../../examples/models/Millard2016v2.xml'
+    fileRes = basePath  + "Results/optim_Millard_acet_ko_"+str(size)+".csv"
+    fileLastGen = basePath + "Results/optim_Millard_acet_ko_" + str(size) + "_lastgen.csv"
+
+    mapParamReacs = OrderedDict([('PTS_4', ['eiicbP']), ('PTS_0', ['ei']), ('PTS_1', ['eiP']), ('PTS_2', ['eiia']), ('PTS_3', ['eiicb']),
+                      ('PGI', ['PGI_Vmax']), ('PFK', ['PFK_Vmax']), ('FBA', ['FBA_Vmax']), ('TPI', ['TPI_Vmax']),
+                      ('GDH', ['GDH_Vmax']), ('PGK', ['PGK_Vmax']), ('GPM', ['GPM_Vmax']), ('ENO', ['ENO_Vmax']),
+                      ('PYK', ['PYK_Vmax']), ('ZWF', ['ZWF_Vmax']), ('PGL', ['PGL_Vmax']), ('GND', ['GND_Vmax']),
+                      ('RPE', ['RPE_Vmax']), ('RPI', ['RPI_Vmax']), ('X5P_GAP_TKT', ['tkt']), ('F6P_E4P_TKT', ['tktC2']),
+                      ('S7P_R5P_TKT', ['tktC2']), ('F6P_GAP_TAL', ['talC3']), ('S7P_E4P_TAL', ['tal']), ('FBP', ['FBP_Vmax']),
+                      ('PPC', ['PPC_Vmax']), ('PCK', ['PCK_Vmax']), ('PPS', ['PPS_Vmax']), ('MAD', ['MAD_Vmax']),
+                      ('PDH', ['PDH_Vmax']), ('GLT', ['GLT_Vmax']), ('ACN_1', ['ACN_1_Vmax']), ('ACN_2', ['ACN_2_Vmax']),
+                      ('ICD', ['icd']), ('LPD', ['LPD_Vmax']), ('SK', ['SK_Vmax']), ('SDH', ['SDH_Vmax']), ('FUMA', ['FUMA_Vmax']),
+                      ('MQO', ['MQO_Vmax']), ('MDH', ['MDH_Vmax']), ('ACEA', ['ACEA_Vmax']), ('ACEB', ['ACEB_Vmax']),
+                      ('EDD', ['EDD_Vmax']), ('EDA', ['EDA_Vmax']), ('NADH_req', ['NADH_req_Vmax']), ('ATP_syn', ['ATP_syn_Vmax']),
+                      ('ACK', ['ACK_Vmax']), ('ACS', ['ACS_Vmax']), ('PTA', ['PTA_Vmax']), ('MYTBO', ['MYTBO_Vmax']),
+                      ('SQR', ['SQR_Vmax']), ('NDHII', ['NDHII_Vmax']), ('GROWTH', ['GROWTH_Vmax']), ('ATP_MAINTENANCE', ['ATP_MAINTENANCE_Vmax']),
+                      ('XCH_GLC', ['XCH_GLC_Vmax']), ('PIT', ['PIT_Vmax']), ('XCH_P', ['XCH_P_Vmax']), ('XCH_ACE1', ['XCH_ACE1_Vmax']),
+                      ('XCH_ACE2', ['XCH_ACE2_Vmax'])])
+
+    model = load_kinetic_model(sbmlFile, mapParamReacs)
+
+    objFunc = build_objective_function("targetFlux", ["_ACE_OUT"])
+
+
+    result = strain_optim(model, objFunc=objFunc, levels=None, criticalGenes=['ATP_MAINTENANCE_Vmax','GROWTH_Vmax', 'NDHII_Vmax','PIT_Vmax','eiicbP','ei','eiP', 'eiia'], isMultiProc=isMultiProc, resultFile=fileRes, initPopFile=fileLastGen)
+    for r in result:
+        print (print_simul_result(r))
+
+
+def under_over_millard(isMultiProc=False, size=1):
+    EAConfigurations.MAX_CANDIDATE_SIZE = size;
+
+    sbmlFile = '../../../examples/models/Millard2016v2.xml'
+    fileRes = basePath + "Results/optim_Millard_acet_underover_"+str(size)+".csv"
+    fileLastGen = basePath + "Results/optim_Millard_acet_underover_" + str(size) + "_lastgen.csv"
+    mapParamReacs = OrderedDict([('PTS_4', ['eiicbP']), ('PTS_0', ['ei']), ('PTS_1', ['eiP']), ('PTS_2', ['eiia']), ('PTS_3', ['eiicb']),
+                      ('PGI', ['PGI_Vmax']), ('PFK', ['PFK_Vmax']), ('FBA', ['FBA_Vmax']), ('TPI', ['TPI_Vmax']),
+                      ('GDH', ['GDH_Vmax']), ('PGK', ['PGK_Vmax']), ('GPM', ['GPM_Vmax']), ('ENO', ['ENO_Vmax']),
+                      ('PYK', ['PYK_Vmax']), ('ZWF', ['ZWF_Vmax']), ('PGL', ['PGL_Vmax']), ('GND', ['GND_Vmax']),
+                      ('RPE', ['RPE_Vmax']), ('RPI', ['RPI_Vmax']), ('X5P_GAP_TKT', ['tkt']), ('F6P_E4P_TKT', ['tktC2']),
+                      ('S7P_R5P_TKT', ['tktC2']), ('F6P_GAP_TAL', ['talC3']), ('S7P_E4P_TAL', ['tal']), ('FBP', ['FBP_Vmax']),
+                      ('PPC', ['PPC_Vmax']), ('PCK', ['PCK_Vmax']), ('PPS', ['PPS_Vmax']), ('MAD', ['MAD_Vmax']),
+                      ('PDH', ['PDH_Vmax']), ('GLT', ['GLT_Vmax']), ('ACN_1', ['ACN_1_Vmax']), ('ACN_2', ['ACN_2_Vmax']),
+                      ('ICD', ['icd']), ('LPD', ['LPD_Vmax']), ('SK', ['SK_Vmax']), ('SDH', ['SDH_Vmax']), ('FUMA', ['FUMA_Vmax']),
+                      ('MQO', ['MQO_Vmax']), ('MDH', ['MDH_Vmax']), ('ACEA', ['ACEA_Vmax']), ('ACEB', ['ACEB_Vmax']),
+                      ('EDD', ['EDD_Vmax']), ('EDA', ['EDA_Vmax']), ('NADH_req', ['NADH_req_Vmax']), ('ATP_syn', ['ATP_syn_Vmax']),
+                      ('ACK', ['ACK_Vmax']), ('ACS', ['ACS_Vmax']), ('PTA', ['PTA_Vmax']), ('MYTBO', ['MYTBO_Vmax']),
+                      ('SQR', ['SQR_Vmax']), ('NDHII', ['NDHII_Vmax']), ('GROWTH', ['GROWTH_Vmax']), ('ATP_MAINTENANCE', ['ATP_MAINTENANCE_Vmax']),
+                      ('XCH_GLC', ['XCH_GLC_Vmax']), ('PIT', ['PIT_Vmax']), ('XCH_P', ['XCH_P_Vmax']), ('XCH_ACE1', ['XCH_ACE1_Vmax']),
+                      ('XCH_ACE2', ['XCH_ACE2_Vmax'])])
+
+    model = load_kinetic_model(sbmlFile, mapParamReacs)
+
+    objFunc = build_objective_function("targetFlux", ["_ACE_OUT"])
+
+    result = strain_optim(model, objFunc=objFunc, levels=LEVELS, criticalGenes=['ATP_MAINTENANCE_Vmax','GROWTH_Vmax', 'NDHII_Vmax','PIT_Vmax','eiicbP','ei','eiP', 'eiia'], isMultiProc=isMultiProc, resultFile=fileRes, initPopFile=fileLastGen)
+    for r in result:
+        print (print_simul_result(r))
+
 
 if __name__ == '__main__':
     import time
     import warnings
+    import sys
+    size = 1
+
     warnings.filterwarnings('ignore')  # ignore the warnings related to floating points raise from solver!!!
     t1 = time.time()
-    ko_jahan()
+    #ko_millard(True,size)
+    under_over_millard(True, size)
     t2 = time.time()
-    print "time with multiproccessing" + str(t2 - t1)
+    print ("time with multiproccessing" + str(t2 - t1))
 
-    t1 = time.time()
-    under_over_chassagnole()
-    t2 = time.time()
-    print "time with multiproccessing" + str(t2 - t1)
