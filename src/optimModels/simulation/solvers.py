@@ -1,6 +1,7 @@
 import odespy
 
-from optimModels.utils.constantes import solverParameters, Parameter, solverMethod
+from optimModels.utils.configurations import SolverConfigurations
+from optimModels.utils.constantes import solverMethod
 
 
 class odespySolver:
@@ -54,9 +55,9 @@ class odespySolver:
             solver = odespy.AdamsBashMoulton2(func)
 
         # update default parameters
-        solver.nsteps = solverParameters[Parameter.N_STEPS]
-        solver.atol = solverParameters[Parameter.ABSOLUTE_TOL]
-        solver.rtol = solverParameters[Parameter.RELATIVE_TOL]
+        solver.nsteps = SolverConfigurations.N_STEPS
+        solver.atol = SolverConfigurations.ABSOLUTE_TOL
+        solver.rtol = SolverConfigurations.RELATIVE_TOL
 
         return solver
 

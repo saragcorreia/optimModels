@@ -32,19 +32,22 @@ def evaluator(candidates, args):
     simulProblem = config.get_simulation_problem()
     fitness = []
     for candidate in candidates:
+        candidateDecoded = decoder.decode_candidate(candidate)
         overrideProblem = decoder.get_override_simul_problem(candidate, simulProblem)
         fitInd = -1.0
         try:
             res = simulProblem.simulate(overrideProblem)
-            if res.get_solver_status() == solverStatus.OPTIMAL:
-                fitInd = config.get_objective_function().get_fitness(res)
+            if res.get_solver_status() == solverStatus.OPTIMAL or res.get_solver_status() == solverStatus.SUBOPTIMAL:
+                fitInd = config.get_evaluation_function().get_fitness(res, candidateDecoded)
                 if math.isnan(fitInd):
                     fitInd = -1.0
-        except (ValueError):
-            print ("Oops! Solver problems.  " + e.message)
-            logging.getLogger('optimModels').warning( "Oops! Solver problems.  " + e.message)
+        except (Exception):
+            print ("Oops! Solver problems.  ")
+            logging.getLogger('optimModels').warning( "Oops! Solver problems.")
         fitness.append(fitInd)
     return fitness
+
+
 
 
 
@@ -116,6 +119,7 @@ def parallel_evaluation_mp(candidates, args):
         raise
     else:
         end = time.time()
+        print('completed parallel_evaluation_mp in {0} seconds'.format(end - start))
         logger.debug('completed parallel_evaluation_mp in {0} seconds'.format(end - start))
 
 

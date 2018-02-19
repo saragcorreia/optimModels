@@ -1,17 +1,26 @@
-#import copy
+from framed.model.cbmodel import CBModel
+from optimModels.simulation.simul_problems import KineticSimulationProblem, StoicSimulationProblem
+from optimModels.simulation.override_simul_problem import OverrideKineticSimulProblem, OverrideStoicSimulProblem
 
-#from optimModels.model.kineticModel import load_kinetic_model
-from optimModels.simulation.simulationProblems import kineticSimulationProblem
-from optimModels.simulation.overrideSimulationProblem import overrideKineticSimulProblem
-#from optimModels.utils.configurations import EAConfigurations
 
-def steady_state_simulation(model, parameters = None, factors = None, time = 1e9):
+
+def cbm_simulation (model, objective, minimize, constraints, solverId, method):
+    simulProblem = StoicSimulationProblem(model, objective=objective, minimize=minimize, constraints=constraints, solverId=solverId, method = method)
+    if constraints:
+        override = OverrideStoicSimulProblem(constraints = constraints)
+        result = simulProblem.simulate(override)
+    else:
+        result = simulProblem.simulate()
+    return result
+
+
+def kinetic_simulation(model, parameters = None, factors = None, time = 1e9):
     """
     Function to perform the strain optimization using kinetic metabolic models.
 
     Parameters
     ----------
-    model : kineticModel
+    model : kineticModel or CBModel
         The kinetic metabolic model.
     parameters : dict
         List of parameters that will be set with new values (ex: Dilution, initial concentrations).
@@ -29,12 +38,13 @@ def steady_state_simulation(model, parameters = None, factors = None, time = 1e9
 
     """
 
-    simulProblem = kineticSimulationProblem(model, parameters = parameters , tSteps=[0, time], timeout=None)
+    simulProblem = KineticSimulationProblem(model, parameters = parameters, tSteps=[0, time], timeout=None)
 
     if factors:
-        override = overrideKineticSimulProblem(factors = factors)
+        override = OverrideKineticSimulProblem(factors = factors)
         result = simulProblem.simulate(override)
     else:
         result = simulProblem.simulate()
+
 
     return result

@@ -1,4 +1,23 @@
-from optimModels.optimization.objectiveFunctions import BPCY, targetFlux
+class optimType:
+    REACTION_KO = 1
+    REACTION_UO = 2
+    GENE_KO = 3
+    GENE_UO = 4
+    MEDIUM = 5
+    MEDIUM_LEVELS = 6
+    MEDIUM_REACTION_KO = 7
+    MEDIUM_REACTION_UO = 8
+    COMPOSITION = 9
+
+
+    types = {1:"Reaction Knockouts",2:"Reaction Under/Over expression", 3:"Gene Knockouts",
+             4:"Gene Under/Over expression", 5:"Medium compositions",6:"Medium compositions with levels",
+             7:"Medium with Reaction Knockouts",8: "Medium with Reaction Under/Over expression",
+             9:"Community Composition"}
+
+    def get_optim_type_name(self, id):
+        return optimType.types.get(id)
+
 
 class solverMethod:
     LSODA = 1
@@ -25,16 +44,16 @@ class solverMethod:
         return solverMethod.methods.get(id)
 
 
-class objFunctions:
-    ids = [targetFlux.get_name(), BPCY.get_name()]
-    parameters = {0: targetFlux.get_parameters_ids(),
-                  1: BPCY.get_parameters_ids()}
-
 class solverStatus:
     """ Enumeration of possible solution status. """
-    OPTIMAL = 0
-    UNKNOWN = 1
+    OPTIMAL = 1
+    UNKNOWN = 0
     ERROR = 2
+    SUBOPTIMAL = -1
+    UNBOUNDED = -2
+    INFEASIBLE = -3
+    INF_OR_UNB = -4
+
 
     @staticmethod
     def get_status_str(id):
@@ -42,30 +61,11 @@ class solverStatus:
             str="Error"
         elif solverStatus.OPTIMAL == id:
             str = "Optimal"
+        elif solverStatus.SUBOPTIMAL == id:
+            str = "Sub-Optimal"
+        elif solverStatus.UNBOUNDED == id or  solverStatus.INFEASIBLE == id or solverStatus.INF_OR_UNB == id:
+            str = "Infeasible or unbounded problem."
         else:
             str = "Unknown"
         return str
-
-
-def set_solver_parameter(parameter, value):
-    """ Change the value for a given parameter (see list of supported parameters).
-    Parameters
-    -----------
-    parameter : parameter type
-    value : parameter value
-    """
-    global solverParameters
-    solverParameters[parameter] = value
-
-
-class Parameter:
-    """ Enumeration of parameters. """
-    ABSOLUTE_TOL = 0
-    RELATIVE_TOL = 1
-    N_STEPS =2
-
-solverParameters={Parameter.ABSOLUTE_TOL: 1e-9,
-                  Parameter.RELATIVE_TOL: 1e-6,
-                  Parameter.N_STEPS:10000}
-
 

@@ -20,7 +20,7 @@ def load_kinetic_model(filename, map=None):
 
     Returns
     -------
-    out : kineticModel
+    out : KineticModel
         Contains all information related with the dynamic model (reactions, kinetic eqations, metabolites, compartments, etc.)
 
     Raises
@@ -35,7 +35,7 @@ def load_kinetic_model(filename, map=None):
     if sbmlModel is None:
         raise IOError('Failed to load model.')
 
-    model = kineticModel(sbmlModel.getId())
+    model = KineticModel(sbmlModel.getId())
 
     _load_compartments(sbmlModel, model)
     _load_metabolites(sbmlModel, model)
@@ -60,7 +60,7 @@ def load_kinetic_model(filename, map=None):
     return model
 
 
-class kineticModel(ODEModel):
+class KineticModel(ODEModel):
     """ Class to store information of dynamic models.
     This class is an extension of ODEModel class from FRAMED package. The methods  *build_ode* and *get_ode* are overrided to
     support the manipulations over the parameters or enzyme concentration level during the strain optimization process.

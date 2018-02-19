@@ -1,7 +1,8 @@
-from optimModels.optimization.objectiveFunctions import build_objective_function
-from optimModels.optimization.run import strain_optim
+from optimModels.optimization.evaluation_functions import build_evaluation_function
+from optimModels.optimization.run import kinetic_strain_optim
 from optimModels.model.kineticModel import load_kinetic_model
-from optimModels.simulation.simulationResults import print_simul_result
+from optimModels.simulation.simul_problems import KineticSimulationProblem
+from optimModels.utils.configurations import KineticConfigurations
 from optimModels.utils.configurations import EAConfigurations
 from collections import OrderedDict
 
@@ -16,11 +17,10 @@ def ko_chassagnole():
 
     model = load_kinetic_model(sbmlFile)
 
-    objFunc = build_objective_function("targetFlux", ["vsersynth"])
-
-    result = strain_optim(model, objFunc=objFunc, levels=None, isMultiProc=False, resultFile=fileRes)
-    for r in result:
-        print (print_simul_result(r))
+    objFunc = build_evaluation_function("targetFlux", ["vsersynth"])
+    simulProblem = KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=None, isMultiProc=False, resultFile=fileRes)
+    result.print()
 
 
 def under_over_chassagnole():
@@ -29,11 +29,10 @@ def under_over_chassagnole():
 
     model = load_kinetic_model(sbmlFile)
 
-    objFunc = build_objective_function("targetFlux", ["vsersynth"])
-
-    result = strain_optim(model, objFunc=objFunc, levels=LEVELS, criticalGenes=[], isMultiProc=False, resultFile=fileRes)
-    for r in result:
-        print (print_simul_result(r))
+    objFunc = build_evaluation_function("targetFlux", ["vsersynth"])
+    simulProblem = KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=LEVELS, criticalParameters=[], isMultiProc=False, resultFile=fileRes)
+    result.print()
 
 
 def ko_jahan():
@@ -54,11 +53,10 @@ def ko_jahan():
 
     model = load_kinetic_model(sbmlFile, mapParamReacs)
 
-    objFunc = build_objective_function("targetFlux", ["vD_SUC"])
-
-    result = strain_optim(model, objFunc=objFunc, levels=LEVELS, isMultiProc=False, resultFile=fileRes)
-    for r in result:
-        print (print_simul_result(r))
+    objFunc = build_evaluation_function("targetFlux", ["vD_SUC"])
+    simulProblem= KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=LEVELS, isMultiProc=False, resultFile=fileRes)
+    result.print()
 
 def ko_millard(isMultiProc=False, size=1):
     EAConfigurations.MAX_CANDIDATE_SIZE = size;
@@ -85,12 +83,11 @@ def ko_millard(isMultiProc=False, size=1):
 
     model = load_kinetic_model(sbmlFile, mapParamReacs)
 
-    objFunc = build_objective_function("targetFlux", ["_ACE_OUT"])
+    objFunc = build_evaluation_function("targetFlux", ["_ACE_OUT"])
+    simulProblem= KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
 
-
-    result = strain_optim(model, objFunc=objFunc, levels=None, criticalGenes=['ATP_MAINTENANCE_Vmax','GROWTH_Vmax', 'NDHII_Vmax','PIT_Vmax','eiicbP','ei','eiP', 'eiia'], isMultiProc=isMultiProc, resultFile=fileRes, initPopFile=fileLastGen)
-    for r in result:
-        print (print_simul_result(r))
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=None, criticalParameters=['ATP_MAINTENANCE_Vmax', 'GROWTH_Vmax', 'NDHII_Vmax', 'PIT_Vmax', 'eiicbP', 'ei', 'eiP', 'eiia'], isMultiProc=isMultiProc, resultFile=fileRes, initPopFile=fileLastGen)
+    result.print()
 
 
 def under_over_millard(isMultiProc=False, size=1):
@@ -117,11 +114,10 @@ def under_over_millard(isMultiProc=False, size=1):
 
     model = load_kinetic_model(sbmlFile, mapParamReacs)
 
-    objFunc = build_objective_function("targetFlux", ["_ACE_OUT"])
-
-    result = strain_optim(model, objFunc=objFunc, levels=LEVELS, criticalGenes=['ATP_MAINTENANCE_Vmax','GROWTH_Vmax', 'NDHII_Vmax','PIT_Vmax','eiicbP','ei','eiP', 'eiia'], isMultiProc=isMultiProc, resultFile=fileRes, initPopFile=fileLastGen)
-    for r in result:
-        print (print_simul_result(r))
+    objFunc = build_evaluation_function("targetFlux", ["_ACE_OUT"])
+    simulProblem= KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=LEVELS, criticalParameters=['ATP_MAINTENANCE_Vmax', 'GROWTH_Vmax', 'NDHII_Vmax', 'PIT_Vmax', 'eiicbP', 'ei', 'eiP', 'eiia'], isMultiProc=isMultiProc, resultFile=fileRes, initPopFile=fileLastGen)
+    result.print()
 
 
 if __name__ == '__main__':

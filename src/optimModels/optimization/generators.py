@@ -1,5 +1,5 @@
 
-def  generator_intSetRep(random, args):
+def  generator_single_int_set(random, args):
     """
     Function to generate a new individual using the integer set representation.
     The function returns a set of integer values with a maximum of *candidate_max_size* elements.
@@ -19,10 +19,10 @@ def  generator_intSetRep(random, args):
     """
     size = random.randint(1, args["candidate_max_size"])
     bounder = args["_ec"].bounder
-    representation = {random.randint(bounder.lower_bound.next(), bounder.upper_bound.next()) for i in range(size)}
+    representation = {random.randint(next(bounder.lower_bound), next(bounder.upper_bound)) for i in range(size)}
     return representation
 
-def generator_intTupleRep(random, args):
+def generator_single_int_tuple(random, args):
     """
     Function to generate a new individual using the integer tuple representation.
     The function returns a set of tuples values with a maximum of *candidate_max_size* elements.
@@ -47,6 +47,19 @@ def generator_intTupleRep(random, args):
     for i in range(size):
         id1 = random.randint(bounder.lower_bound[0], bounder.upper_bound[0])
         id2 = random.randint(bounder.lower_bound[1], bounder.upper_bound[1])
-        if id1 not in tuples:
+        if id1 not in tuples.keys():
             tuples[id1] = id2
-    return {(a, b) for a, b in tuples.iteritems()}
+    return {(a, b) for a, b in tuples.items()}
+
+
+def generator_tuple_int_set(random, args):
+    size1 = random.randint(1, args["candidate_max_size"][0])
+    size2 = random.randint(1, args["candidate_max_size"][1])
+    # first element of array has the lowers bounds and second element the upper bounds.
+    bounder = args["_ec"].bounder
+    set1 = {random.randint(bounder.lower_bound[0], bounder.upper_bound[0]) for i in range(size1)}
+    set2 = {random.randint(bounder.lower_bound[1], bounder.upper_bound[1]) for i in range(size2)}
+    #print (set1)
+    #print (set2)
+    #print ("--------")
+    return (set1, set2)

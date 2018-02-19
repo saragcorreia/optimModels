@@ -1,4 +1,4 @@
-from optimModels.utils.configurations import EAConfigurations
+
 
 def load_population (initPopFile = None, decoder = None):
     population = []
@@ -11,7 +11,7 @@ def load_population (initPopFile = None, decoder = None):
              fields = line.split(';')
              num_generations = int(fields[0]) + 1
              candidateIds = eval(fields[3])
-             candidate = set(decoder.candidate_decoded_ids_to_index(candidateIds))
+             candidate = set(decoder.decode_candidate_ids_to_index(candidateIds))
              population.append(candidate)
         file.close()
     return num_generations, population
@@ -41,22 +41,23 @@ def save_all_results(population, num_generations, num_evaluations, args):
     - *configuration* -- the configuration of the EA algorithm
 
     """
+    print ("save results of generation:" + str(num_generations))
     resultFile = args["results_file"]
     file = open(resultFile, 'a')
 
-    print ("Number of generation:" + str(num_generations))
+    #print ("Number of generation:" + str(num_generations))
     config = args["configuration"]
     decoder = config.get_decoder()
 
     # save the optimization configuration
     if num_generations == 0:
         file.write("population_size;candidate_max_size;crossover_rate; mutation_rate;new_candidates_rate; num_elites\n")
-        file.write(";".join(map(str,EAConfigurations.get_default_config())))
+        file.write(";".join(map(str,config.get_ea_configurations().get_default_config())))
         file.write("Generation;Fitness;Candidate;Reactions\n")
 
     # save all candidates of the population
     for ind in population:
-        solution_decoded = decoder.candidate_decoded(ind.candidate)
+        solution_decoded = decoder.decode_candidate(ind.candidate)
         file.write(("{0};{1};{2};{3} \n").format(num_generations, ind.fitness, ind.candidate, solution_decoded))
     file.close()
 
