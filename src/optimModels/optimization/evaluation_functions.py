@@ -121,13 +121,14 @@ class targetFlux(EvaluationFunction):
 
     """
     def __init__(self, targetReactionId):
-        self.targetReactionId = targetReactionId
+        #TODO: take only the first element
+        self.targetReactionId = targetReactionId[0]
 
     def get_fitness(self, simulResult, candidate):
         fluxes = simulResult.get_fluxes_distribution()
-        if self.targetReactionId not in fluxes.keys():
+        if self.targetReactionId not in list(fluxes.keys()):
             raise ValueError("Reaction id is not present in the fluxes distribution.")
-        return fluxes[self.targetReactionId] / len(candidate)
+        return fluxes[self.targetReactionId]
 
     def method_str(self):
         return "Target Flux: " + self.targetReactionId

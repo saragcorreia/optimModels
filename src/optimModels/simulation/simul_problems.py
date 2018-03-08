@@ -212,7 +212,7 @@ class KineticSimulationProblem(SimulationProblem):
         super().__init__(model, solver, method)
 
     def __getstate__(self):
-        state = self.__dict__.copy()
+        state = OrderedDict(self.__dict__.copy())
         return state
 
     def __setstate__(self, state):
@@ -251,15 +251,15 @@ class KineticSimulationProblem(SimulationProblem):
         if self.timeout is None:
             status, sstateRates, sstateConc = _my_kinetic_solve(self.get_model(), self.parameters,
                                                                 final_factors,
-                                                                initConcentrations.values(),
+                                                                initConcentrations,
                                                                 self.get_time_steps())
         else:
             p = MyPool(processes=1)
             res = p.apply_async(_my_kinetic_solve, (
-                self.get_model(), self.parameters, final_factors, initConcentrations.values(),
+                self.get_model(), self.parameters, final_factors, initConcentrations,
                 self.get_time_steps()))
             try:
-                sstateRates, sstateConc, status = res.get(self.timeout)  # Wait timeout seconds for func to complete.
+                status, sstateRates, sstateConc = res.get(self.timeout)  # Wait timeout seconds for func to complete.
             except Exception:
                 print("Aborting due to timeout")
                 sstateRates = {}
@@ -269,7 +269,7 @@ class KineticSimulationProblem(SimulationProblem):
             p.close()
             p.join()
         t2 = time.time()
-        print("TIME (seconds) simulate: " + str(t2 - t1))
+        #print("TIME (seconds) simulate: " + str(t2 - t1))
 
         return kineticSimulationResult(self.model.id, solverStatus=status, ssFluxesDistrib=sstateRates,
                                        ssConcentrations=sstateConc,
@@ -307,7 +307,7 @@ def _run_stoic_simutation_with_cobra(model, constraints):
             reac.bounds=(constraints.get(rId)[0], constraints.get(rId)[1])
         solution = model.optimize()
     time = str(time.time() - t1)
-    print("simulation time ", time)
+    #print("simulation time ", time)
     return solverStatus.OPTIMAL, solution.fluxes
 
 def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoints):
@@ -320,7 +320,7 @@ def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoi
     func = lambda x, t: f(t, x)
 
     solver = odespySolver(KineticConfigurations.SOLVER_METHOD).get_solver(func)
-    solver.set_initial_condition(list(initialConc))
+    solver.set_initial_condition(list(initialConc.values()))
     try:
         X, t = solver.solve(timePoints)
     except Exception:
@@ -329,7 +329,7 @@ def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoi
         # print finalRates
         return {}, {}, solverStatus.ERROR
 
-    print(finalRates)
+    #print(finalRates)
     # values bellow solver precision will be set to 0
     finalRates.update({k: 0 for k, v in finalRates.items() if
                        v < SolverConfigurations.ABSOLUTE_TOL and v > - SolverConfigurations.ABSOLUTE_TOL})

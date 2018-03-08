@@ -55,16 +55,16 @@ if __name__ == '__main__':
 
     #SBML_MODEL = '../../../examples/models/Millard2016v2.xml'
     #SBML_MODEL = '../../../examples/models/Jahan2016_chemostat_fixed.xml'
-    #SBML_MODEL = '../../../examples/models/chassagnole2002.xml'
+    SBML_MODEL = '../../../examples/models/chassagnole2002.xml'
     #load Model
-    #model = load_kinetic_model(SBML_MODEL)
+    model = load_kinetic_model(SBML_MODEL)
 
     # wild-type simulation
     #result = kinetic_simulation(model)
     #result.print()
     # Change parameters
-    # result = steady_state_simulation(model, parameters={'Dil': 0.2 / 3600})
-    # print_simul_result(result)
+    #result = steady_state_simulation(model, parameters={'Dil': 0.2 / 3600})
+    #print_simul_result(result)
     #
     # #Knockouts (the local parameters has the sufix of reactioId)
     # result = steady_state_simulation(model, factors={'vG6PDH_rmaxG6PDH': 0.0})

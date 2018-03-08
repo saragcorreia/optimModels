@@ -15,7 +15,7 @@ class KineticConfigurations:
     STEADY_STATE_TIME = 1e9
     SOLVER = "odespy"
     SOLVER_METHOD = solverMethod.LSODA  # ode solver method used in the phenotype simulation
-    SOLVER_TIMEOUT = 60  # maximum time allowed by simulation
+    SOLVER_TIMEOUT = 6000  # maximum time allowed by simulation
 
 
 

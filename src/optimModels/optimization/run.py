@@ -66,7 +66,7 @@ def cbm_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.REACTI
     return result
 
 
-def kinetic_strain_optim(simulProblem, objFunc=None, levels=None, criticalParameters=[], isMultiProc=False, candidateSize = None, resultFile=None,
+def kinetic_strain_optim(simulProblem, objFunc=None, levels=None, type = optimType.REACTION_KO, criticalParameters=[], isMultiProc=False, candidateSize = None, resultFile=None,
                          initPopFile=None):
     """
     Function to perform the strain optimization using kinetic metabolic models.
@@ -97,7 +97,7 @@ def kinetic_strain_optim(simulProblem, objFunc=None, levels=None, criticalParame
     idsToManipulate = [x for x in allParams if x not in criticalParameters]
 
     if type == optimType.REACTION_KO:
-        decoder = DecoderReacKnockouts(idsToManipulate, levels)
+        decoder = DecoderReacKnockouts(idsToManipulate)
     elif type == optimType.REACTION_UO:
         if not levels:
             raise Exception("The specification of levels for under/over optimizarion is required!")
@@ -118,8 +118,8 @@ def kinetic_strain_optim(simulProblem, objFunc=None, levels=None, criticalParame
                                               EAConfig=eaConfig)
 
     # run optimization
-    final_pop = run_optimization(optimProbConf, type=type, resultFile=resultFile, isMultiProc=isMultiProc,
-                                 population=initPopulation, nextGen=numGeneration)
+    final_pop = run_optimization(optimProbConf, resultFile=resultFile, isMultiProc=isMultiProc,
+                                 population=initPopulation)
 
     best_solutions = findBestSolutions(final_pop, eaConfig)
 

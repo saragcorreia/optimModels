@@ -3,35 +3,36 @@ from optimModels.optimization.run import kinetic_strain_optim
 from optimModels.model.kineticModel import load_kinetic_model
 from optimModels.simulation.simul_problems import KineticSimulationProblem
 from optimModels.utils.configurations import KineticConfigurations
-from optimModels.utils.configurations import EAConfigurations
+from optimModels.optimization.evolutionary_computation import EAConfigurations
 from collections import OrderedDict
+from optimModels.utils.constantes import optimType
 
 LEVELS = [0, 2 ** -5, 2 ** -4, 2 ** -3, 2 ** -2, 2 ** -1, 2 ** 1, 2 ** 2, 2 ** 3, 2 ** 4, 2 ** 5]
 #basePath = "/home/scorreia/Decaf/"
-basePath = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/"
+basePath = "C:/Users/sara/UMinho/Results/"
 
-def ko_chassagnole():
+def ko_chassagnole(isMultiProc=False, size=1):
     sbmlFile = '../../../examples/models/chassagnole2002.xml'
-    fileRes = basePath + "Results/optim_Chassagnole_Serine_ko.csv"
+    fileRes = basePath + "Chassagnole/optim_Chassagnole_Serine_ko_"+str(size)+".csv"
 
 
     model = load_kinetic_model(sbmlFile)
 
     objFunc = build_evaluation_function("targetFlux", ["vsersynth"])
     simulProblem = KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
-    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=None, isMultiProc=False, resultFile=fileRes)
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=None, type= optimType.REACTION_KO, isMultiProc=True, candidateSize=size, resultFile=fileRes)
     result.print()
 
 
-def under_over_chassagnole():
+def under_over_chassagnole(isMultiProc=False, size=1):
     sbmlFile = '../../../examples/models/chassagnole2002.xml'
-    fileRes = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/Results/optim_Chassagnole_Serine_underover.csv"
+    fileRes = basePath + "Results/optim_Chassagnole_Serine_underover_"+size+".csv"
 
     model = load_kinetic_model(sbmlFile)
 
     objFunc = build_evaluation_function("targetFlux", ["vsersynth"])
     simulProblem = KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
-    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=LEVELS, criticalParameters=[], isMultiProc=False, resultFile=fileRes)
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=LEVELS, criticalParameters=[], isMultiProc=False, candidateSize=size, resultFile=fileRes)
     result.print()
 
 
@@ -55,7 +56,7 @@ def ko_jahan():
 
     objFunc = build_evaluation_function("targetFlux", ["vD_SUC"])
     simulProblem= KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
-    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=LEVELS, isMultiProc=False, resultFile=fileRes)
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=LEVELS, isMultiProc=False, candidateSize=size, resultFile=fileRes)
     result.print()
 
 def ko_millard(isMultiProc=False, size=1):
@@ -86,7 +87,9 @@ def ko_millard(isMultiProc=False, size=1):
     objFunc = build_evaluation_function("targetFlux", ["_ACE_OUT"])
     simulProblem= KineticSimulationProblem(model, tSteps=[0, KineticConfigurations.STEADY_STATE_TIME])
 
-    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=None, criticalParameters=['ATP_MAINTENANCE_Vmax', 'GROWTH_Vmax', 'NDHII_Vmax', 'PIT_Vmax', 'eiicbP', 'ei', 'eiP', 'eiia'], isMultiProc=isMultiProc, resultFile=fileRes, initPopFile=fileLastGen)
+    result = kinetic_strain_optim(simulProblem, objFunc=objFunc, levels=None,
+                                  criticalParameters=['ATP_MAINTENANCE_Vmax', 'GROWTH_Vmax', 'NDHII_Vmax', 'PIT_Vmax', 'eiicbP', 'ei', 'eiP', 'eiia'],
+                                  isMultiProc=isMultiProc, resultFile=fileRes, initPopFile=fileLastGen)
     result.print()
 
 
@@ -123,13 +126,12 @@ def under_over_millard(isMultiProc=False, size=1):
 if __name__ == '__main__':
     import time
     import warnings
-    import sys
-    size = 1
-
+    size = 2
     warnings.filterwarnings('ignore')  # ignore the warnings related to floating points raise from solver!!!
+
     t1 = time.time()
-    #ko_millard(True,size)
-    under_over_millard(True, size)
+    ko_chassagnole(True,size)
+    #under_over_chassagnole(True, size)
     t2 = time.time()
     print ("time with multiproccessing" + str(t2 - t1))
 

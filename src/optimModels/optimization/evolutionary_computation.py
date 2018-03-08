@@ -9,7 +9,7 @@ from optimModels.utils.constantes import optimType
 class EAConfigurations():
     def __init__(self):
        # Configuration of EA algorithm
-        self.MAX_GENERATIONS = 250
+        self.MAX_GENERATIONS = 500
         self.POPULATION_SIZE = 100
         self.MAX_CANDIDATE_SIZE = 5
         self.POPULATION_SELECTED_SIZE = 50
@@ -139,10 +139,7 @@ def run_optimization(optimProbConf, resultFile= None, isMultiProc=False, populat
             nprocs= int(cpu_count()/2)
         except NotImplementedError:
             nprocs = config.NUM_CPUS
-        print("###########")
-        nprocs=4
-        print(nprocs)
-
+        print("number of proc" , nprocs)
         final_pop = my_ec.evolve(generator=myGenerator,
                                  evaluator=evaluators.parallel_evaluation_mp,
                                  mp_evaluator=evaluators.evaluator,
