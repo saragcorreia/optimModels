@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-
+from itertools import chain
 from optimModels.utils.configurations import StoicConfigurations
 class EvaluationFunction:
     """
@@ -25,6 +25,40 @@ class EvaluationFunction:
         self.__dict__.update(state)
 
 class MinNumberReacAndMaxFlux(EvaluationFunction):
+
+    def __init__(self, maxCandidateSize, maxTargetFlux):
+        self.maxCandidateSize = maxCandidateSize
+        self.objective = maxTargetFlux
+
+    def get_fitness(self, simulResult, candidate):
+        fluxes = simulResult.get_fluxes_distribution()
+        numModifications = len(list(chain.from_iterable(candidate)))
+
+        for rId, ub in self.objective.items():
+            ub = StoicConfigurations.DEFAULT_UB if ub is None else ub
+            f = 1 if fluxes[rId]>=ub else 1-((ub-fluxes[rId])/ub)
+            sumObj = sumObj + f
+        objFactor=sumObj/len(self.objective)
+
+        return  objFactor/numModifications
+
+
+    def method_str(self):
+        return "Minimize the number of modifications while maximize the target flux."
+
+    @staticmethod
+    def get_id():
+        return "MinNumberReacAndMaxFlux"
+
+    @staticmethod
+    def get_name():
+        return "Minimize the number of modifications while maximize the target flux."
+
+    @staticmethod
+    def get_parameters_ids():
+        return ["Maximum of modifications allowed", "Target reactions"]
+
+class MinNumberReacAndMaxFluxWithLevels(EvaluationFunction):
     #TODO: Validar o que acontece em caso do ub do target ser 0 ou seja o fluxes[rId] é negativo (ver se há hipotese de isto acontecer)
 
     def __init__(self, maxCandidateSize, levels, maxTargetFlux):
@@ -59,7 +93,7 @@ class MinNumberReacAndMaxFlux(EvaluationFunction):
 
     @staticmethod
     def get_id():
-        return "MinNumberReacAndMaxFlux"
+        return "MinNumberReacAndMaxFluxWithLevels"
 
     @staticmethod
     def get_name():
@@ -67,7 +101,7 @@ class MinNumberReacAndMaxFlux(EvaluationFunction):
 
     @staticmethod
     def get_parameters_ids():
-        return ["list of reactions ids", ""]
+        return ["Maximum number of modifications allowed", "Levels", "Target reactions"]
 
 class MinNumberReac(EvaluationFunction):
     """
@@ -106,7 +140,7 @@ class MinNumberReac(EvaluationFunction):
 
     @staticmethod
     def get_parameters_ids():
-        return ["list of reactions ids", ""]
+        return ["Number maximum of modification allowed", "Minimum of targets flux values."]
 
 
 
@@ -209,8 +243,10 @@ def build_evaluation_function(id, *args):
         objFunc = targetFlux(args[0])
     elif id == MinNumberReac.get_id():
         objFunc = MinNumberReac(args[0], args[1])
+    elif id == MinNumberReacAndMaxFluxWithLevels.get_id():
+        objFunc = MinNumberReacAndMaxFluxWithLevels (args[0], args[1],args[2])
     elif id == MinNumberReacAndMaxFlux.get_id():
-        objFunc = MinNumberReacAndMaxFlux (args[0], args[1],args[2])
+        objFunc = MinNumberReacAndMaxFlux (args[0], args[1])
     else:
         raise Exception("Wrong objective function!")
 

@@ -10,7 +10,7 @@ from optimModels.utils.configurations import StoicConfigurations
 
 
 SBML_FILE = "../../../examples/models/Ec_iAF1260.xml"
-basePath = "/Volumes/Data/Documents/Projects/DeCaF/Optimizations/"
+basePath = "C:/Users/sara/UMinho/Projects/DeCaF/Optimizations/"
 LEVELS = [1e-3, 1e-2, 1e-1, 0.5, 1 , 5, 10, 50, 1e2, 5e2, 1e3, 1e4]
 
 def reac_ko_optim (isMultiProc=False, size=1, withCobraPy = False):
@@ -85,7 +85,7 @@ def medium_SC_Etanol_Levels_optim(isMultiProc=False, size=1, withCobraPy = False
 
     print ("Biomass: " + str(fba.get_fluxes_distribution()["R_BIOMASS_SC5_notrace"] * 0.75))
 
-    evalFunc = build_evaluation_function("MinNumberReacAndMaxFlux", size, LEVELS, {"R_EX_etoh_e": model.reactions["R_EX_etoh_e"].ub})
+    evalFunc = build_evaluation_function("MinNumberReacAndMaxFluxWithLevels", size, LEVELS, {"R_EX_etoh_e": model.reactions["R_EX_etoh_e"].ub})
 
     cbm_strain_optim(simulProb, evaluationFunc=evalFunc, levels=LEVELS, type=optimType.MEDIUM_LEVELS, criticalReacs = criticalReacs, isMultiProc=isMultiProc,
                      candidateSize=size, resultFile=fileRes)  # KO_Reaction by default
@@ -208,7 +208,7 @@ def medium_reac_ko_optim(isMultiProc=False, size=[5,5], withCobraPy = False):
     simulProb.constraints.update({"R_Ec_biomass_iAF1260_core_59p81M":(fba.get_fluxes_distribution()["R_Ec_biomass_iAF1260_core_59p81M"] * 0.25,9999)})
     print ("Biomass: " + str(fba.get_fluxes_distribution()["R_Ec_biomass_iAF1260_core_59p81M"] * 0.25))
 
-    evalFunc = build_evaluation_function("targetFlux", ["R_EX_succ_e"])
+    evalFunc = build_evaluation_function("MinNumberReacAndMaxFlux",sum(size) , ["R_EX_succ_e"])
 
     cbm_strain_optim(simulProb, evaluationFunc=evalFunc, levels=None, type=optimType.MEDIUM_REACTION_KO, criticalReacs = essential, isMultiProc=isMultiProc,
                      candidateSize=size, resultFile=fileRes)  # KO_Reaction by default
