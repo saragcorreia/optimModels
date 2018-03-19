@@ -77,17 +77,16 @@ class OverrideKineticSimulProblem(OverrideSimulationProblem):
 
     def simplify_modifications(self, simulationProblem, objFunction, fitness):
         factorsOrig = self.factors.copy()
-
-        for k, v in factorsOrig:
+        print("simplify")
+        for k, v in factorsOrig.items():
             del self.factors[k]
 
             try:
                 res = simulationProblem.simulate(self)
-                print(objFunction.get_name())
-                newFitness = objFunction.get_fitness(res)
+                newFitness = objFunction.get_fitness(res,self.factors)
             except Exception:
                 newFitness = -1.0
-            print(fitness, " ---- ", newFitness)
+            print(fitness, " ---- ",k,"----", newFitness)
             if round(fitness, 12) != round(newFitness, 12):
                 self.factors[k] = v
 

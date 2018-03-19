@@ -92,11 +92,12 @@ class StoicSimulationProblem(SimulationProblem):
 
     def get_uptake_reactions(self):
         if self.withCobraPy:
+            #TODO: validar as reversiveis no cobrapy
             reacs = [r.id for r in self.model.exchanges if self.model.reactions.get_by_id(r.id).lb<0]
 
         else:
             drains = list(self.model.get_exchange_reactions())
-            reacs = [r for r in drains if self.model.get_flux_bounds(r)[0]<0]
+            reacs = [r for r in drains if self.model.reactions[r].lb<0 or self.model.reactions[r].reversible]
         return reacs
 
     def get_internal_reactions(self):

@@ -33,7 +33,7 @@ class MinNumberReacAndMaxFlux(EvaluationFunction):
     def get_fitness(self, simulResult, candidate):
         fluxes = simulResult.get_fluxes_distribution()
         numModifications = len(list(chain.from_iterable(candidate)))
-
+        sumObj=0
         for rId, ub in self.objective.items():
             ub = StoicConfigurations.DEFAULT_UB if ub is None else ub
             f = 1 if fluxes[rId]>=ub else 1-((ub-fluxes[rId])/ub)

@@ -14,11 +14,11 @@ def cbm_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.REACTI
                      resultFile=None, initPopFile=None):
 
     if type == optimType.MEDIUM or type == optimType.MEDIUM_LEVELS:
-        idsToManipulate = [x for x in simulProblem.get_drains() if x not in criticalReacs and x not in simulProblem.objective.keys()]
+        idsToManipulate = [x for x in simulProblem.get_uptake_reactions() if x not in criticalReacs and x not in simulProblem.objective.keys()]
     elif type == optimType.REACTION_KO or type == optimType.REACTION_UO:
         idsToManipulate = [x for x in simulProblem.get_internal_reactions() if x not in criticalReacs and x not in simulProblem.objective.keys()]
     elif type == optimType.MEDIUM_REACTION_KO:
-        drainsToManipulate = [x for x in simulProblem.get_drains() if x not in criticalReacs and x not in simulProblem.objective.keys()]
+        drainsToManipulate = [x for x in simulProblem.get_uptake_reactions() if x not in criticalReacs and x not in simulProblem.objective.keys()]
         reacsToManipulate = [x for x in simulProblem.get_internal_reactions() if x not in criticalReacs and x not in simulProblem.objective.keys()]
     else:
         raise Exception("cbm_strain_optim:NOT IMMPLEMENTED!")

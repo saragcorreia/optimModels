@@ -2,6 +2,7 @@
 
 def load_population (initPopFile = None, decoder = None):
     population = []
+    fitness = []
     if initPopFile is not None:
 
         with open(initPopFile, 'r') as file:
@@ -10,11 +11,12 @@ def load_population (initPopFile = None, decoder = None):
         for line in data:
              fields = line.split(';')
              num_generations = int(fields[0]) + 1
+             fitness.append(fields[1])
              candidateIds = eval(fields[3])
              candidate = set(decoder.decode_candidate_ids_to_index(candidateIds))
              population.append(candidate)
         file.close()
-    return num_generations, population
+    return num_generations, population, fitness
 
 
 

@@ -208,7 +208,7 @@ def medium_reac_ko_optim(isMultiProc=False, size=[5,5], withCobraPy = False):
     simulProb.constraints.update({"R_Ec_biomass_iAF1260_core_59p81M":(fba.get_fluxes_distribution()["R_Ec_biomass_iAF1260_core_59p81M"] * 0.25,9999)})
     print ("Biomass: " + str(fba.get_fluxes_distribution()["R_Ec_biomass_iAF1260_core_59p81M"] * 0.25))
 
-    evalFunc = build_evaluation_function("MinNumberReacAndMaxFlux",sum(size) , ["R_EX_succ_e"])
+    evalFunc = build_evaluation_function("MinNumberReacAndMaxFlux",sum(size) , {"R_EX_succ_e": model.reactions["R_EX_succ_e"].ub})
 
     cbm_strain_optim(simulProb, evaluationFunc=evalFunc, levels=None, type=optimType.MEDIUM_REACTION_KO, criticalReacs = essential, isMultiProc=isMultiProc,
                      candidateSize=size, resultFile=fileRes)  # KO_Reaction by default
