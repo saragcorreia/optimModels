@@ -6,6 +6,7 @@ from optimModels.simulation.simul_problems import StoicSimulationProblem
 from optimModels.optimization.run import cbm_strain_optim
 from optimModels.utils.constantes import optimType
 from optimModels.utils.configurations import StoicConfigurations
+from optimModels.utils.utils import fix_exchange_reactions_model
 
 
 
@@ -186,8 +187,9 @@ def medium_Lactate_optim(isMultiProc=False, size=1, withCobraPy = False):
 def medium_reac_ko_optim(isMultiProc=False, size=[5,5], withCobraPy = False):
     SBML_FILE = "../../../examples/models/Ec_iAF1260.xml"
     model = load_cbmodel(SBML_FILE, flavor="cobra")
+    newModel = fix_exchange_reactions_model(model)
     fileRes = basePath + "Results/optim_Ec_iAF1260_medium_ko_succ.csv"
-    simulProb = StoicSimulationProblem(model, objective={"R_Ec_biomass_iAF1260_core_59p81M": 1},
+    simulProb = StoicSimulationProblem(newModel, objective={"R_Ec_biomass_iAF1260_core_59p81M": 1},
                                        withCobraPy=withCobraPy)
 
     # set the minimum production of biomass
