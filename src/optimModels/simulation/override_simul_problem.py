@@ -75,18 +75,4 @@ class OverrideKineticSimulProblem(OverrideSimulationProblem):
             raise Exception ("Factors must be of type OrderedDict, where the key is the parameter id (vmax) and the value a double!")
         self.factors = values
 
-    def simplify_modifications(self, simulationProblem, objFunction, fitness):
-        factorsOrig = self.factors.copy()
-        print("simplify")
-        for k, v in factorsOrig.items():
-            del self.factors[k]
-
-            try:
-                res = simulationProblem.simulate(self)
-                newFitness = objFunction.get_fitness(res,self.factors)
-            except Exception:
-                newFitness = -1.0
-            print(fitness, " ---- ",k,"----", newFitness)
-            if round(fitness, 12) != round(newFitness, 12):
-                self.factors[k] = v
 

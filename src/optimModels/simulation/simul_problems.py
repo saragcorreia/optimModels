@@ -327,6 +327,11 @@ def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoi
     solver.set_initial_condition(list(initialConc.values()))
     try:
         X, t = solver.solve(timePoints)
+        #if solver returns a solution where any concentration is negative
+        for c in X[1]:
+            if c < 0:
+                return {}, {}, solverStatus.ERROR
+
     except Exception:
         print("Error on solver!!!")
         # print X
