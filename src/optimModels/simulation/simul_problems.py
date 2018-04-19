@@ -97,10 +97,9 @@ class StoicSimulationProblem(SimulationProblem):
 
         else:
             drains = list(self.model.get_exchange_reactions())
-
             reacs = [r for r in drains if self.model.reactions[r].reversible or
-                     (self.model.reactions[r].lb<0 and len(self.model.reactions[r].get_substrates())>0)or
-                     (self.model.reactions[r].ub> 0 and len(self.model.reactions[r].get_products())>0)]
+                     (self.model.reactions[r].lb is None or self.model.reactions[r].lb<0 and len(self.model.reactions[r].get_substrates())>0)or
+                     (self.model.reactions[r].ub is None or self.model.reactions[r].ub> 0 and len(self.model.reactions[r].get_products())>0)]
         return reacs
 
     def get_internal_reactions(self):
@@ -328,15 +327,15 @@ def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoi
     try:
         X, t = solver.solve(timePoints)
         #if solver returns a solution where any concentration is negative
-        for c in X[1]:
-            if c < 0:
-                return {}, {}, solverStatus.ERROR
+        for c  in X[1]:
+            if c < -1*SolverConfigurations.RELATIVE_TOL:
+                return solverStatus.ERROR, {}, {}
 
     except Exception:
         print("Error on solver!!!")
         # print X
         # print finalRates
-        return {}, {}, solverStatus.ERROR
+        return solverStatus.ERROR,{}, {}
 
     #print(finalRates)
     # values bellow solver precision will be set to 0

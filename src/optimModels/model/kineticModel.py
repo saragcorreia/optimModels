@@ -189,7 +189,7 @@ class KineticModel(ODEModel):
         #print p
         #print v
         #print "-----"
-        #print (self.build_ode(factors))
+        print (self.build_ode(factors))
         f = lambda t, x: ode_func(t, x, r, p, v)
         return f
 

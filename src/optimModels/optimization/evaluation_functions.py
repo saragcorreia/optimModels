@@ -204,9 +204,12 @@ class BPCY (EvaluationFunction):
 
     def get_fitness(self, simulResult, candidate):
         ssFluxes= simulResult.get_fluxes_distribution()
-        if self.biomassId not in ssFluxes.keys or self.productId not in ssFluxes.keys:
+        ids = list(ssFluxes.keys())
+        if self.biomassId not in ids or self.productId not in ids or self.productId not in ids:
             raise ValueError("Reaction ids is not present in the fluxes distribution. Please check id objective function is correct.")
-        return (ssFluxes[self.biomass] * ssFluxes[self.productId])/ssFluxes[self.uptakeId]
+        if abs(ssFluxes[self.uptakeId])==0:
+            return 0
+        return (ssFluxes[self.biomassId] * ssFluxes[self.productId])/abs(ssFluxes[self.uptakeId])
 
 
 
