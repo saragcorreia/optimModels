@@ -205,7 +205,7 @@ class BPCY (EvaluationFunction):
     def get_fitness(self, simulResult, candidate):
         ssFluxes= simulResult.get_fluxes_distribution()
         ids = list(ssFluxes.keys())
-        if self.biomassId not in ids or self.productId not in ids or self.productId not in ids:
+        if self.biomassId not in ids or self.productId not in ids or self.uptakeId not in ids:
             raise ValueError("Reaction ids is not present in the fluxes distribution. Please check id objective function is correct.")
         if abs(ssFluxes[self.uptakeId])==0:
             return 0
@@ -228,6 +228,50 @@ class BPCY (EvaluationFunction):
     def get_parameters_ids():
         return ["Biomass id", "Product id", "Uptake id"]
 
+class BP_MinModifications (EvaluationFunction):
+    """
+        This class is based the "Biomass-Product Coupled Yield" objective function but considering the candidate size. The fitness is given by the equation:
+        (biomass_flux * product_flux)/ candidate_size)
+
+        Attributes
+        ----------
+        biomassId : str
+            biomass reaction identifier
+        productId : str
+            target product reaction identifier
+
+        """
+    def __init__(self, biomassId, productId):
+        self.biomassId = biomassId
+        self.productId = productId
+
+    def get_fitness(self, simulResult, candidate):
+        ssFluxes= simulResult.get_fluxes_distribution()
+        ids = list(ssFluxes.keys())
+        if self.biomassId not in ids or self.productId not in ids:
+            raise ValueError("Reaction ids is not present in the fluxes distribution. Please check id objective function is correct.")
+        size = len(candidate)
+        # optimization of medium and KO .. the candidate is a tuple of lists
+        if (isinstance(candidate[0], list)):
+            size = len(candidate[0]) + len(candidate[1])
+        return (ssFluxes[self.biomassId] * ssFluxes[self.productId])/size
+
+
+
+    def method_str(self):
+        return "BP_MinModifications=  (" + self.biomassId +  " * " + self.productId +") / candidate_size "
+
+    @staticmethod
+    def get_id():
+        return "BP_MinModifications"
+
+    @staticmethod
+    def get_name():
+        return "Biomass-Product with minimun of modifications"
+
+    @staticmethod
+    def get_parameters_ids():
+        return ["Biomass id", "Product id"]
 
 def build_evaluation_function(id, *args):
     """
@@ -246,10 +290,12 @@ def build_evaluation_function(id, *args):
         objFunc = targetFlux(args[0])
     elif id == MinNumberReac.get_id():
         objFunc = MinNumberReac(args[0], args[1])
-    elif id == MinNumberReacAndMaxFluxWithLevels.get_id():
-        objFunc = MinNumberReacAndMaxFluxWithLevels (args[0], args[1],args[2])
-    elif id == MinNumberReacAndMaxFlux.get_id():
-        objFunc = MinNumberReacAndMaxFlux (args[0], args[1])
+    elif id ==  BP_MinModifications.get_id():
+        objFunc = BP_MinModifications(args[0], args[1])
+    #elif id == MinNumberReacAndMaxFluxWithLevels.get_id():
+    #    objFunc = MinNumberReacAndMaxFluxWithLevels (args[0], args[1],args[2])
+    #elif id == MinNumberReacAndMaxFlux.get_id():
+    #    objFunc = MinNumberReacAndMaxFlux (args[0], args[1])
     else:
         raise Exception("Wrong objective function!")
 

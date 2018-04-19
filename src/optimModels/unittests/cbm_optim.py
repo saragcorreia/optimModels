@@ -9,7 +9,6 @@ from optimModels.utils.configurations import StoicConfigurations
 from optimModels.utils.utils import fix_exchange_reactions_model
 
 
-
 SBML_FILE = "../../../examples/models/Ec_iAF1260.xml"
 basePath = "C:/Users/sara/UMinho/Projects/DeCaF/Optimizations/"
 LEVELS = [1e-3, 1e-2, 1e-1, 0.5, 1 , 5, 10, 50, 1e2, 5e2, 1e3, 1e4]
@@ -153,7 +152,8 @@ def medium_optim (isMultiProc=False, size=1, withCobraPy = False):
 
 def medium_Lactate_optim(isMultiProc=False, size=1, withCobraPy = False):
     SBML_FILE = "../../../examples/models/Ec_iAF1260.xml"
-    model = load_cbmodel(SBML_FILE, flavor="cobra")
+    modelaux = load_cbmodel(SBML_FILE, flavor="cobra")
+    model = fix_exchange_reactions_model(modelaux)
     fileRes = basePath + "Results/optim_Ec_iAF1260_medium_lactate.csv"
     simulProb = StoicSimulationProblem(model, objective={"R_Ec_biomass_iAF1260_core_59p81M": 1},
                                        withCobraPy=withCobraPy)
@@ -214,17 +214,57 @@ def medium_reac_ko_optim(isMultiProc=False, size=[5,5], withCobraPy = False):
 
     cbm_strain_optim(simulProb, evaluationFunc=evalFunc, levels=None, type=optimType.MEDIUM_REACTION_KO, criticalReacs = essential, isMultiProc=isMultiProc,
                      candidateSize=size, resultFile=fileRes)  # KO_Reaction by default
+########################################
+def reac_ko_optim_CM (isMultiProc=False, size=1, withCobraPy = False):
+    SBML_FILE =basePath + "Data/EC_SC_model.xml"
+    modelaux = load_cbmodel(SBML_FILE, exchange_detection_mode="R_EX_")
+    model = fix_exchange_reactions_model(modelaux)
+    fileRes = basePath + "Results/optim_Comunity_KO.csv"
+
+    for r_id, rxn in model.reactions.items():
+        if r_id.startswith('R_EX_'):  # ou tambem podes fazer if rxn.is_exchange:
+            rxn.lb = -1000 if rxn.lb is None else rxn.lb
+            rxn.ub = 1000 if rxn.ub is None else rxn.ub
+
+    simulProb = StoicSimulationProblem(model, objective={"R_BM_total_Synth": 1}, withCobraPy=withCobraPy)
+    evalFunc = build_evaluation_function("BPCY", "R_BM_total_Synth","R_EX_succ_medium_", "R_EX_glc_D_medium_")
+
+    result = cbm_strain_optim(simulProb, evaluationFunc=evalFunc, levels=None, isMultiProc=isMultiProc, candidateSize= size, resultFile=fileRes) #KO_Reaction by default
+    result.print()
+
+def reac_ko_medium_optim_CM (isMultiProc=False, size=1, withCobraPy = False):
+    SBML_FILE =basePath + "Data/EC_SC_model.xml"
+    modelaux = load_cbmodel(SBML_FILE, exchange_detection_mode="R_EX_")
+    model = fix_exchange_reactions_model(modelaux)
+    fileRes = basePath + "Results/optim_Comunity_KO_medium.csv"
+
+    for r_id, rxn in model.reactions.items():
+        if r_id.startswith('R_EX_'):  # ou tambem podes fazer if rxn.is_exchange:
+            rxn.lb = -1000 if rxn.lb is None else rxn.lb
+            rxn.ub = 1000 if rxn.ub is None else rxn.ub
+
+
+    simulProb = StoicSimulationProblem(model, objective={"R_BM_total_Synth": 1}, withCobraPy=withCobraPy)
+    res = simulProb.simulate()
+    print(res.print())
+    evalFunc = build_evaluation_function("BP_MinModifications", "R_BM_total_Synth", "R_EX_succ_medium_")
+
+    result = cbm_strain_optim(simulProb, evaluationFunc=evalFunc, levels=None, type=optimType.MEDIUM_REACTION_KO, isMultiProc=isMultiProc, candidateSize= size, resultFile=fileRes) #KO_Reaction by default
+    result.print()
+
+
 
 if __name__ == '__main__':
     import time
-    size = 30
+    size = 5
 
     t1 = time.time()
    # medium_SC_optim(False, size, False)
     #medium_SC_Etanol_optim (False, size, False)
     #medium_SC_Etanol_Levels_optim(False, size, False)
     #medium_optim(False, size, False)
-    medium_reac_ko_optim(False, (size, 10), False)
+    #reac_ko_optim_CM(False, size, False)
+    reac_ko_medium_optim_CM(False, (50, 10), False)
 
     t2 = time.time()
     print ("time of FRAMED: " + str(t2 - t1))
