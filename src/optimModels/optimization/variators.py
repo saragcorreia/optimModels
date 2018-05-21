@@ -273,6 +273,25 @@ def uniform_crossover_intTupleRep(random, mom, dad, args):
     child1 = copy.copy(intersection)
     child2 = copy.copy(intersection)
 
+    #intersection keys
+    #############################
+    intkeys = {k for k,v in list(mom)}& {k for k,v in list(dad)}
+    intkeys = intkeys.difference({k for k,v in list(intersection)})
+    swap = bool(random.randint(0,1))
+    for k in intkeys:
+        v1 = [d2 for d1,d2 in dad if k==d1][0]
+        v2 = [m2 for m1,m2 in mom if k==m1][0]
+        if swap:
+            child1.add((k, v2))
+            child2.add((k, v1))
+        else:
+            child1.add((k,v1))
+            child2.add((k, v2))
+        swap = not swap
+        otherElems.remove((k,v1))
+        otherElems.remove((k,v2))
+    #############################
+
     while len(otherElems) > 0:
         prob = 0.5
         elemPosition = random.randint(0, len(otherElems) - 1) if len(otherElems)>1 else 0

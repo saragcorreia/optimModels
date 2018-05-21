@@ -38,7 +38,7 @@ def evaluator(candidates, args):
         try:
             res = simulProblem.simulate(overrideProblem)
             if res.get_solver_status() == solverStatus.OPTIMAL or res.get_solver_status() == solverStatus.SUBOPTIMAL:
-                fitInd = config.get_evaluation_function().get_fitness(res, candidateDecoded)
+                fitInd = config.get_evaluation_function().get_fitness(res, candidate)
                 if math.isnan(fitInd):
                     fitInd = -1.0
         except (Exception):

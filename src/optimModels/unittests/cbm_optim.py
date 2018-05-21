@@ -236,7 +236,7 @@ def reac_ko_medium_optim_CM (isMultiProc=False, size=1, withCobraPy = False):
     SBML_FILE =basePath + "Data/EC_SC_model.xml"
     modelaux = load_cbmodel(SBML_FILE, exchange_detection_mode="R_EX_")
     model = fix_exchange_reactions_model(modelaux)
-    fileRes = basePath + "Results/optim_Comunity_KO_medium.csv"
+    fileRes = basePath + "Results/optim_Comunity_KO_medium_pFBA.csv"
 
     for r_id, rxn in model.reactions.items():
         if r_id.startswith('R_EX_'):  # ou tambem podes fazer if rxn.is_exchange:
@@ -250,7 +250,7 @@ def reac_ko_medium_optim_CM (isMultiProc=False, size=1, withCobraPy = False):
     evalFunc = build_evaluation_function("BP_MinModifications", "R_BM_total_Synth", "R_EX_succ_medium_")
 
     result = cbm_strain_optim(simulProb, evaluationFunc=evalFunc, levels=None, type=optimType.MEDIUM_REACTION_KO, isMultiProc=isMultiProc, candidateSize= size, resultFile=fileRes) #KO_Reaction by default
-    result.print()
+
 
 
 

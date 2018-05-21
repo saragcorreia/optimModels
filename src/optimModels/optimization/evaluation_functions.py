@@ -254,6 +254,7 @@ class BP_MinModifications (EvaluationFunction):
         # optimization of medium and KO .. the candidate is a tuple of lists
         if (isinstance(candidate[0], list)):
             size = len(candidate[0]) + len(candidate[1])
+        print(candidate, str(ssFluxes[self.biomassId]), str(ssFluxes[self.productId]))
         return (ssFluxes[self.biomassId] * ssFluxes[self.productId])/size
 
 

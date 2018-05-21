@@ -97,9 +97,13 @@ class StoicSimulationProblem(SimulationProblem):
 
         else:
             drains = list(self.model.get_exchange_reactions())
+            for r in drains:
+                print (r, self.model.reactions[r].reversible)
+
             reacs = [r for r in drains if self.model.reactions[r].reversible or
-                     (self.model.reactions[r].lb is None or self.model.reactions[r].lb<0 and len(self.model.reactions[r].get_substrates())>0)or
-                     (self.model.reactions[r].ub is None or self.model.reactions[r].ub> 0 and len(self.model.reactions[r].get_products())>0)]
+                     ((self.model.reactions[r].lb is None or self.model.reactions[r].lb<0 )and len(self.model.reactions[r].get_substrates())>0)or
+                     ((self.model.reactions[r].ub is None or self.model.reactions[r].ub> 0 )and len(self.model.reactions[r].get_products()))>0]
+        print(reacs)
         return reacs
 
     def get_internal_reactions(self):
