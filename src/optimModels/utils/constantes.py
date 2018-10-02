@@ -8,12 +8,14 @@ class optimType:
     MEDIUM_REACTION_KO = 7
     MEDIUM_REACTION_UO = 8
     COMPOSITION = 9
+    PROTEIN_KO = 10
+    PROTEIN_UO = 11
 
 
     types = {1:"Reaction Knockouts",2:"Reaction Under/Over expression", 3:"Gene Knockouts",
              4:"Gene Under/Over expression", 5:"Medium compositions",6:"Medium compositions with levels",
              7:"Medium with Reaction Knockouts",8: "Medium with Reaction Under/Over expression",
-             9:"Community Composition"}
+             9:"Community Composition", 10:"Protein knockouts", 11:"Protein Under/Over expression"}
 
     def get_optim_type_name(self, id):
         return optimType.types.get(id)

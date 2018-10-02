@@ -1,6 +1,16 @@
 
-
 def load_population (initPopFile = None, decoder = None):
+    """
+
+    Args:
+        initPopFile (str): file name with the population to be loaded.
+        decoder (Decoder): decoder to decode the candidates.
+
+    Returns:
+        num_generations(str): number of the generation
+        population (list): list of candidates
+        fitness (list): fitness values for each candidate
+    """
     population = []
     fitness = []
     if initPopFile is not None:
@@ -30,17 +40,16 @@ def save_all_results(population, num_generations, num_evaluations, args):
     - the solution candidates
     - the solution encoded candidates
 
-    Parameters
-    -----------
-    population : the population of Individuals
-    num_generations : the number of elapsed generations
-    num_evaluations : the number of evaluations already performed
-    args : a dictionary of keyword arguments
+    Args:
+        population (list): the population of Individuals
+        num_generations (int): the number of elapsed generations
+        num_evaluations (int): the number of evaluations already performed
+        args (dict): a dictionary of keyword arguments
 
-    Optional keyword arguments in args:
-
-    - *results_file* -- the file path of the result file
-    - *configuration* -- the configuration of the EA algorithm
+    Notes:
+        Optional keyword arguments in args:
+        - *results_file* -- the file path of the result file
+        - *configuration* -- the configuration of the EA algorithm
 
     """
     print ("save results of generation:" + str(num_generations))

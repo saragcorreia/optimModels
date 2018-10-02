@@ -10,21 +10,18 @@ def grow_mutation_intSetRep(random, candidate, args):
     """Returns the mutant produced by a grow mutation on the candidate (when the representation is a set of integers).
     If a candidate solution has the maximum size candidate allowed, this function leaves it unchanged.
 
-    Parameters
-    ----------
-    random  : the random number generator object
-    candidate : the candidate solution
-    args : a dictionary of keyword arguments
+    Args:
+        random  : the random number generator object
+        candidate : the candidate solution
+        args : a dictionary of keyword arguments
 
-    Returns
-    -------
-    out : new candidate
+    Returns:
+        set: new candidate
 
-    Optional keyword arguments in args:
-
-    - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
+    Notes:
+        Optional keyword arguments in args:
+        - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
     """
-    # bounder = inspyred.ec.Bounder(0,10)
     bounder = args["_ec"].bounder
     mutRate = args.setdefault("mutation_rate", 0.1)
     if random.random() > mutRate:
@@ -46,19 +43,17 @@ def shrink_mutation(random, candidate, args):
     """Returns the mutant produced by shrink mutation on the candidate.
     If a candidate solution has length of 1, this function leaves it unchanged.
 
-    Parameters
-    ----------
-    random  : the random number generator object
-    candidate : the candidate solution
-    args : a dictionary of keyword arguments
+    Args:
+        random  : the random number generator object
+        candidate : the candidate solution
+        args : a dictionary of keyword arguments
 
-    Returns
-    -------
-    out : new candidate
+    Returns:
+        set: new candidate
 
-    Optional keyword arguments in args:
-
-    - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
+    Notes:
+        Optional keyword arguments in args:
+        - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
     """
     mutRate = args.setdefault("mutation_rate", 0.1)
     if random.random() > mutRate or len(candidate) == 1:
@@ -115,16 +110,18 @@ def uniform_crossover(random, mom, dad, args):
     - elements present in only one parent have equal probability to be present in child 1 or child 2 (after each child has at least one element).
 
 
-    Parameters
-    ------------
-    random : the random number generator object
-    mom : the first parent candidate
-    dad : the second parent candidate
-    args : a dictionary of keyword arguments
+    Args:
+        random : the random number generator object
+        mom : the first parent candidate
+        dad : the second parent candidate
+        args : a dictionary of keyword arguments
 
-    Optional keyword arguments in args:
-    - *crossover_rate* -- the rate at which crossover is performed
-      (default 1.0)
+    Returns:
+        Return the offspring of the candidates given as argument.
+
+    Notes:
+        Optional keyword arguments in args:
+        - *crossover_rate* -- the rate at which crossover is performed (default 1.0)
     """
     crossRate = args.setdefault("crossover_rate", 1.0)
     children = []
@@ -171,19 +168,17 @@ def grow_mutation_intTupleRep(random, candidate, args):
     """Returns the mutant produced by a grow mutation on the candidate (when the representation is a set of tuples).
     If a candidate solution has the maximum size candidate allowed, this function leaves it unchanged.
 
-    Parameters
-    ----------
-    random  : the random number generator object
-    candidate : the candidate solution
-    args : a dictionary of keyword arguments
+    Args:
+        random  : the random number generator object
+        candidate : the candidate solution
+        args : a dictionary of keyword arguments
 
-    Returns
-    -------
-    out : new candidate
+    Returns:
+        Returns a new candidate
 
-    Optional keyword arguments in args:
-
-    - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
+    Notes:
+        Optional keyword arguments in args:
+        - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
     """
     bounder = args["_ec"].bounder
     mutRate = args.setdefault("mutation_rate", 0.1)
@@ -205,15 +200,13 @@ def single_mutation_intTupleRep(random, candidate, args):
     """Returns the mutant produced by a single mutation on the candidate (when the representation is a set of tuples).
     The candidate size is maintained.
 
-    Parameters
-    ----------
-    random  : the random number generator object
-    candidate : the candidate solution
-    args : a dictionary of keyword arguments
+    Args:
+        random  : the random number generator object
+        candidate : the candidate solution
+        args : a dictionary of keyword arguments
 
-    Returns
-    -------
-    out : new candidate
+    Returns:
+        Returns a new candidate
 
     Optional keyword arguments in args:
 
@@ -248,17 +241,18 @@ def uniform_crossover_intTupleRep(random, mom, dad, args):
     - both children have at least one element;
     - elements present in only one parent have equal probability to be present in child 1 or child 2 (after each child has at least one element).
 
+    Args:
+        random : the random number generator object
+        mom : the first parent candidate
+        dad : the second parent candidate
+        args : a dictionary of keyword arguments
 
-    Parameters
-    ------------
-    random : the random number generator object
-    mom : the first parent candidate
-    dad : the second parent candidate
-    args : a dictionary of keyword arguments
+    Returns:
+        Returns the offspring of the candidates given as argument.
 
-    Optional keyword arguments in args:
-    - *crossover_rate* -- the rate at which crossover is performed
-      (default 1.0)
+    Notes:
+        Optional keyword arguments in args:
+        - *crossover_rate* -- the rate at which crossover is performed (default 1.0)
     """
     crossRate = args.setdefault("crossover_rate", 1.0)
     children = []
@@ -327,19 +321,17 @@ def grow_mutation_tuple_intSetRep(random, candidate, args):
     """Returns the mutant produced by a grow mutation on the candidate (when the representation is a set of integers).
     If a candidate solution has the maximum size candidate allowed, this function leaves it unchanged.
 
-    Parameters
-    ----------
-    random  : the random number generator object
-    candidate : the candidate solution
-    args : a dictionary of keyword arguments
+    Args:
+        random  : the random number generator object
+        candidate : the candidate solution
+        args : a dictionary of keyword arguments
 
-    Returns
-    -------
-    out : new candidate
+    Returns:
+        Returns a new candidate
 
-    Optional keyword arguments in args:
-
-    - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
+    Notes:
+        Optional keyword arguments in args:
+        - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
     """
     # bounder = inspyred.ec.Bounder(0,10)
     bounder = args["_ec"].bounder
@@ -365,19 +357,17 @@ def shrink_mutation_tuple(random, candidate, args):
     """Returns the mutant produced by shrink mutation on the candidate.
     If a candidate solution has length of 1, this function leaves it unchanged.
 
-    Parameters
-    ----------
-    random  : the random number generator object
-    candidate : the candidate solution
-    args : a dictionary of keyword arguments
+    Args:
+        random  : the random number generator object
+        candidate : the candidate solution
+        args : a dictionary of keyword arguments
 
-    Returns
-    -------
-    out : new candidate
+    Returns:
+        Returns a  new candidate
 
-    Optional keyword arguments in args:
-
-    - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
+    Notes:
+        Optional keyword arguments in args:
+        - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
     """
     mutRate = args.setdefault("mutation_rate", 0.1)
 
@@ -405,19 +395,17 @@ def single_mutation_tuple_intSetRep(random, candidate, args):
     """Returns the mutant produced by a single mutation on the candidate (when the representation is a set of integers).
     The candidate size is maintained.
 
-    Parameters
-    ----------
-    random  : the random number generator object
-    candidate : the candidate solution
-    args : a dictionary of keyword arguments
+    Args:
+        random  : the random number generator object
+        candidate : the candidate solution
+        args : a dictionary of keyword arguments
 
-    Returns
-    -------
-    out : new candidate
+    Returns:
+        Returns a  new candidate
 
-    Optional keyword arguments in args:
-
-    - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
+    Notes:
+        Optional keyword arguments in args:
+        - *mutation_rate* -- the rate at which mutation is performed (default 0.1)
     """
 
     bounder = args["_ec"].bounder
@@ -450,16 +438,17 @@ def uniform_crossover_tuple(random, mom, dad, args):
     - elements present in only one parent have equal probability to be present in child 1 or child 2 (after each child has at least one element).
 
 
-    Parameters
-    ------------
-    random : the random number generator object
-    mom : the first parent candidate
-    dad : the second parent candidate
-    args : a dictionary of keyword arguments
+    Args:
+        random : the random number generator object
+        mom : the first parent candidate
+        dad : the second parent candidate
+        args : a dictionary of keyword arguments
 
-    Optional keyword arguments in args:
-    - *crossover_rate* -- the rate at which crossover is performed
-      (default 1.0)
+    Returns:
+        Return the offspring of the candidates given as argument.
+    Notes:
+        Optional keyword arguments in args:
+        - *crossover_rate* -- the rate at which crossover is performed (default 1.0)
     """
     crossRate = args.setdefault("crossover_rate", 1.0)
     children = []

@@ -7,6 +7,9 @@ from optimModels.simulation.simul_problems import KineticSimulationProblem
 from optimModels.utils.constantes import optimType
 
 class EAConfigurations():
+    """
+    Basic configurations to Evolutionary Algorithm.
+    """
     def __init__(self):
        # Configuration of EA algorithm
         self.MAX_GENERATIONS = 500
@@ -29,18 +32,18 @@ class EAConfigurations():
 class OptimProblemConfiguration():
     """
     This class contains all information to perform a strain optimization
-
-    Attributes
-    -----------
-    simulProblem : KineticSimulationProblem
-        Configuration of a kinetic simulation problem (model and modifications over the parameters)
-    decoder : an instance of decoderKnockouts or decoderUnderOverExpression class
-        Responsible to convert a set of integers (int set representation) or a set of tuples (tuples of 2 integers) to knockouts or under/over levels of enzymes expression.
-    evaluationFunc : an instance of targetFlux or BCPY class
-        Function to calculate the fitness value of each candidate during the optimization process.
-    EAConfiguration : configuration of evolutionary anlgorithms
     """
     def __init__(self, simulationProblem=None, type = None, decoder=None, evaluationFunc=None, EAConfig = None):
+        """
+        Create a OptimProblemConfiguration instance.
+
+        Args:
+            simulProblem (SimulationProblem) Configuration of a simulation problem instance (model and modifications over the parameters)
+            type (str): Optimization type (constants.optimType).
+            decoder (Decoder):  instance of Decoder responsible to convert a candidate to an OverrideSimulationProblem.
+            evaluationFunc (EvaluationFunction): Function to calculate the fitness value of each candidate during the optimization process.
+            EAConfig (EAConfiguration): configuration of evolutionary algorithm
+        """
         if simulationProblem is None or type is None or decoder is None or evaluationFunc is None:
             raise Exception("You must give all the arguments!")
         self.simulProblem = simulationProblem
@@ -80,19 +83,13 @@ def run_optimization(optimProbConf, resultFile= None, isMultiProc=False, populat
     """
     Function to perform the optimization using the integer set representation to the candidates solutions.
 
-    Parameters
-    ----------
-    optimProbConf : an instance of optimProblemConfiguration.
-        This object contains all information to perform the strain optimization task.
-    resultFile : str
-        The path file to store all the results obtained during the optimization (default results are not saved into a file)
-    isMultiProc : boolean value.
-        True, if the user wants parallelize the population evaluation. (default False)
+    Args:
+    optimProbConf (OptimProblemConfiguration): This object contains all information to perform the strain optimization task.
+    resultFile (str): The path file to store all the results obtained during the optimization (default results are not saved into a file)
+    isMultiProc (bool): True, if the user wants parallelize the population evaluation. (default False)
 
     Returns
-    --------
-    out : list of individuals
-        The function returns the last population of EA.
+        list: the individuals of the last population.
 
     """
     #TODO consider the initial poputalion
@@ -106,8 +103,8 @@ def run_optimization(optimProbConf, resultFile= None, isMultiProc=False, populat
     if resultFile is not None:
         my_ec.observer = observers.save_all_results
 
-    if optimProbConf.type in [optimType.REACTION_KO, optimType.GENE_KO, optimType.MEDIUM]:
-        # ins set representation
+    if optimProbConf.type in [optimType.REACTION_KO, optimType.GENE_KO, optimType.MEDIUM, optimType.PROTEIN_KO]:
+        # int set representation
         bounds = [0, len(optimProbConf.get_decoder().ids) - 1]
         myGenerator = generators.generator_single_int_set
         my_ec.variator = [variators.uniform_crossover,
@@ -173,10 +170,3 @@ def run_optimization(optimProbConf, resultFile= None, isMultiProc=False, populat
                                  tournament_size=config.TOURNAMENT_SIZE
                                  )
     return final_pop
-
-
-
-
-
-
-

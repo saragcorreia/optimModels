@@ -10,18 +10,15 @@ def new_candidates_replacement(random, population, parents, offspring, args):
     that they replace. Moreover a new set of candidates random generated
     will be added to the population
 
-    Parameters
-    -----------
-    random : the random number generator object
-    population : the population of individuals
-    parents : the list of parent individuals
-    offspring : the list of offspring individuals
-    args : a dictionary of keyword arguments
+    Args:
+        random : the random number generator object
+        population : the population of individuals
+        parents : the list of parent individuals
+        offspring : the list of offspring individuals
+        args : a dictionary of keyword arguments
 
-    Returns
-    --------
-    out : list of individuals
-        Returns the new population that will be used to next generation.
+    Returns:
+        list: Returns the new population that will be used to next generation.
 
     """
     population.sort()
@@ -47,18 +44,15 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
     will be added to the population. The duplicated candidates are
     replaced by new ones randomly generated.
 
-    Parameters
-    -----------
-    random : the random number generator object
-    population : the population of individuals
-    parents : the list of parent individuals
-    offspring : the list of offspring individuals
-    args : a dictionary of keyword arguments
+    Args:
+        random : the random number generator object
+        population : the population of individuals
+        parents : the list of parent individuals
+        offspring : the list of offspring individuals
+        args : a dictionary of keyword arguments
 
-    Returns
-    --------
-    out : list of individuals
-        Returns the new population that will be used to next generation.
+    Returns:
+        list: Returns the new population that will be used to next generation.
 
     """
 
@@ -72,7 +66,6 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
     numNewCandidates = int(round(args.setdefault("new_candidates_rate", 0.0) * len(population)))
     newCandidates = _generateNewCandidates(numNewCandidates, random, args)
     population[:len(newCandidates)] = newCandidates
-
 
     # remove duplicates
     newPopulation = []
@@ -91,7 +84,6 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
 def _generateNewCandidates(numCandidates, random, args):
     newCandidates = []
     if numCandidates > 0:
-
         try:
             generator = args["_ec"].mp_generator
         except AttributeError:

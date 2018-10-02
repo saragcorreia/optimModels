@@ -17,10 +17,6 @@ def fix_exchange_reactions_model(model):
                 newModel.reactions[rId].stoichiometry[m_id] = -1*coeff
     return newModel
 
-
-
-
-
 class MyTree:
     """Class to implement a generic tree."""
 
@@ -44,6 +40,7 @@ def get_order_nodes(tree):
 
     """
     if tree.children is None:
+
         return [tree.name];
     else:
         res = []

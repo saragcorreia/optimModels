@@ -46,5 +46,4 @@ def kinetic_simulation(model, parameters = None, factors = None, time = 1e9):
     else:
         result = simulProblem.simulate()
 
-
     return result

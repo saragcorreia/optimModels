@@ -9,25 +9,14 @@ from  optimModels.utils.utils import MyTree
 
 
 def load_kinetic_model(filename, map=None):
-    """ Load a kinetic model SBML file.
+    """
 
-    Parameters
-    ----------
-    filename : str
-        Location of the SBML file.
-    map : dictionary
-        Dictionary with the parameters that can be used in the strain optmimization process for each reaction. {id_reaction: [param1, param2]}
+    Args:
+        filename (str): SBBML file.
+        map (dict): Dictionary with the parameters that can be used in the strain optmimization process for each reaction. {id_reaction: [param1, param2]}
 
-    Returns
-    -------
-    out : KineticModel
+    Returns: KineticModel
         Contains all information related with the dynamic model (reactions, kinetic eqations, metabolites, compartments, etc.)
-
-    Raises
-    ------
-    IOError
-        When is not possible load the SBML file.
-
     """
     document = readSBMLFromFile(filename)
     sbmlModel = document.getModel()
@@ -49,34 +38,29 @@ def load_kinetic_model(filename, map=None):
     # parse rates, rules and xdot expressions
     model._set_parsed_attr()
 
-
-    if map is not None:
-        model.set_reactions_parameters_factors(map)
-    else:
-        aux = OrderedDict([(rId ,  [rId+"_"+x for x in re.findall("(rmax\w*)", ratelaw)]) for rId, ratelaw in model.ratelaws.items()])#CHASSAGNOLE
+    if isinstance(map,str):
+        aux = OrderedDict([(rId, re.findall(map, ratelaw)) for rId, ratelaw in model.ratelaws.items()])
+        #aux = OrderedDict([(rId ,  [rId+"_"+x for x in re.findall("(rmax\w*)", ratelaw)]) for rId, ratelaw in model.ratelaws.items()])#CHASSAGNOLE
         model.reacParamsFactors = OrderedDict([(rId , params) for rId, params in aux.items() if len(params) > 0])
-        #model.reacParamsFactors = OrderedDict([(rId ,  re.findall("(vMax\w*)", ratelaw)) for rId, ratelaw in model.ratelaws.items()])
-
+    else:
+        model.set_reactions_parameters_factors(map)
     return model
 
 
 class KineticModel(ODEModel):
     """ Class to store information of dynamic models.
-    This class is an extension of ODEModel class from FRAMED package. The methods  *build_ode* and *get_ode* are overrided to
+    This class is an extension of ODEModel class from FRAMED package. The methods  *build_ode* and *get_ode* were overrided to
     support the manipulations over the parameters or enzyme concentration level during the strain optimization process.
     The ode function returned by *get_ode* replace the negative concentrations, received as argument, by 0 if the concentration is smaller than
     absolute tolerance or raise an exception if the concentration is a significante negative value.
-
     """
 
     def __init__(self, modelId):
-        """Create a instance of dynamicModel class.
+        """
+        Create a instance of dynamicModel class.
 
-        Parameters
-        ----------
-        modelId : str
-            A valid unique identifier
-
+        Args:
+            modelId (str): A valid unique identifier
         """
         ODEModel.__init__(self, modelId)
         self.reacParamsFactors = None;  # reaction->parameters association
@@ -99,22 +83,18 @@ class KineticModel(ODEModel):
 
 
     def build_ode(self, factors):
-        """Build the ODE system.
+        """
 
-        Parameters
-        ----------
-        factors : dict
-            The key is the parameter identifyer and the value is the level of change values between 0 and 1 represent a under expression, above 1 a over
+        Args:
+            factors (dict): The key is the parameter identifier and the value is the level of change values between 0 and 1 represent a under expression, above 1 a over
         expression and 0 to represent the knockouts.
 
-        Returns
-        -------
-        out : str
-            Returns  a string with the ode system.
+        Returns: (str)  Returns  a string with the ode system.
+
         """
+
         # factors: ["vmax1": 0, "vmax2"=2, "ENZYME_ID":0]
         # divide vmax parameters from enzymes expression levels
-
         factorsEnz = OrderedDict([(k, v) for k, v in factors.items() if k in self.metabolites.keys()])
         factorsParam = OrderedDict([(k, v) for k, v in factors.items() if k not in factorsEnz.keys()])
 
@@ -153,24 +133,20 @@ class KineticModel(ODEModel):
         return func_str
 
     def get_ode(self, r_dict=None, params=None, factors=None):
-        """ Build the ODE system.
+        """
+        Build the ODE system.
 
-        Parameters
-        ----------
-        rDict : dict
-            This variable is used to store the reaction rates.
-        params : dict
-            Parameters and the new values used to replace the original parameters present in the SBML model
-        factors : dict
-            The key is the parameter identifyer and the value is the level of change values
-            between 0 and 1 represent a under expression, above 1 a over expression and 0 to represent the knockouts.
+        Args:
+            r_dict (dict): This variable is used to store the reaction rates.
+            params (dict): Parameters and the new values used to replace the original parameters present in the SBML model.
+            factors (dict): The key is the parameter identifier and the value is the level of change values between
+            0 and 1 represent a under expression, above 1 a over expression and 0 to represent the knockouts.
 
-        Returns
-        --------
-        out : function
-            A function used to solve the ODE system.
+        Returns:
+            func: A function used to solve the ODE system.
 
         """
+
         p = self.merge_constants()
         v = self.variable_params.copy()
 
@@ -189,57 +165,20 @@ class KineticModel(ODEModel):
         #print p
         #print v
         #print "-----"
-        print (self.build_ode(factors))
+        #print (self.build_ode(factors))
         f = lambda t, x: ode_func(t, x, r, p, v)
         return f
 
     def set_reactions_parameters_factors(self, map):
-        """ Set a new map with the parameters that can be changed for each reaction.
+        """
+        Set a new map with the parameters that can be changed for each reaction.
 
-        Parameters
-        ----------
-        map : dict
-            The keys is the reaction identifier and the value a list of parameters which can be used to simulate modifications( KO, under/ over expression)
+        Args:
+            map (dict): The keys is the reaction identifier and the value a list of parameters which can be used to simulate modifications( KO, under/ over expression)
+
         """
         self.reacParamsFactors = OrderedDict(map)
 
-    def get_reactions_parameters_factors(self):
-        """ Get the map with the parameters that can be changed for each reaction.
-
-            Returns
-            ----------
-             : list
-                List of parameters identifiers.
-        """
-        return self.reacParamsFactors
-
-    def get_parameters_by_reaction(self, reactionId):
-        """ Get the parameters list for a specific reaction identifier.
-
-        Returns
-        ----------
-         : list
-            List of parameters identifiers.
-        """
-        res = []
-        if reactionId in self.reacParamsFactors.keys():
-            res = self.reacParamsFactors[reactionId]
-        return res
-
-    def get_reactions_by_parameter(self, paramId):
-        """
-        Get the list of reactions associated with the parameters identifier.
-
-        Returns
-        ----------
-         : list
-            List of reactions identifiers.
-        """
-        res = []
-        for r in self.reacParamsFactors.keys():
-            if paramId in self.reacParamsFactors[r]:
-                res = res + [r]
-        return res
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -250,6 +189,9 @@ class KineticModel(ODEModel):
 
 
 # auxiliary functions to set the assignment rules by the correct order in the ODE system
+# TODO: Check if the framed in python 3.6 already correct the order of rules
+
+
 def _build_tree_rules(parent, rules):
     regexp = "v\[\'(.*?)\'\]"
     children = re.findall(regexp, rules[parent])

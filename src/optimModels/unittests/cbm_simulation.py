@@ -8,10 +8,12 @@ from optimModels.utils.utils import fix_exchange_reactions_model
 
 def medium_test():
     SBML_FILE = "C:/Users/sara/UMinho/Projects/DeCaF/Optimizations/Data/EC_SC_model.xml"
-    model = load_cbmodel(SBML_FILE,
-
-                         )
+    model = load_cbmodel(SBML_FILE)
     model2 = fix_exchange_reactions_model(model)
+
+    for r in model2.reactions:
+        print (r)
+
 
     for r_id, rxn in model2.reactions.items():
         if r_id.startswith('R_EX_'):  # ou tambem podes fazer if rxn.is_exchange:
@@ -106,6 +108,4 @@ def cbm_simualtion():
 
 
 if __name__ == '__main__':
-
-
-    kinetic_sim()
+    medium_test()

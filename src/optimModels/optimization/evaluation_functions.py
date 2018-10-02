@@ -3,7 +3,7 @@ from itertools import chain
 from optimModels.utils.configurations import StoicConfigurations
 class EvaluationFunction:
     """
-    This abstract class should be extended by all implemented evaluation functions classes.
+    This abstract class should be extended by all evaluation functions classes.
 
     """
     __metaclass__ = ABCMeta
@@ -11,7 +11,6 @@ class EvaluationFunction:
     @abstractmethod
     def get_fitness(self, simulationResult, candidate):
         return
-
 
     @abstractmethod
     def method_str(self):
@@ -25,7 +24,14 @@ class EvaluationFunction:
         self.__dict__.update(state)
 
 class MinNumberReacAndMaxFlux(EvaluationFunction):
+    """
+    This class implements ...
 
+    Args:
+        maxCandidateSize (int): maximum
+        maxTargetFlux ():
+
+    """
     def __init__(self, maxCandidateSize, maxTargetFlux):
         self.maxCandidateSize = maxCandidateSize
         self.objective = maxTargetFlux
@@ -105,11 +111,12 @@ class MinNumberReacAndMaxFluxWithLevels(EvaluationFunction):
 
 class MinNumberReac(EvaluationFunction):
     """
-    This class implements ...
+    This class implements the "minimization of number of reactions" objective function. The fitness is given by
+    1 - size(candidate)/ max_candidate_size, where the max_candidate_size is the maximum size that a candidate can have
+    during optimization.
 
-    Attributes
-    ----------
-    reactionList: list
+    Args:
+        reactionList (list): List of reaction ids
 
     minFluxes : dict
         (key: reaction id, value: minimum of flux)
@@ -124,7 +131,6 @@ class MinNumberReac(EvaluationFunction):
         for rId, flux in self.minFluxes.items():
             if fluxes[rId]< flux:
                 return 0
-
         return 1 - len(candidate)/(self.maxCandidateSize + 1)
 
     def method_str(self):
@@ -143,15 +149,12 @@ class MinNumberReac(EvaluationFunction):
         return ["Number maximum of modification allowed", "Minimum of targets flux values."]
 
 
-
-class targetFlux(EvaluationFunction):
+class TargetFlux(EvaluationFunction):
     """
     This class implements the "target flux" objective function. The fitness is given by the flux value of the target reaction.
 
-    Attributes
-    ----------
-    targetReactionId : str
-        Reaction identifier of the target compound production.
+    Args:
+        targetReactionId (str): Reaction identifier of the target compound production.
 
     """
     def __init__(self, targetReactionId):
@@ -179,22 +182,15 @@ class targetFlux(EvaluationFunction):
     def get_parameters_ids():
         return ["Target reaction id"]
 
-
-
-
 class BPCY (EvaluationFunction):
     """
-        This class implements the "Biomass-Product Coupled Yield" objective function. The fitness is given by the equation:
-        (biomass_flux * product_flux)/ uptake_flux
+    This class implements the "Biomass-Product Coupled Yield" objective function. The fitness is given by the equation:
+    (biomass_flux * product_flux)/ uptake_flux
 
-        Attributes
-        ----------
-        biomassId : str
-            biomass reaction identifier
-        productId : str
-            target product reaction identifier
-        uptakeId : str
-            reaction of uptake
+    Args:
+        biomassId (str): Biomass reaction identifier
+        productId (str): Target product reaction identifier
+        uptakeId (str): Reaction of uptake
 
         """
     def __init__(self, biomassId, productId, uptakeId):
@@ -210,8 +206,6 @@ class BPCY (EvaluationFunction):
         if abs(ssFluxes[self.uptakeId])==0:
             return 0
         return (ssFluxes[self.biomassId] * ssFluxes[self.productId])/abs(ssFluxes[self.uptakeId])
-
-
 
     def method_str(self):
         return "BPCY =  (" + self.biomassId +  " * " + self.productId +") / " + self.uptakeId
@@ -233,12 +227,9 @@ class BP_MinModifications (EvaluationFunction):
         This class is based the "Biomass-Product Coupled Yield" objective function but considering the candidate size. The fitness is given by the equation:
         (biomass_flux * product_flux)/ candidate_size)
 
-        Attributes
-        ----------
-        biomassId : str
-            biomass reaction identifier
-        productId : str
-            target product reaction identifier
+        Args:
+            biomassId (str): biomass reaction identifier
+            productId (str): target product reaction identifier
 
         """
     def __init__(self, biomassId, productId):
@@ -257,8 +248,6 @@ class BP_MinModifications (EvaluationFunction):
         print(candidate, str(ssFluxes[self.biomassId]), str(ssFluxes[self.productId]))
         return (ssFluxes[self.biomassId] * ssFluxes[self.productId])/size
 
-
-
     def method_str(self):
         return "BP_MinModifications=  (" + self.biomassId +  " * " + self.productId +") / candidate_size "
 
@@ -276,19 +265,19 @@ class BP_MinModifications (EvaluationFunction):
 
 def build_evaluation_function(id, *args):
     """
-    Parameters
-    -----------
-    id : str
-        name of the objective function. The implemented objective functions should be registed in constants.objFunctions class
-    *args : list of str
-        the number of arguments depends of the objective function chosen by user.
+    Function to return an evaluation function instance.
 
+    Args:
+        id (str): Name of the objective function. The implemented objective functions should be registed in constants.objFunctions class
+        *args (list of str): The number of arguments depends of the objective function chosen by user.
+    Returns:
+        EvaluationFunction: return an evaluation function instance.
     """
 
     if id == BPCY.get_id():
         objFunc = BPCY(args[0],args[1],args[2])
-    elif id == targetFlux.get_id():
-        objFunc = targetFlux(args[0])
+    elif id == TargetFlux.get_id():
+        objFunc = TargetFlux(args[0])
     elif id == MinNumberReac.get_id():
         objFunc = MinNumberReac(args[0], args[1])
     elif id ==  BP_MinModifications.get_id():

@@ -14,30 +14,38 @@ class OverrideSimulationProblem:
 
 class OverrideStoicSimulProblem(OverrideSimulationProblem):
     """
-            This class contains the modifications that will be made to the stoichiometric model in the simulation process.
-
-            Attributes
-            ----------
-            constraints  : dict {recation_id : (LowerBound, UpperBound)}
-                (KO simulation: LowerBound= UpperBound = 0)
-
-        """
+    This class contains the modifications that will be made to the stoichiometric model in the simulation process.
+    """
 
     def __init__(self, constraints={}):
+        """
+        Create a instance of override stroichiometric simulation problem.
+        Args:
+            constraints (dict): Dictionary with the new constraints to be applied in the simulation ("reac_id": (LB, UB)).
+        """
         self.constraints = constraints
 
     def get_modifications(self):
         return self.constraints
 
-    def get_bounds(self, reactionId):
-        bounds = None
-        if reactionId in self.constraints.keys():
-            bounds = self.constraints.get(reactionId)
-        return bounds
+    # def get_bounds(self, reactionId):
+    #     bounds = None
+    #     if reactionId in self.constraints.keys():
+    #         bounds = self.constraints.get(reactionId)
+    #     return bounds
 
     def simplify_modifications(self, simulationProblem, objFunction, fitness):
-        constraintsOrig = self.constraints.copy()
+        """
+        Simplify the constraints to be applied in the simulation. Constraints that not effluence the fitness value will
+        be removed.
 
+        Args:
+            simulationProblem: simulation problem instance
+            objFunction: function to calculate the fitness
+            fitness: reference fitness
+
+        """
+        constraintsOrig = self.constraints.copy()
         for k in constraintsOrig.keys():
             del self.constraints[k]
             try:
@@ -55,13 +63,11 @@ class OverrideStoicSimulProblem(OverrideSimulationProblem):
 
 class OverrideKineticSimulProblem(OverrideSimulationProblem):
     """
-        This class contains the modifications that will be made to the kinetic model in the simulation process.
+    This class contains the modifications that will be made to the kinetic model in the simulation process.
 
-        Attributes
-        ----------
-        factors  : dict {id_param : factor_value}
-            Factors to be multiplied with vmax parameter present in the model.
-            (KO simulation: factor = 0, under expression: factor > 0 and <1, over expression factor >1)
+    Args:
+        factors  (dict): Factors to be multiplied with vmax parameter present in the model.
+        (KO simulation: factor = 0, under expression: factor > 0 and <1, over expression factor >1)
 
     """
     def __init__(self, factors = {}):

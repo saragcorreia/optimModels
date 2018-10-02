@@ -12,19 +12,14 @@ except ImportError:
 
 def evaluator(candidates, args):
     """
-    This function allows evaluation of candidate solutions.
+    This function allows the evaluation of candidate solutions.
 
-    Parameters
-    -----------
-    candidates : list
-        A list of candidate solutions
-    args : dict
-       A dictionary of keyword arguments
+    Args:
+        candidates (list): A list of candidate solutions
+        args (dict): A dictionary of keyword arguments
 
-    Returns
-    --------
-    out: list of floats
-        a list of fitness values
+    Returns:
+        list of floats: a list of fitness values
     """
 
     config = args["configuration"]
@@ -32,8 +27,8 @@ def evaluator(candidates, args):
     simulProblem = config.get_simulation_problem()
     fitness = []
     for candidate in candidates:
-        candidateDecoded = decoder.decode_candidate(candidate)
         overrideProblem = decoder.get_override_simul_problem(candidate, simulProblem)
+
         fitInd = -1.0
         try:
             res = simulProblem.simulate(overrideProblem)
@@ -41,18 +36,14 @@ def evaluator(candidates, args):
                 fitInd = config.get_evaluation_function().get_fitness(res, candidate)
                 if math.isnan(fitInd):
                     fitInd = -1.0
-        except (Exception):
-            print ("Oops! Solver problems.  ")
-            logging.getLogger('optimModels').warning( "Oops! Solver problems.")
+        except Exception as error:
+            print ("Oops! Solver problems.  ", error)
+            logging.getLogger('optimModels').warning( "Oops! Solver problems." + str(error))
         fitness.append(fitInd)
     return fitness
 
 
-
-
-
 # change the original function to start a non-demoniac workers
-
 def parallel_evaluation_mp(candidates, args):
     """Evaluate the candidates in parallel using ``multiprocessing``.
 

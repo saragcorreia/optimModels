@@ -9,6 +9,43 @@ from optimModels.utils.configurations import StoicConfigurations
 
 import itertools
 
+def gecko_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.PROTEIN_KO, criticalProteins=[], isMultiProc=False, candidateSize = None,
+                     resultFile=None, initPopFile=None):
+
+    idsToManipulate = [x for x in simulProblem.model.proteins if x not in criticalProteins and x not in simulProblem.objective.keys()]
+
+    if type == optimType.PROTEIN_KO:
+        decoder = DecoderProtKnockouts(list(idsToManipulate))
+    elif type == optimType.PROTEIN_UO:
+        if not levels:
+            raise Exception("The specification of levels for under/over optimizarion is required!")
+        decoder = DecoderProtUnderOverExpression(idsToManipulate, levels)
+
+    initPopulation = None
+    if initPopFile is not None:
+        numGeneration, initPopulation = load_population(initPopFile, decoder)
+
+    # build optimization configuration problem
+    eaConfig = EAConfigurations()
+    if candidateSize:
+        eaConfig.MAX_CANDIDATE_SIZE = candidateSize;
+
+    optimProbConf = OptimProblemConfiguration(simulProblem, type=type, decoder=decoder, evaluationFunc=evaluationFunc,
+                                              EAConfig=eaConfig)
+
+    # run optimization
+    final_pop = run_optimization(optimProbConf, resultFile=resultFile, isMultiProc=isMultiProc,
+                                 population=initPopulation)
+
+    best_solutions = findBestSolutions(final_pop, eaConfig)
+
+    # simplify solutions
+    result = simplifySolutions(optimProbConf, best_solutions)
+
+    print_results(resultFile,final_pop,optimProbConf )
+
+    return result
+
 
 def cbm_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.REACTION_KO, criticalReacs=[], isMultiProc=False, candidateSize = None,
                      resultFile=None, initPopFile=None):

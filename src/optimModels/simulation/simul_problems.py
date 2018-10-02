@@ -5,21 +5,30 @@ from framed.cobra.simulation import FBA, MOMA, ROOM, pFBA, lMOMA
 from framed.solvers import solver_instance, set_default_solver
 
 from optimModels.utils.utils import MyPool
-from optimModels.simulation.simul_results import kineticSimulationResult, StoicSimulationResult
+from optimModels.simulation.simul_results import kineticSimulationResult, StoicSimulationResult, GeckoSimulationResult
 from optimModels.simulation.solvers import odespySolver
 from optimModels.utils.configurations import KineticConfigurations, StoicConfigurations, SolverConfigurations
 from optimModels.utils.constantes import solverStatus
-
+from cobra.util.solver import linear_reaction_coefficients
 try:
     import cPickle as pickle
 except ImportError:
     import pickle
 
-
 class SimulationProblem:
+    """
+    Abstract class of simulation problem
+    """
     __metaclass__ = ABCMeta
 
     def __init__(self, model, solverId, method):
+        """
+        Create a instance of a basic simulation problem.
+        Args:
+            model (Model): model instance ( CBModel, KineticModel or GeckoModel).
+            solverId (str): solver used in the simulation.
+            method: method to solve to use in phenotype prediction.
+        """
         self.model = model
         self.solverId = solverId
         self.method = method
@@ -37,32 +46,153 @@ class SimulationProblem:
     def get_method(self):
         return self.method
 
+class GeckoSimulationProblem(SimulationProblem):
+    """
+    This class contains all required information to perform a simulation of a Gecko metabolic model.
+    """
+
+    def __init__(self, model, objective=None, constraints=None, solverId=StoicConfigurations.SOLVER):
+        """
+        Create a instance of GeckoSimulProblem.
+
+        Args:
+            model (GeckoModel): Metabolic model
+            objective: Objective coefficients (optional)
+            constraints: Environmental conditions  or additional constraints (optional)
+            solverId (str): Solver id ("cplex", "glpk", "gurobi")
+        """
+        if objective:
+            model.objective = next(iter(objective.keys())) # only the first reac id will be set as objective function with coeficient 1
+            self.objective = objective
+        else:
+            (reac, coef)  = next(iter(linear_reaction_coefficients(model).items()))
+            self.objective = {reac.id:coef}
+        model.solver = solverId
+        if constraints:
+            for rId in list(constraints.keys()):
+                reac = model.reactions.get_by_id(rId)
+                reac.bounds(constraints.get(rId)[0], constraints.get(rId)[1])
+
+        self.constraints = constraints
+
+        super().__init__(model, solverId, "gecko")
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        return state
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+
+    def get_drains(self):
+        reacs= [r.id for r in self.model.exchanges]
+        return reacs
+
+    def get_uptake_reactions(self):
+        drains= self.model.exchanges
+        reacs =[r.id for r in drains if r.reversibility or
+                (r.lower_bound <0 and len(r.reactants)>0) or
+                (r.upper_bound >0  and len(r.products) >0)]
+        return reacs
+
+    def get_internal_reactions(self):
+        l1 = [r.id for r in self.model.reactions]
+        l2 = [r.id for r in self.model.exchanges]
+        reacs = set(l1) - set(l2)
+        return list(reacs)
+
+    def get_reactions_ids(self):
+        reacs = [r.id for r in self.model.reactions]
+        return reacs
+
+    def get_bounds(self, rId):
+        return self.model.reactions.get_by_id(rId).lower_bound, self.model.reactions.get_by_id(rId).upper_bound
+
+    def get_constraints_reacs(self):
+        return self.constraints.keys()
+
+    def set_objective_function(self, objective):
+        self.objective = objective
+
+    def find_essential_proteins(self):
+        proteins = self.model.proteins
+        essential = []
+        with self.model as m:
+            if self.constraints:
+                # apply the constraints of simulation problem
+                for reac ,bounds in self.constraints.items():
+                    m.reactions.get_by_id(reac).lower_bound = bounds[0]
+                    m.reactions.get_by_id(reac).upper_bound = bounds[1]
+            # for each protein check the essentially
+            for p in proteins:
+                r = m.reactions.get_by_id("draw_prot_" + p)
+                lb = r.lower_bound
+                ub = r.upper_bound
+                r.lower_bound = 0
+                r.upper_bound = 0
+                res = m.optimize()
+                r.lower_bound = lb
+                r.upper_bound = ub
+                if res.objective == 0:
+                    essential.append(p)
+        return essential
+
+    def simulate(self, overrideSimulProblem=None):
+        """
+        This method preforms the phenotype simulation of the GeckoModel with the modifications present in the overrideSimulProblem.
+        Args:
+            overrideProblem (overrideStoicSimulProblem): override simulation Problem
+
+        Returns:
+            GeckoSimulationResult: Returns an object with the steady-state flux distribution, protein concentrations and solver status.
+        """
+
+        new_constraints = OrderedDict()
+        if overrideSimulProblem is not None:
+            new_constraints = overrideSimulProblem.get_modifications()
+
+        if self.constraints is not None:
+            new_constraints.update(self.constraints)
+
+        status, fluxDist = _run_stoic_simutation_with_cobra(self.model, constraints=new_constraints)
+
+        fluxes, prots = {},{}
+        for k,v in fluxDist.items():
+            if k.startswith("draw_prot_"):
+                prots[k[10:]]=v
+            else:
+                fluxes[k] = v
+
+        return GeckoSimulationResult(self.model.id, solverStatus=status, ssFluxesDistrib=fluxes,
+                                          protConcentrations=prots, overrideSimulProblem=overrideSimulProblem)
+
 
 class StoicSimulationProblem(SimulationProblem):
     """
         This class contains all required information to perform a simulation of a stoichiometric metabolic model.
 
-        Attributes
-        ------------------
-        model : CBMModel
-            Metabolic model object.
-        objective : dict
-            objective coefficients (optional)
-        minimize: bool
-            minimize objective function (False by default)
-        constraints: dict
-            environmental or additional constraints (optional)
-        solverId: str
-            solver id ("cplex" or "gurobi")
-        method: str
-            method can be "FBA", "pFBA", "MOMA", "lMOMA" and "ROOM"
     """
 
     def __init__(self, model, objective=None, minimize=False, constraints=None, solverId=StoicConfigurations.SOLVER,
                  method=StoicConfigurations.SOLVER_METHOD,  withCobraPy = False):
+        """
+        Create a StoicSimulationProblem instance.
+        Args:
+            model (CBModel): Stoichiometric metabolic model
+            objective (dict): Objective coefficients (optional)
+            minimize (bool): Minimize objective function (False by default)
+            constraints (dict): Environmental conditions or additional constraints (optional)
+            solverId (str): Solver id ("cplex" or "gurobi")
+            method (str): Simulation method ("FBA", "pFBA", "MOMA", "lMOMA" and "ROOM")
+            withCobraPy (bool): Solve the problem using CobraPy package (default false)
+        """
         self.withCobraPy= withCobraPy
         if self.withCobraPy:
-            model.objective = next(iter(objective.keys()))
+            if objective:
+                model.objective = next(iter(objective.keys())) # only the first reac id will be set as objective function with coeficient 1
+            # set the objective reaction in simulation problem obj
+            (reac, coef)  = next(iter(linear_reaction_coefficients(model).items()))
+            self.objective = {reac.id:coef}
             model.solver = solverId
             if constraints:
                 for rId in list(constraints.keys()):
@@ -71,8 +201,8 @@ class StoicSimulationProblem(SimulationProblem):
         else:
             set_default_solver(solverId)
             #self.solver = solver_instance(model)
-        self.constraints = constraints
-        self.objective = objective
+            self.constraints = constraints
+            self.objective = objective
         self.minimize = minimize
         super().__init__(model, solverId, method)
 
@@ -92,18 +222,17 @@ class StoicSimulationProblem(SimulationProblem):
 
     def get_uptake_reactions(self):
         if self.withCobraPy:
-            #TODO: validar as reversiveis no cobrapy
-            reacs = [r.id for r in self.model.exchanges if self.model.reactions.get_by_id(r.id).lb<0]
+            drains = self.model.exchanges
+            reacs = [r.id for r in drains if r.reversibility or
+                     (r.lower_bound < 0 and len(r.reactants) > 0) or
+                     (r.upper_bound > 0 and len(r.products) > 0)]
 
         else:
             drains = list(self.model.get_exchange_reactions())
-            for r in drains:
-                print (r, self.model.reactions[r].reversible)
 
             reacs = [r for r in drains if self.model.reactions[r].reversible or
                      ((self.model.reactions[r].lb is None or self.model.reactions[r].lb<0 )and len(self.model.reactions[r].get_substrates())>0)or
                      ((self.model.reactions[r].ub is None or self.model.reactions[r].ub> 0 )and len(self.model.reactions[r].get_products()))>0]
-        print(reacs)
         return reacs
 
     def get_internal_reactions(self):
@@ -154,7 +283,7 @@ class StoicSimulationProblem(SimulationProblem):
             constraints[d] = (0,StoicConfigurations.DEFAULT_UB)
             solution = FBA(self.model, objective=self.objective, minimize=self.minimize, constraints=constraints)
             #TODO check what happens if the objective flux is negative .... minimize problem
-            if (any([solution.values[rId]==0 for rId in hasFlux])):
+            if (solution.values is None or any([solution.values[rId]==0 for rId in hasFlux])):
                 essential.append(d)
             constraints[d] = (StoicConfigurations.DEFAULT_LB, StoicConfigurations.DEFAULT_UB)
 
@@ -165,17 +294,14 @@ class StoicSimulationProblem(SimulationProblem):
 
     def simulate(self, overrideSimulProblem=None):
         """
-        This method preform the phenotype simulation of the stoichiometric model, using the solver method and applying the modifications present in the instance of overrideSimulProblem.
+        This method preform the phenotype simulation of the stoichiometric model, using the solver method and applying
+        the modifications present in the instance of overrideSimulProblem.
 
-        Parameters
-        -----------
-        overrideProblem : overrideStoicSimulProblem
-            Modification over the Stoichiometric model and the default constrains.
+        Args:
+            overrideProblem (OverrideStoicSimulProblem): Modification over the stoichiometric model and the default constraints.
 
-        Returns
-        --------
-        out : StoicSimulationResult
-            Returns an object of type StoicSimulationResult with the steady-state flux distribution.
+        Returns:
+            StoicSimulationResult: Returns an object with the steady-state flux distribution, solver status, etc..
         """
         new_constraints = OrderedDict()
         if overrideSimulProblem is not None:
@@ -285,14 +411,13 @@ class KineticSimulationProblem(SimulationProblem):
 
 ## auxiliar functions
 def _run_stoic_simutation(model, objective, minimize, constraints, method):
-    #import time
-    #t1 = time.time()
     if method == 'FBA':
         solution = FBA(model, objective=objective, minimize=minimize, constraints=constraints)
     elif method == 'pFBA':
         solution = pFBA(model, objective=objective, minimize=minimize, constraints=constraints)
     # elif method == 'MOMA':
-    #     solution = MOMA(model, objective=objective, minimize=minimize, constraints=constraints, solver=solver)
+    #     solution = MOMA(mo
+    # del, objective=objective, minimize=minimize, constraints=constraints, solver=solver)
     # elif method == 'lMOMA':
     #     solution = lMOMA(model, objective=objective, minimize=minimize, constraints=constraints, solver=solver)
     # elif method == 'ROOM':
@@ -300,22 +425,20 @@ def _run_stoic_simutation(model, objective, minimize, constraints, method):
     else:
         raise Exception(
             "Unknown method to perform the simulation.")
-    #time = str(time.time() - t1)
-    #print("simulation time ", time)
     return solution.status, solution.values
 
 
 def _run_stoic_simutation_with_cobra(model, constraints):
-    import time
-    t1= time.time()
     with model:
         for rId in list(constraints.keys()):
             reac = model.reactions.get_by_id(rId)
             reac.bounds=(constraints.get(rId)[0], constraints.get(rId)[1])
         solution = model.optimize()
-    time = str(time.time() - t1)
     #print("simulation time ", time)
-    return solverStatus.OPTIMAL, solution.fluxes
+    status = solverStatus.UNKNOWN
+    if solution.status == "optimal":
+        status = solverStatus.OPTIMAL
+    return status, solution.fluxes
 
 def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoints):
     """
