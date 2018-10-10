@@ -7,9 +7,10 @@ from framed.solvers import solver_instance, set_default_solver
 from optimModels.utils.utils import MyPool
 from optimModels.simulation.simul_results import kineticSimulationResult, StoicSimulationResult, GeckoSimulationResult
 from optimModels.simulation.solvers import odespySolver
-from optimModels.utils.configurations import KineticConfigurations, StoicConfigurations, SolverConfigurations
+from optimModels.utils.configurations import KineticConfigurations, StoicConfigurations, SolverConfigurations, GeckoConfigurations
 from optimModels.utils.constantes import solverStatus
 from cobra.util.solver import linear_reaction_coefficients
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -121,8 +122,8 @@ class GeckoSimulationProblem(SimulationProblem):
             if self.constraints:
                 # apply the constraints of simulation problem
                 for reac ,bounds in self.constraints.items():
-                    m.reactions.get_by_id(reac).lower_bound = bounds[0]
-                    m.reactions.get_by_id(reac).upper_bound = bounds[1]
+                    m.reactions.get_by_id(reac).lower_bound = bounds[0]* GeckoConfigurations.SCALE_CONSTANT
+                    m.reactions.get_by_id(reac).upper_bound = bounds[1]* GeckoConfigurations.SCALE_CONSTANT
             # for each protein check the essentially
             for p in proteins:
                 r = m.reactions.get_by_id("draw_prot_" + p)
@@ -154,14 +155,25 @@ class GeckoSimulationProblem(SimulationProblem):
         if self.constraints is not None:
             new_constraints.update(self.constraints)
 
-        status, fluxDist = _run_stoic_simutation_with_cobra(self.model, constraints=new_constraints)
+        with self.model:
+            for rId in list(self.constraints.keys()):
+                reac = self.model.reactions.get_by_id(rId)
+                reac.bounds = (self.constraints.get(rId)[0] * GeckoConfigurations.SCALE_CONSTANT, self.constraints.get(rId)[1]* GeckoConfigurations.SCALE_CONSTANT)
+            solution = self.model.optimize()
+        # print("simulation time ", time)
+        status = solverStatus.UNKNOWN
+
+        if solution.status == "optimal":
+            status = solverStatus.OPTIMAL
+
+        fluxDist = solution.fluxes
 
         fluxes, prots = {},{}
         for k,v in fluxDist.items():
             if k.startswith("draw_prot_"):
-                prots[k[10:]]=v
+                prots[k[10:]]= v / GeckoConfigurations.SCALE_CONSTANT
             else:
-                fluxes[k] = v
+                fluxes[k] = v / GeckoConfigurations.SCALE_CONSTANT
 
         return GeckoSimulationResult(self.model.id, solverStatus=status, ssFluxesDistrib=fluxes,
                                           protConcentrations=prots, overrideSimulProblem=overrideSimulProblem)

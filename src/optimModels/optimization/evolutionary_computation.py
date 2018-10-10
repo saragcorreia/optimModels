@@ -33,7 +33,7 @@ class OptimProblemConfiguration():
     """
     This class contains all information to perform a strain optimization
     """
-    def __init__(self, simulationProblem=None, type = None, decoder=None, evaluationFunc=None, EAConfig = None):
+    def __init__(self, simulationProblem=None, type = None, decoder=None, evaluationFunc=None, EAConfig = None, scaleProblem=1):
         """
         Create a OptimProblemConfiguration instance.
 
@@ -50,6 +50,7 @@ class OptimProblemConfiguration():
         self.type = type
         self.decoder = decoder
         self.evaluationFunc = evaluationFunc
+        self.scaleProblem =scaleProblem
 
         if EAConfig:
             self.EAConfig = EAConfig

@@ -12,6 +12,9 @@ class StoicConfigurations:
     DEFAULT_LB = -99999
     DEFAULT_UB = 99999
 
+class GeckoConfigurations:
+    SCALE_CONSTANT = 10000
+
 class KineticConfigurations:
     STEADY_STATE_TIME = 1e9
     SOLVER = "odespy"

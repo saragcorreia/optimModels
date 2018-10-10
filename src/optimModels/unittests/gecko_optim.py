@@ -5,6 +5,7 @@ from geckopy import GeckoModel
 from optimModels.optimization.evaluation_functions import build_evaluation_function
 from optimModels.simulation.simul_problems import GeckoSimulationProblem
 from optimModels.optimization.run import gecko_strain_optim
+from optimModels.utils.configurations import GeckoConfigurations
 
 
 basePath = "C:/Users/sara/UMinho/Projects/DeCaF/Optimizations/"
@@ -25,8 +26,8 @@ def prot_ko_optim (prot_measure_fractions =None, prot_measure_ggdw= None,  const
     fileRes = basePath + "Results/optim_KO_Gecko_Yeast_SUCC_max5_scale.csv"
 
     for r in model.reactions:
-        r.lower_bound = r.lower_bound * 100000
-        r.upper_bound = r.upper_bound * 100000
+        r.lower_bound = r.lower_bound * GeckoConfigurations.SCALE_CONSTANT
+        r.upper_bound = r.upper_bound * GeckoConfigurations.SCALE_CONSTANT
 
     simulProb = GeckoSimulationProblem(model, constraints= constraints)
     evalFunc = build_evaluation_function("BPCY", "r_2111", "r_2056", "r_1714_REV") # max succ exchange

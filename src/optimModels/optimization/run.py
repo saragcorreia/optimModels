@@ -5,7 +5,7 @@ from optimModels.optimization.decoders import *
 from optimModels.optimization.evolutionary_computation import run_optimization, OptimProblemConfiguration, \
     EAConfigurations
 from optimModels.utils.constantes import optimType
-from optimModels.utils.configurations import StoicConfigurations
+from optimModels.utils.configurations import GeckoConfigurations
 
 import itertools
 
@@ -31,7 +31,7 @@ def gecko_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.PROT
         eaConfig.MAX_CANDIDATE_SIZE = candidateSize;
 
     optimProbConf = OptimProblemConfiguration(simulProblem, type=type, decoder=decoder, evaluationFunc=evaluationFunc,
-                                              EAConfig=eaConfig)
+                                              EAConfig=eaConfig, scaleProblem=GeckoConfigurations.SCALE_CONSTANT)
 
     # run optimization
     final_pop = run_optimization(optimProbConf, resultFile=resultFile, isMultiProc=isMultiProc,
