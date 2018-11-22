@@ -13,7 +13,7 @@ For the kinetic models simulation, we use the Odespy framework, which offers a u
 
 ### Documentation
 
-For documentation and API please check: http://optimModelsreadthedocs.io/
+For documentation and API please check: http://optimModels.readthedocs.io/
 
 ### Instalation
 

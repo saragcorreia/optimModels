@@ -497,9 +497,3 @@ def uniform_crossover_tuple(random, mom, dad, args):
     # print (str(mom) + " ; "+str(dad))
     # print (str(child1) + " ; " + str(child2))
     return children
-
-
-if __name__ == '__main__':
-    import random
-    r = random.Random()
-    uniform_crossover(r, {1,2},{3}, None)

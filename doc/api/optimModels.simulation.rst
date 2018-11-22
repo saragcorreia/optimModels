@@ -4,10 +4,10 @@ optimModels.simulation package
 Submodules
 ----------
 
-optimModels.simulation.overrideSimulationProblem module
--------------------------------------------------------
+optimModels.simulation.override\_simul\_problem module
+------------------------------------------------------
 
-.. automodule:: optimModels.simulation.overrideSimulationProblem
+.. automodule:: optimModels.simulation.override_simul_problem
     :members:
     :undoc-members:
     :show-inheritance:
@@ -20,18 +20,18 @@ optimModels.simulation.run module
     :undoc-members:
     :show-inheritance:
 
-optimModels.simulation.simulationProblems module
-------------------------------------------------
+optimModels.simulation.simul\_problems module
+---------------------------------------------
 
-.. automodule:: optimModels.simulation.simulationProblems
+.. automodule:: optimModels.simulation.simul_problems
     :members:
     :undoc-members:
     :show-inheritance:
 
-optimModels.simulation.simulationResults module
------------------------------------------------
+optimModels.simulation.simul\_results module
+--------------------------------------------
 
-.. automodule:: optimModels.simulation.simulationResults
+.. automodule:: optimModels.simulation.simul_results
     :members:
     :undoc-members:
     :show-inheritance:

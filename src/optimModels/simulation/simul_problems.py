@@ -73,8 +73,12 @@ class GeckoSimulationProblem(SimulationProblem):
             for rId in list(constraints.keys()):
                 reac = model.reactions.get_by_id(rId)
                 reac.bounds(constraints.get(rId)[0], constraints.get(rId)[1])
-
         self.constraints = constraints
+
+        #scale the model
+        for r in model.reactions:
+            r.lower_bound = r.lower_bound * GeckoConfigurations.SCALE_CONSTANT
+            r.upper_bound = r.upper_bound * GeckoConfigurations.SCALE_CONSTANT
 
         super().__init__(model, solverId, "gecko")
 
@@ -107,7 +111,9 @@ class GeckoSimulationProblem(SimulationProblem):
         return reacs
 
     def get_bounds(self, rId):
-        return self.model.reactions.get_by_id(rId).lower_bound, self.model.reactions.get_by_id(rId).upper_bound
+        lb = self.model.reactions.get_by_id(rId).lower_bound / GeckoConfigurations.SCALE_CONSTANT
+        ub = self.model.reactions.get_by_id(rId).upper_bound / GeckoConfigurations.SCALE_CONSTANT
+        return lb,ub
 
     def get_constraints_reacs(self):
         return self.constraints.keys()
@@ -119,11 +125,6 @@ class GeckoSimulationProblem(SimulationProblem):
         proteins = self.model.proteins
         essential = []
         with self.model as m:
-            if self.constraints:
-                # apply the constraints of simulation problem
-                for reac ,bounds in self.constraints.items():
-                    m.reactions.get_by_id(reac).lower_bound = bounds[0]* GeckoConfigurations.SCALE_CONSTANT
-                    m.reactions.get_by_id(reac).upper_bound = bounds[1]* GeckoConfigurations.SCALE_CONSTANT
             # for each protein check the essentially
             for p in proteins:
                 r = m.reactions.get_by_id("draw_prot_" + p)
@@ -182,7 +183,6 @@ class GeckoSimulationProblem(SimulationProblem):
 class StoicSimulationProblem(SimulationProblem):
     """
         This class contains all required information to perform a simulation of a stoichiometric metabolic model.
-
     """
 
     def __init__(self, model, objective=None, minimize=False, constraints=None, solverId=StoicConfigurations.SOLVER,
@@ -238,7 +238,6 @@ class StoicSimulationProblem(SimulationProblem):
             reacs = [r.id for r in drains if r.reversibility or
                      (r.lower_bound < 0 and len(r.reactants) > 0) or
                      (r.upper_bound > 0 and len(r.products) > 0)]
-
         else:
             drains = list(self.model.get_exchange_reactions())
 
@@ -294,15 +293,11 @@ class StoicSimulationProblem(SimulationProblem):
         for d in drains:
             constraints[d] = (0,StoicConfigurations.DEFAULT_UB)
             solution = FBA(self.model, objective=self.objective, minimize=self.minimize, constraints=constraints)
-            #TODO check what happens if the objective flux is negative .... minimize problem
             if (solution.values is None or any([solution.values[rId]==0 for rId in hasFlux])):
                 essential.append(d)
             constraints[d] = (StoicConfigurations.DEFAULT_LB, StoicConfigurations.DEFAULT_UB)
 
         return essential
-
-
-
 
     def simulate(self, overrideSimulProblem=None):
         """
@@ -389,10 +384,6 @@ class KineticSimulationProblem(SimulationProblem):
             final_factors = overrideSimulProblem.factors
         # update initial concentrations when a [enz] is changed: == 0, up or down regulated
         initConcentrations = self.get_initial_concentrations().copy()
-        # print "------conc ----"
-        # print initConcentrations
-        # print "------conc ----"
-        t1 = time.time()
         if self.timeout is None:
             status, sstateRates, sstateConc = _my_kinetic_solve(self.get_model(), self.parameters,
                                                                 final_factors,
@@ -413,9 +404,6 @@ class KineticSimulationProblem(SimulationProblem):
                 p.terminate()
             p.close()
             p.join()
-        t2 = time.time()
-        #print("TIME (seconds) simulate: " + str(t2 - t1))
-
         return kineticSimulationResult(self.model.id, solverStatus=status, ssFluxesDistrib=sstateRates,
                                        ssConcentrations=sstateConc,
                                        overrideSimulProblem=overrideSimulProblem)
@@ -427,13 +415,6 @@ def _run_stoic_simutation(model, objective, minimize, constraints, method):
         solution = FBA(model, objective=objective, minimize=minimize, constraints=constraints)
     elif method == 'pFBA':
         solution = pFBA(model, objective=objective, minimize=minimize, constraints=constraints)
-    # elif method == 'MOMA':
-    #     solution = MOMA(mo
-    # del, objective=objective, minimize=minimize, constraints=constraints, solver=solver)
-    # elif method == 'lMOMA':
-    #     solution = lMOMA(model, objective=objective, minimize=minimize, constraints=constraints, solver=solver)
-    # elif method == 'ROOM':
-    #     solution = ROOM(model, objective=objective, minimize=minimize, constraints=constraints, solver=solver)
     else:
         raise Exception(
             "Unknown method to perform the simulation.")
@@ -472,11 +453,8 @@ def _my_kinetic_solve(model, finalParameters, finalFactors, initialConc, timePoi
 
     except Exception:
         print("Error on solver!!!")
-        # print X
-        # print finalRates
         return solverStatus.ERROR,{}, {}
 
-    #print(finalRates)
     # values bellow solver precision will be set to 0
     finalRates.update({k: 0 for k, v in finalRates.items() if
                        v < SolverConfigurations.ABSOLUTE_TOL and v > - SolverConfigurations.ABSOLUTE_TOL})

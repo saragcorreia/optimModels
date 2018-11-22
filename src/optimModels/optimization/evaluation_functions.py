@@ -1,6 +1,7 @@
 from abc import ABCMeta, abstractmethod
 from itertools import chain
 from optimModels.utils.configurations import StoicConfigurations
+
 class EvaluationFunction:
     """
     This abstract class should be extended by all evaluation functions classes.
@@ -28,8 +29,8 @@ class MinNumberReacAndMaxFlux(EvaluationFunction):
     This class implements ...
 
     Args:
-        maxCandidateSize (int): maximum
-        maxTargetFlux ():
+        maxCandidateSize (int): maximum of candidate size
+        maxTargetFlux (str): reaction id to maximize
 
     """
     def __init__(self, maxCandidateSize, maxTargetFlux):

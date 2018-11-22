@@ -69,7 +69,4 @@ def generator_tuple_int_set(random, args):
     bounder = args["_ec"].bounder
     set1 = {random.randint(bounder.lower_bound[0], bounder.upper_bound[0]) for i in range(size1)}
     set2 = {random.randint(bounder.lower_bound[1], bounder.upper_bound[1]) for i in range(size2)}
-    #print (set1)
-    #print (set2)
-    #print ("--------")
     return (set1, set2)

@@ -214,6 +214,7 @@ def medium_reac_ko_optim(isMultiProc=False, size=[5,5], withCobraPy = False):
 
     cbm_strain_optim(simulProb, evaluationFunc=evalFunc, levels=None, type=optimType.MEDIUM_REACTION_KO, criticalReacs = essential, isMultiProc=isMultiProc,
                      candidateSize=size, resultFile=fileRes)  # KO_Reaction by default
+
 ########################################
 def reac_ko_optim_CM (isMultiProc=False, size=1, withCobraPy = False):
     SBML_FILE =basePath + "Data/EC_SC_model.xml"

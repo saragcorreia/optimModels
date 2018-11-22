@@ -2,7 +2,7 @@ from optimModels.model.kineticModel import load_kinetic_model
 from framed.cobra.simulation import FBA, pFBA
 from framed.io.sbml import load_cbmodel
 from optimModels.simulation.simul_problems import StoicSimulationProblem, KineticSimulationProblem
-from optimModels.simulation.run import kinetic_simulation
+from optimModels.simulation.override_simul_problem import  OverrideKineticSimulProblem
 from optimModels.utils.utils import fix_exchange_reactions_model
 
 
@@ -83,7 +83,14 @@ def kinetic_sim():
     factors = None
     factors = {'CS': 32, 'v6PGDH_max': 0.0625, 'vEdd_max': 8, 'ICDH': 0.125, 'MS': 8, 'vPta_max': 0, 'SDH': 0.03125, 'vPTS4_max': 32}
     factors = {'ICDH': 0.03125, 'vAck_max': 0, 'SDH': 0.0625, 'vPTS4_max': 32}
-    res = kinetic_simulation(model, parameters = None, factors = factors, time = 1e9)
+
+    simulProblem = KineticSimulationProblem(model, parameters=None, tSteps=[0, 1e9], timeout=None)
+
+    if factors:
+        override = OverrideKineticSimulProblem(factors = factors)
+        res = simulProblem.simulate(override)
+    else:
+        res = simulProblem.simulate()
 
     for r, f in res.get_fluxes_distribution().items():
         print (r + " --> " +str(f))

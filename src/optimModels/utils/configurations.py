@@ -8,7 +8,7 @@ class SolverConfigurations:
 
 class StoicConfigurations:
     SOLVER = 'cplex'
-    SOLVER_METHOD = 'pFBA'
+    SOLVER_METHOD = 'FBA'
     DEFAULT_LB = -99999
     DEFAULT_UB = 99999
 

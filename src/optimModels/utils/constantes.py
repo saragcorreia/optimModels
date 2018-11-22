@@ -11,7 +11,6 @@ class optimType:
     PROTEIN_KO = 10
     PROTEIN_UO = 11
 
-
     types = {1:"Reaction Knockouts",2:"Reaction Under/Over expression", 3:"Gene Knockouts",
              4:"Gene Under/Over expression", 5:"Medium compositions",6:"Medium compositions with levels",
              7:"Medium with Reaction Knockouts",8: "Medium with Reaction Under/Over expression",
@@ -47,7 +46,9 @@ class solverMethod:
 
 
 class solverStatus:
-    """ Enumeration of possible solution status. """
+    '''
+     Enumeration of possible solution status. (FROM FRAMED
+    '''
     OPTIMAL = 1
     UNKNOWN = 0
     ERROR = 2

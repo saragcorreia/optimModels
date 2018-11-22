@@ -1,8 +1,9 @@
 from optimModels.utils.constantes import solverStatus
 
 class SimulationResult():
-    """ Represents the result of a metabolic model simulation on steady-state.
-    """
+    '''
+    Represents the result of a metabolic model simulation at steady-state.
+    '''
 
     def __init__(self, modelId, solverStatus, ssFluxesDistrib,
                  overrideSimulProblem=None):

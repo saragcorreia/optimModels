@@ -4,19 +4,18 @@ from framed.io.sbml import  _load_compartments, _load_metabolites, _load_reactio
     _load_local_parameters, _load_ratelaws, _load_assignment_rules, _load_concentrations
 from framed.model.odemodel import ODEModel
 import re
-from math import log
 from  optimModels.utils.utils import MyTree
 
 
 def load_kinetic_model(filename, map=None):
     """
-
+    Load the dynamic model present in a SBML file.
     Args:
         filename (str): SBBML file.
-        map (dict): Dictionary with the parameters that can be used in the strain optmimization process for each reaction. {id_reaction: [param1, param2]}
+        map (dict): Dictionary with the parameters that can be used in the strain optimization process for each reaction.{id_reaction: [param1, param2]}
 
     Returns: KineticModel
-        Contains all information related with the dynamic model (reactions, kinetic eqations, metabolites, compartments, etc.)
+        Contains all information related with the dynamic model (reactions, kinetic equations, metabolites, compartments, etc.)
     """
     document = readSBMLFromFile(filename)
     sbmlModel = document.getModel()
@@ -52,7 +51,7 @@ class KineticModel(ODEModel):
     This class is an extension of ODEModel class from FRAMED package. The methods  *build_ode* and *get_ode* were overrided to
     support the manipulations over the parameters or enzyme concentration level during the strain optimization process.
     The ode function returned by *get_ode* replace the negative concentrations, received as argument, by 0 if the concentration is smaller than
-    absolute tolerance or raise an exception if the concentration is a significante negative value.
+    absolute tolerance or raise an exception if the concentration is a significant negative value.
     """
 
     def __init__(self, modelId):
@@ -84,13 +83,11 @@ class KineticModel(ODEModel):
 
     def build_ode(self, factors):
         """
-
         Args:
             factors (dict): The key is the parameter identifier and the value is the level of change values between 0 and 1 represent a under expression, above 1 a over
         expression and 0 to represent the knockouts.
 
         Returns: (str)  Returns  a string with the ode system.
-
         """
 
         # factors: ["vmax1": 0, "vmax2"=2, "ENZYME_ID":0]
@@ -190,8 +187,6 @@ class KineticModel(ODEModel):
 
 # auxiliary functions to set the assignment rules by the correct order in the ODE system
 # TODO: Check if the framed in python 3.6 already correct the order of rules
-
-
 def _build_tree_rules(parent, rules):
     regexp = "v\[\'(.*?)\'\]"
     children = re.findall(regexp, rules[parent])
@@ -207,7 +202,6 @@ def _get_oder_rules(trees):
     for tree in trees:
         new_elems = _get_order_nodes(tree)
         [res.append(item) for item in new_elems if item not in res]
-    #print res
     return res
 
 

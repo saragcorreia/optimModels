@@ -13,4 +13,7 @@ sphinx-apidoc -f -o api/ ../src/optimModels
 
 # build html pages
 make html
+
+# on windows 
+mingw32-make html
     

@@ -1,9 +1,6 @@
 from optimModels.optimization.decoders import DecoderReacKnockouts, DecoderReacUnderOverExpression
 import itertools
-from optimModels.optimization.run import load_population
 from optimModels.model.kineticModel import load_kinetic_model
-from collections import OrderedDict
-from optimModels.simulation.override_simul_problem import OverrideKineticSimulProblem
 from optimModels.optimization.evaluation_functions import build_evaluation_function
 from optimModels.simulation.simul_problems import KineticSimulationProblem
 from optimModels.utils.configurations import KineticConfigurations

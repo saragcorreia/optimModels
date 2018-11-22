@@ -43,7 +43,7 @@ The strain optimization using the knockouts can be performed calling the *strain
 
 Under/Over expression
 ~~~~~~~~~~~~~~~~~~~~~~
-To performe a under/over expression optimization the multiplied factors levels should be given as argument.
+To perform a under/over expression optimization the multiplied factors levels should be given as argument.
 
 ::
 

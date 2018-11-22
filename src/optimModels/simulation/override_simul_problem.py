@@ -28,15 +28,10 @@ class OverrideStoicSimulProblem(OverrideSimulationProblem):
     def get_modifications(self):
         return self.constraints
 
-    # def get_bounds(self, reactionId):
-    #     bounds = None
-    #     if reactionId in self.constraints.keys():
-    #         bounds = self.constraints.get(reactionId)
-    #     return bounds
 
     def simplify_modifications(self, simulationProblem, objFunction, fitness):
         """
-        Simplify the constraints to be applied in the simulation. Constraints that not effluence the fitness value will
+        Simplify the constraints to be applied in the simulation. Constraints that not influence the fitness value will
         be removed.
 
         Args:
@@ -50,14 +45,10 @@ class OverrideStoicSimulProblem(OverrideSimulationProblem):
             del self.constraints[k]
             try:
                 res = simulationProblem.simulate(self)
-                #print(objFunction.get_name())
                 newFitness = objFunction.get_fitness(res)
             except Exception:
                 newFitness = -1.0
-                #print(fitness)
-                #print(newFitness)
             if round(fitness, 12) != round(newFitness, 12):
-                #print("remove :" +k)
                 self.constraints[k] = constraintsOrig[k]
 
 

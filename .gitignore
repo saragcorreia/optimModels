@@ -7,3 +7,4 @@
 _build
 dist
 src/optimModels.egg-info
+examples/models

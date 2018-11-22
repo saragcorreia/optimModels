@@ -45,7 +45,8 @@ def evaluator(candidates, args):
 
 # change the original function to start a non-demoniac workers
 def parallel_evaluation_mp(candidates, args):
-    """Evaluate the candidates in parallel using ``multiprocessing``.
+    """
+    Evaluate the candidates in parallel using ``multiprocessing``.
 
     This function allows parallel evaluation of candidate solutions.
     It uses the standard multiprocessing library to accomplish the
@@ -53,18 +54,15 @@ def parallel_evaluation_mp(candidates, args):
     candidate to its own job, all of which are then distributed to the
     available processing units.
 
-    Notes
-    -----
+    Args:
+        candidates: list the candidate solutions
+        args: a dictionary of keyword arguments
 
-       All arguments to the evaluation function must be pickleable.
-       Those that are not will not be sent through the ``args`` variable
-       and will be unavailable to your function.
+    Returns:
 
-    Parameters
-    ----------
-    candidates : list the candidate solutions
-    args : a dictionary of keyword arguments
-
+    Notes:
+    All arguments to the evaluation function must be pickleable.
+    Those that are not will not be sent through the ``args`` variable and will be unavailable to your function.
     Required keyword arguments in args:
     - *mp_evaluator* -- actual evaluation function to be used (This function
       should have the same signature as any other inspyred evaluation function.)
@@ -73,9 +71,7 @@ def parallel_evaluation_mp(candidates, args):
 
     - *mp_nprocs* -- number of processors that will be used (default machine
       cpu count)
-
     """
-
     logger = logging.getLogger('optimModels')
 
     try:

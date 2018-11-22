@@ -3,6 +3,14 @@ from collections import OrderedDict
 import  multiprocessing.pool
 
 def fix_exchange_reactions_model(model):
+    '''
+    Convert the exchange reactions for the uptake reactions have negative fluxes and excretion reactions have positive fluxes.
+    Args:
+        model: Metabolic model
+
+    Returns: a new copy of model where all exchange reactions are in the format " A <---> "
+
+    '''
     newModel = model.copy();
     exchange = model.get_exchange_reactions(include_sink=True)
     for rId in exchange:
@@ -69,6 +77,7 @@ class NoDaemonProcess(multiprocessing.Process):
     def _set_daemon(self, value):
         pass
     daemon = property(_get_daemon, _set_daemon)
+
 
 
 class MyPool(multiprocessing.pool.Pool):
