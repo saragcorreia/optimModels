@@ -28,10 +28,6 @@ def load_population (initPopFile = None, decoder = None):
         file.close()
     return num_generations, population, fitness
 
-
-
-
-
 def save_all_results(population, num_generations, num_evaluations, args):
     """
     Print the output of the evolutionary computation to a file with the follow fields:
@@ -56,7 +52,6 @@ def save_all_results(population, num_generations, num_evaluations, args):
     resultFile = args["results_file"]
     file = open(resultFile, 'a')
 
-    #print ("Number of generation:" + str(num_generations))
     config = args["configuration"]
     decoder = config.get_decoder()
 

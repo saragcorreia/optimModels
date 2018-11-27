@@ -34,7 +34,6 @@ def grow_mutation_intSetRep(random, candidate, args):
         while newElem in mutant:
             newElem = random.randint(next(bounder.lower_bound), next(bounder.upper_bound))
         mutant.add(newElem)
-    # print str(candidate)+"--grow->"+str(mutant)
     return mutant
 
 
@@ -62,7 +61,6 @@ def shrink_mutation(random, candidate, args):
     mutantL = list(candidate)
     del mutantL[index]
     mutant = set(mutantL)
-    # print str(candidate)+"--shrink->"+str(mutant)
     return mutant
 
 
@@ -99,7 +97,6 @@ def single_mutation_intSetRep(random, candidate, args):
     mutantL = list(mutant)
     mutantL[index] = newElem
     mutant = set(mutantL)
-    # print str(candidate)+" --replace-> "+str(mutant)
     return mutant
 
 @crossover
@@ -108,7 +105,6 @@ def uniform_crossover(random, mom, dad, args):
     - elements present in both parents will be present in both children;
     - both children have at least one element;
     - elements present in only one parent have equal probability to be present in child 1 or child 2 (after each child has at least one element).
-
 
     Args:
         random : the random number generator object
@@ -153,9 +149,6 @@ def uniform_crossover(random, mom, dad, args):
 
     children.append(child1)
     children.append(child2)
-    # print ("cross over")
-    # print (str(mom) + " ; "+str(dad))
-    # print (str(child1) + " ; " + str(child2))
     return children
 
 
@@ -191,7 +184,6 @@ def grow_mutation_intTupleRep(random, candidate, args):
     if len(mutant) < maxSize:
         elem = _generate_new_tupple(random, mutant, bounder)
         mutant.add(elem)
-    # print str(candidate)+"--grow->"+str(mutant)
     return mutant
 
 
@@ -221,7 +213,6 @@ def single_mutation_intTupleRep(random, candidate, args):
     mutantL = list(mutant)
     mutantL[index] = _generate_new_tupple(random, mutant, bounder)
     mutant = set(mutantL)
-    # print str(candidate)+" --replace-> "+str(mutant)
     return mutant
 
 
@@ -306,9 +297,6 @@ def uniform_crossover_intTupleRep(random, mom, dad, args):
 
     children.append(child1)
     children.append(child2)
-    # print ("cross over")
-    # print (str(mom) + " ; "+str(dad))
-    # print (str(child1) + " ; " + str(child2))
     return children
 
 
@@ -348,7 +336,6 @@ def grow_mutation_tuple_intSetRep(random, candidate, args):
         while newElem in mutant[index]:
             newElem = random.randint(bounder.lower_bound[index], bounder.upper_bound[index])
         mutant[index].add(newElem)
-    # print str(candidate)+"--grow->"+str(mutant)
     return mutant
 
 
@@ -386,7 +373,6 @@ def shrink_mutation_tuple(random, candidate, args):
         mutant = (set(mutantL), mutant[1])
     else:
         mutant = (mutant[0], set(mutantL))
-    # print str(candidate)+"--shrink->"+str(mutant)
     return mutant
 
 
@@ -427,7 +413,6 @@ def single_mutation_tuple_intSetRep(random, candidate, args):
         mutant = (set(mutantL), mutant[1])
     else:
         mutant = (mutant[0], set(mutantL))
-    # print str(candidate)+" --replace-> "+str(mutant)
     return mutant
 
 @crossover
@@ -493,7 +478,4 @@ def uniform_crossover_tuple(random, mom, dad, args):
     else:
         children.append((mom[0],child1))
         children.append((dad[0], child2))
-    # print ("cross over")
-    # print (str(mom) + " ; "+str(dad))
-    # print (str(child1) + " ; " + str(child2))
     return children

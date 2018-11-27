@@ -4,59 +4,57 @@ from optimModels.simulation.simul_problems import GeckoSimulationProblem
 import pandas
 import random
 
-def protein_ko (prot_measure_fractions = None, prot_measure_ggdw = None, constraints = None):
-
-    if prot_measure_fractions is None and prot_measure_ggdw is None:
-        model = GeckoModel("single-pool")
-    else:
-        model = GeckoModel("multi-pool")
-        if prot_measure_fractions:
-            model.limit_proteins(fractions=prot_measure_fractions)
-        else:
-            model.limit_proteins(ggdw=prot_measure_ggdw)
-
-    if constraints:
-        for r in constraints.keys():
-            model.reactions.get_by_id(r).lower_bound = constraints[r][0]
-            model.reactions.get_by_id(r).upper_bound = constraints[r][1]
-    res = model.optimize()
-
-
-
-
-
-
-def increase_bounds():
-    model = GeckoModel("single-pool")
-    model.solver = 'cplex'
-    for r in model.exchanges:
-        r.upper_bound = r.upper_bound * 100
-
-    pool = model.reactions.get_by_id("prot_pool_exchange")
-    pool.upper_bound = pool.upper_bound*1000000
-
-    #model.p_base = 4005
-    #model.constrain_pool()
-    #model.limit_proteins( p_base=4005) # x 1E4
-    #for r in model.exchanges:
-    #    print (r.id + ": " + str(r.lower_bound) + " , " + str(r.upper_bound))
-    #print (len(model.exchanges))
-
-    print("antes"+ str(model.reactions.get_by_id("r_1663").upper_bound))
-    res = model.optimize()
-    print("after" + str(model.reactions.get_by_id("r_1663").upper_bound))
-
-    print("growth "+ str(res.objective_value))
-    a = res.fluxes
-    for k,v in res.fluxes.items():
-        if k.startswith("draw_prot_") or k.startswith("prot_pool_exchange"):
-            print(k +"  -> "+str(v))
+# def protein_ko (prot_measure_fractions = None, prot_measure_ggdw = None, constraints = None):
+#
+#     if prot_measure_fractions is None and prot_measure_ggdw is None:
+#         model = GeckoModel("single-pool")
+#     else:
+#         model = GeckoModel("multi-pool")
+#         if prot_measure_fractions:
+#             model.limit_proteins(fractions=prot_measure_fractions)
+#         else:
+#             model.limit_proteins(ggdw=prot_measure_ggdw)
+#
+#     if constraints:
+#         for r in constraints.keys():
+#             model.reactions.get_by_id(r).lower_bound = constraints[r][0]
+#             model.reactions.get_by_id(r).upper_bound = constraints[r][1]
+#     res = model.optimize()
+#
+#
+#
+# def increase_bounds():
+#     model = GeckoModel("single-pool")
+#     model.solver = 'cplex'
+#     for r in model.exchanges:
+#         r.upper_bound = r.upper_bound * 100
+#
+#     pool = model.reactions.get_by_id("prot_pool_exchange")
+#     pool.upper_bound = pool.upper_bound*1000000
+#
+#     #model.p_base = 4005
+#     #model.constrain_pool()
+#     #model.limit_proteins( p_base=4005) # x 1E4
+#     #for r in model.exchanges:
+#     #    print (r.id + ": " + str(r.lower_bound) + " , " + str(r.upper_bound))
+#     #print (len(model.exchanges))
+#
+#     print("antes"+ str(model.reactions.get_by_id("r_1663").upper_bound))
+#     res = model.optimize()
+#     print("after" + str(model.reactions.get_by_id("r_1663").upper_bound))
+#
+#     print("growth "+ str(res.objective_value))
+#     a = res.fluxes
+#     for k,v in res.fluxes.items():
+#         if k.startswith("draw_prot_") or k.startswith("prot_pool_exchange"):
+#             print(k +"  -> "+str(v))
 
 
 
 def simulate_prot():
     model = GeckoModel("single-pool")
     model.solver = 'cplex'
+
 
     with model:
  #       for p in ["P53685","Q01574"]:

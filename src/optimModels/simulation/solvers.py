@@ -5,15 +5,15 @@ from optimModels.utils.constantes import solverMethod
 
 
 class odespySolver:
-    '''
+    """
     ODE solver method implemented on odespy package.
-    '''
+    """
 
     def __init__(self, solverMethod):
         self.solverMethod = solverMethod
 
     def get_solver(self, func):
-        '''
+        """
         Returns the solver method from odespy package.
 
         Args:
@@ -22,7 +22,7 @@ class odespySolver:
 
         Returns: an instance of odeSolver
 
-        '''
+        """
 
         if self.solverMethod is solverMethod.LSODA:
             solver = odespy.Lsoda(func)

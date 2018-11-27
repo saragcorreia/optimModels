@@ -24,9 +24,10 @@ class EvaluationFunction:
     def __setstate__(self, state):
         self.__dict__.update(state)
 
-class MinNumberReacAndMaxFlux(EvaluationFunction):
+class MinCandSizeAndMaxTarget(EvaluationFunction):
     """
-    This class implements ...
+    This evaluation function finds the solution with the minimum candidate size and levels considering the maximization
+    of the target flux.
 
     Args:
         maxCandidateSize (int): maximum of candidate size
@@ -65,7 +66,7 @@ class MinNumberReacAndMaxFlux(EvaluationFunction):
     def get_parameters_ids():
         return ["Maximum of modifications allowed", "Target reactions"]
 
-class MinNumberReacAndMaxFluxWithLevels(EvaluationFunction):
+class MinCandSizeWithLevelsAndMaxTarget(EvaluationFunction):
     #TODO: Validar o que acontece em caso do ub do target ser 0 ou seja o fluxes[rId] é negativo (ver se há hipotese de isto acontecer)
 
     def __init__(self, maxCandidateSize, levels, maxTargetFlux):
@@ -88,7 +89,7 @@ class MinNumberReacAndMaxFluxWithLevels(EvaluationFunction):
             sumObj = sumObj + f
         objFactor=sumObj/len(self.objective)
 
-        # best solution when factores are close to 1
+        # best solution when factors are close to 1
         upFactor = sumUptake/maxUptake
         lenFactor = len(candidate)/ self.maxCandidateSize
 
@@ -96,31 +97,29 @@ class MinNumberReacAndMaxFluxWithLevels(EvaluationFunction):
 
 
     def method_str(self):
-        return "Minimize the number and the fluxes of active reactions."
+        return "Minimize the number and the fluxes of candidate while maximize the target flux."
 
     @staticmethod
     def get_id():
-        return "MinNumberReacAndMaxFluxWithLevels"
+        return "MinCandSizeWithLevelsAndMaxTarget"
 
     @staticmethod
     def get_name():
-        return "Minimum number and fluxes of active reactions."
+        return "Minimize the number and the fluxes of candidate while maximize the target flux."
 
     @staticmethod
     def get_parameters_ids():
         return ["Maximum number of modifications allowed", "Levels", "Target reactions"]
 
-class MinNumberReac(EvaluationFunction):
+class MinCandSize(EvaluationFunction):
     """
     This class implements the "minimization of number of reactions" objective function. The fitness is given by
     1 - size(candidate)/ max_candidate_size, where the max_candidate_size is the maximum size that a candidate can have
     during optimization.
 
     Args:
-        reactionList (list): List of reaction ids
-
-    minFluxes : dict
-        (key: reaction id, value: minimum of flux)
+        maxCandidateSize(int): Maximum size allowed for candidate
+        minFluxes (dict): Minimal value for fluxes to consider fitness different of 0 (key: reaction id, value: minimum of flux).
 
     """
     def __init__(self, maxCandidateSize, minFluxes):
@@ -279,14 +278,14 @@ def build_evaluation_function(id, *args):
         objFunc = BPCY(args[0],args[1],args[2])
     elif id == TargetFlux.get_id():
         objFunc = TargetFlux(args[0])
-    elif id == MinNumberReac.get_id():
-        objFunc = MinNumberReac(args[0], args[1])
+    elif id == MinCandSize.get_id():
+        objFunc = MinCandSize(args[0], args[1])
     elif id ==  BP_MinModifications.get_id():
         objFunc = BP_MinModifications(args[0], args[1])
-    #elif id == MinNumberReacAndMaxFluxWithLevels.get_id():
-    #    objFunc = MinNumberReacAndMaxFluxWithLevels (args[0], args[1],args[2])
-    #elif id == MinNumberReacAndMaxFlux.get_id():
-    #    objFunc = MinNumberReacAndMaxFlux (args[0], args[1])
+    elif id == MinCandSizeWithLevelsAndMaxTarget.get_id():
+        objFunc = MinCandSizeWithLevelsAndMaxTarget (args[0], args[1], args[2])
+    elif id == MinCandSizeAndMaxTarget.get_id():
+        objFunc = MinCandSizeAndMaxTarget(args[0], args[1])
     else:
         raise Exception("Wrong objective function!")
 

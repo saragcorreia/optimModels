@@ -11,6 +11,11 @@ from optimModels.utils.configurations import GeckoConfigurations
 basePath = "C:/Users/sara/UMinho/Projects/DeCaF/Optimizations/"
 LEVELS = [1e-3, 1e-2, 1e-1, 0.5, 1 , 5, 10, 50, 1e2, 5e2, 1e3, 1e4]
 
+# Optimization:
+# model: Ec_iAF1260
+# Obj Func: BPCY
+# type: Protein Knockouts
+
 def prot_ko_optim (prot_measure_fractions =None, prot_measure_ggdw= None,  constraints = None, isMultiProc=False, size=1):
 
     #load model
@@ -24,10 +29,6 @@ def prot_ko_optim (prot_measure_fractions =None, prot_measure_ggdw= None,  const
             model.limit_proteins(ggdw=prot_measure_ggdw)
 
     fileRes = basePath + "Results/optim_KO_Gecko_Yeast_SUCC_max5_scale.csv"
-
-    for r in model.reactions:
-        r.lower_bound = r.lower_bound * GeckoConfigurations.SCALE_CONSTANT
-        r.upper_bound = r.upper_bound * GeckoConfigurations.SCALE_CONSTANT
 
     simulProb = GeckoSimulationProblem(model, constraints= constraints)
     evalFunc = build_evaluation_function("BPCY", "r_2111", "r_2056", "r_1714_REV") # max succ exchange

@@ -22,7 +22,6 @@ def new_candidates_replacement(random, population, parents, offspring, args):
 
     """
     population.sort()
-   # print "population"
     num_to_replace = min(len(offspring), len(population))
     population[:num_to_replace] = offspring[:num_to_replace]
     population.sort()
@@ -57,7 +56,6 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
     """
 
     population.sort()
-   # print "--------- population replacement ---------------"
     num_to_replace = min(len(offspring), len(population))
     population[:num_to_replace] = offspring[:num_to_replace]
     population.sort()
@@ -75,7 +73,6 @@ def new_candidates_no_duplicates_replacement(random, population, parents, offspr
 
     #complete the population size with new elements
     numNewCandidates = len(population) - len(newPopulation)
-   # print "number of duplicated elements to remove:" + str(numNewCandidates)
     newCandidates = _generateNewCandidates(numNewCandidates, random, args)
     newPopulation = newPopulation + newCandidates
 
@@ -96,7 +93,7 @@ def _generateNewCandidates(numCandidates, random, args):
 
         for cs, fit in zip(newElems, newFits):
             if fit is not None:
-                ind = Individual(cs, maximize=True) #SGC: REVER A PASSAGEM DESTE PARAMETRO maximize
+                ind = Individual(cs, maximize=True)
                 ind.fitness = fit
                 newCandidates.append(ind)
     return newCandidates
