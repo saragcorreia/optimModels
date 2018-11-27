@@ -5,7 +5,7 @@ from random import randint
 
 class Params :
     def __init__(self):
-        file = 'C:/Users/sara/UMinho/Projects/DeCaF/Optimizations/Data/alternativeParamSets_toyModel.csv'
+        file = '../../../examples/data/alternativeParamSets_toyModel.csv'
         aux= pd.read_csv(file)
         self.params = aux.iloc[:,1:]
         self.params.index = list(aux.iloc[:, 0])
@@ -17,16 +17,17 @@ class Params :
         print (data.to_dict)
         return data.to_dict()
 
-
+# Optimization:
+# model: TinyModel_RHS (EPFL model)
+# Objective: Validate in the toy model works with several combinations of parameters
 def toy_model():
-    SBML_FILE = 'C:/Users/sara/UMinho/Projects/DeCaF/Optimizations/Data/TinyModel_RHS.xml'
+    SBML_FILE = '../../../examples/models/TinyModel_RHS.xml'
 
     mapParamReacs = "(vMax\w*)" # regular expression to identify the vmax parameter
 
-
     model = load_kinetic_model(SBML_FILE, [])
 
-    file = 'C:/Users/sara/UMinho/Projects/DeCaF/Optimizations/Data/alternativeParamSets_toyModel.csv'
+    file = '../../../examples/data/alternativeParamSets_toyModel.csv'
     aux = pd.read_csv(file)
     params = aux.iloc[:, 1:]
     params.index = list(aux.iloc[:, 0])
@@ -50,13 +51,13 @@ def toy_model2():
     SBML_FILE = '../../../examples/models/chassagnole2002.xml'
 
     model = load_kinetic_model(SBML_FILE, [])
-
     res = kinetic_simulation(model, time=1e9)
-
     print (res.get_fluxes_distribution())
 
 
-
+# Optimization:
+# model: Jahan2016_chemostat_fixed
+# Objective: Test the under/over expression of some vMax parameters
 def kinetic_sim():
     SBML_FILE = '../../../examples/models/Jahan2016_chemostat_fixed.xml'
     mapParamReacs = {"vE_6PGDH": ["v6PGDH_max"], "vE_Ack": ["vAck_max"], "vE_Ack_medium": ["vAck_max"],

@@ -5,15 +5,15 @@ Strain optimization
 Kinetic models optimization
 ----------------------------
 
-*optimModels* implements some basic (and experimental) support for working with strain optimization using Kinetic
+*optimModels* implements some support for working with strain optimization using Kinetic
 metabolic models.
 
 The optimization use several parameters which are configured in the optimModels.utils.configurations module.
 
-Objective Function
+Evaluation Function
 ~~~~~~~~~~~~~~~~~~~
-Before start the strain optimization, it is required the definition of an objective function.
-The objective function is responsible for calculate the fitness value for each candidate solution obtained during the
+Before start the strain optimization, it is required the definition of an evaluation function.
+The evaluation function is responsible for calculate the fitness value for each candidate solution obtained during the
 optimization process.
 
 At the moment there are two objective functions available:
@@ -22,6 +22,7 @@ At the moment there are two objective functions available:
 
 - *BPCY* : the fitness value is the Biomass-Product Coupled Yield. In this case the user must
 specify 3 reactions identifiers (biomass, product and uptake).
+
 
 ::
 
@@ -39,7 +40,7 @@ The strain optimization using the knockouts can be performed calling the *strain
 
     results = strain_optim(model, objFunc=objFunc)
     for result in results:
-        print_simul_result(result)
+        result.print()
 
 Under/Over expression
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -51,4 +52,4 @@ To perform a under/over expression optimization the multiplied factors levels sh
 
     results = strain_optim(model, objFunc=objFunc, levels = levels)
     for result in results:
-        print_simul_result(result)
+        result.print()

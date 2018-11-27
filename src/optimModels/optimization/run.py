@@ -1,5 +1,3 @@
-from collections import OrderedDict
-
 from optimModels.optimization.observers import load_population
 from optimModels.optimization.decoders import *
 from optimModels.optimization.evolutionary_computation import run_optimization, OptimProblemConfiguration, \
@@ -11,7 +9,22 @@ import itertools
 
 def gecko_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.PROTEIN_KO, criticalProteins=[], isMultiProc=False, candidateSize = None,
                      resultFile=None, initPopFile=None):
+    """
+    Function to run the optimization process.
+    Args:
+        simulProblem (GeckoSimulationProblem): Simulation problem
+        evaluationFunc: evaluation function used in EA to calculate the fitness value of each candidate
+        levels (list): List for under/expression of proteins (the levels should be set when type is  PROTEIN_UO
+        type: type of optimization ( by default Protein knockouts)
+        criticalProteins (list): list of proteins that should not be considered in the optimization
+        isMultiProc (bool): use multiprocessing
+        candidateSize (int):  (by default use the size defined in EAConfigurations.MAX_CANDIDATE_SIZE)
+        resultFile (string): File to store the solutions of each generation
+        initPopFile (string): File with the initial population
 
+    Returns (list): Returns the list of the best modifications.
+
+    """
     idsToManipulate = [x for x in simulProblem.model.proteins if x not in criticalProteins and x not in simulProblem.objective.keys()]
 
     if type == optimType.PROTEIN_KO:
@@ -49,6 +62,22 @@ def gecko_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.PROT
 
 def cbm_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.REACTION_KO, criticalReacs=[], isMultiProc=False, candidateSize = None,
                      resultFile=None, initPopFile=None):
+    """
+    Function to run the optimization process
+    Args:
+        simulProblem (StoicSimulationProblem): Simulation problem
+        evaluationFunc: evaluation function used in EA to calculate the fitness value of each candidate
+        levels (list): List for under/expression of proteins (the levels should be set when type is *_UO
+        type: type of optimization ( by default Reaction knockouts)
+        criticalReacs (list): list of reactions that should not be considered in the optimization
+        isMultiProc (bool): use multiprocessing
+        candidateSize (int):  (by default use the size defined in EAConfigurations.MAX_CANDIDATE_SIZE)
+        resultFile (string): File to store the solutions of each generation
+        initPopFile (string): File with the initial population
+
+    Returns (list): Returns the list of the best modifications.
+
+    """
 
     if type == optimType.MEDIUM or type == optimType.MEDIUM_LEVELS:
         idsToManipulate = [x for x in simulProblem.get_uptake_reactions() if x not in criticalReacs and x not in simulProblem.objective.keys()]
@@ -106,23 +135,19 @@ def cbm_strain_optim(simulProblem, evaluationFunc, levels, type=optimType.REACTI
 def kinetic_strain_optim(simulProblem, objFunc=None, levels=None, type = optimType.REACTION_KO, criticalParameters=[], isMultiProc=False, candidateSize = None, resultFile=None,
                          initPopFile=None):
     """
-    Function to perform the strain optimization using kinetic metabolic models.
+    Function to run the optimization process
+    Args:
+        simulProblem (KineticSimulationProblem): Simulation problem
+        evaluationFunc: evaluation function used in EA to calculate the fitness value of each candidate
+        levels (list): List for under/expression of proteins (the levels should be set when type is *_UO
+        type: type of optimization ( by default Reaction knockouts)
+        criticalReacs (list): list of reactions that should not be considered in the optimization
+        isMultiProc (bool): use multiprocessing
+        candidateSize (int):  (by default use the size defined in EAConfigurations.MAX_CANDIDATE_SIZE)
+        resultFile (string): File to store the solutions of each generation
+        initPopFile (string): File with the initial population
 
-    Parameters
-    ----------
-    simulProblem : SimulationProblem instance ( KineticSimulationProblem, StoicSimulationProblem).
-    objFunc : objectiveFunction
-        Function used to calculate the fitness value.
-    levels : list of floats
-        List of values that can be used to multiply by the vMax parameters in over/under expression enzymes levels.
-    criticalParameters : list of str
-        List of parameters identifiers which can not be manipulated.
-    isMultiProc : boolean
-        Boolean variable used to paralallize the evaluation of candidates.
-
-    Returns
-    -------
-    out : list of kineticSimulationResults
+    Returns (list): Returns the list of the best modifications.
         The function returns the best solutions found in strain optimization. The kineticSimulationResults object has the
         flux distribution and metabolites concentration at steady-state, and the modifications made over the
         original model.
@@ -142,7 +167,6 @@ def kinetic_strain_optim(simulProblem, objFunc=None, levels=None, type = optimTy
 
     # load initial population from file
     initPopulation = None
-    numGeneration = 0
     if initPopFile is not None:
         numGeneration, initPopulation = load_population(initPopFile, decoder)
 
@@ -173,13 +197,12 @@ def findBestSolutions(population, eaConfig):
     Function to get the best individuals of a populations according to their fitness value. The number of individuals
     to return is given by  EAConfigurations.NUM_BEST_SOLUTIONS parameter.
 
-    Parameters
-    ------------
-    population : list of individuals returned by EA
+    Args:
+        population (list): list of individuals returned by EA
+        eaConfig (EAConfigurations): EA configuration object
 
-    Returns
-    --------
-    out : list of best individuals
+    Returns: list of best individuals
+
     """
     bestPop = {}
     bestFitnessOrder = [-1] * eaConfig.NUM_BEST_SOLUTIONS
@@ -200,21 +223,14 @@ def findBestSolutions(population, eaConfig):
 
 def simplifySolutions(optimProbConf, population):
     """
-    This function removes the modifications (KO or under/expression of an enzyme) which not influence the fitness value of the candidate solution.
+    Simplify the solution by removing the modification that not affect the final fitness value.
+    Args:
+        optimProbConf (optimProblemConfiguration): The configuration problem.
+        population (list): List of individuals returned by EA algorithm.
 
-    Parameters
-    -----------
-    optimProbConf: an instance of optimProblemConfiguration
-        The configuration problem.
-    population: list of individuals
-        List of individuals returned by EA algorithm.
-
-    Returns
-    -------
-    out : list of kineticSimulationResults
-        The function returns the best solutions found in strain optimization. The kineticSimulationResults object has the
-        flux distribution and metabolites concentration at steady-state, and the modifications made over the
-        original model.
+    Returns: list of SimulationResults
+        The function returns the best solutions found in strain optimization. The SimulationResults object has the
+        flux distribution, and the modifications made over the original model.
     """
     simulProblem = optimProbConf.get_simulation_problem()
     decoder = optimProbConf.get_decoder()
@@ -232,6 +248,16 @@ def simplifySolutions(optimProbConf, population):
     return solutions
 
 def print_results (fileName, population, optimConfig):
+    """
+   Save the results of a generation in the selected file.
+    Args:
+        fileName (string): file where the results are stored. If the file already exist append the new information.
+        population: list of candidates
+        optimConfig: optimization configuration object with the decoder of solutions
+
+    Returns:
+
+    """
 
     file = open(fileName, 'a')
     file.write("population_size;candidate_max_size;crossover_rate; mutation_rate;new_candidates_rate; num_elites\n")

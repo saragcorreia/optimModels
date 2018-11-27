@@ -1,19 +1,20 @@
 from optimModels.utils.constantes import solverStatus
 
 class SimulationResult():
-    '''
+    """
     Represents the result of a metabolic model simulation at steady-state.
-    '''
+    """
 
     def __init__(self, modelId, solverStatus, ssFluxesDistrib,
                  overrideSimulProblem=None):
         """
-        Agrs:
-        ------------
-        modelId (str): Identification of metabolic model
-        solverStatus (int): Simulation result (OPTIMAL = 0, UNKNOWN = 1, ERROR = 2).
-        ssFluxesDistrib (dict): Fluxes distribution achieved in steady state.
-        overrideSimulProblem (OverrideSimulProblem): Modifications over the metabolic model.
+        Create a Simulationresult instance.
+
+        Args:
+            modelId (str): Identification of metabolic model
+            solverStatus (int): Simulation result (OPTIMAL = 0, UNKNOWN = 1, ERROR = 2).
+            ssFluxesDistrib (dict): Fluxes distribution achieved in steady state.
+            overrideSimulProblem (OverrideSimulProblem): Modifications over the metabolic model.
         """
         self.modelId = modelId
         self.solverStatus = solverStatus
@@ -22,30 +23,19 @@ class SimulationResult():
 
     def get_solver_status(self):
         """
-        Returns  the solver status result. (see optimModels.ut
-        ils.constants.solverStatus)
+        Returns  the solver status result. (see optimModels.utils.constants.solverStatus)
         """
-
         return self.solverStatus
 
     def get_override_simul_problem(self):
         """
         Gets the override simulation problem.
-
-        Returns
-        ---------
-        out : overrideKineticSimulProblem
         """
         return self.overrideSimulProblem
 
     def get_fluxes_distribution(self):
         """
-        Gets the steady-state flux distribution.
-
-        Returns
-        ---------
-        out : dict
-            Flux distribution in steady-state {reactionId: fluxValue}.
+        Gets the steady-state flux distribution {reactionId: fluxValue}.
         """
         return self.ssFluxesDistrib
 
@@ -84,10 +74,6 @@ class GeckoSimulationResult(SimulationResult):
     def get_protein_concentrations(self):
         """
         Gets the protein concentrations in steady-state {proteinId: concentration value}.
-
-        Returns
-        ---------
-        out : dict
         """
         return self.protConcentrations
 
@@ -124,18 +110,12 @@ class GeckoSimulationResult(SimulationResult):
 class kineticSimulationResult(SimulationResult):
     """ Represents the result of a dynamic metabolic model simulation on steady-state.
 
-    Attributes
-    ------------
-    modelId : str
-        identification of metabolic model
-    solverStatus: int
-        simulation result (OPTIMAL = 0, UNKNOWN = 1, ERROR = 2).
-    ssFluxesDistrib : dict
-        fluxes distribution achieved in steady state.
-    ssConcentrations : dict
-        metabolites concentration in steady state.
-    overrideSimulProblem: overrideKineticSimulProblem
-        Modifications over the metabolic model.
+    Args:
+        modelId (str): identification of metabolic model
+        solverStatus (int): simulation result (OPTIMAL = 0, UNKNOWN = 1, ERROR = 2).
+        ssFluxesDistrib (dict): fluxes distribution achieved in steady state.
+        ssConcentrations (dict): metabolites concentration in steady state.
+        overrideSimulProblem (overrideKineticSimulProblem): modifications over the metabolic model.
     """
 
     def __init__(self, modelId, solverStatus, ssFluxesDistrib, ssConcentrations=None,
@@ -147,10 +127,6 @@ class kineticSimulationResult(SimulationResult):
     def get_steady_state_concentrations(self):
         """
         Gets the metabolite concentrations in steady-state {metaboliteId: concentration value}.
-
-        Returns
-        ---------
-        out : dict
         """
         return self.ssConcentrations
 

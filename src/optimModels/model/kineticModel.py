@@ -157,7 +157,6 @@ class KineticModel(ODEModel):
 
         exec(self.build_ode(factors), globals())
         ode_func = eval('ode_func')
-
         #print "Parameters"
         #print p
         #print v
