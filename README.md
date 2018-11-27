@@ -1,7 +1,7 @@
 optimModels
 ============
 
-*The Python framework under development will allow the strain design of single and microbial community cultures.
+The Python framework under development will allow the strain design of single and microbial community cultures.
 The main focus is to provide support for different modeling approaches.
 
 
@@ -24,3 +24,5 @@ pip install optimModels
 ### Credits and License
 Developed at:
 * Centre of Biological Engineering, University of Minho (2017)
+
+Released under an Apache License.
