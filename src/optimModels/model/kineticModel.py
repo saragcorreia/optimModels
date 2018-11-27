@@ -7,6 +7,7 @@ import re
 from  optimModels.utils.utils import MyTree
 
 
+
 def load_kinetic_model(filename, map=None):
     """
     Load the dynamic model present in a SBML file.
