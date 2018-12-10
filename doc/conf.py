@@ -32,7 +32,7 @@ sys.path.insert(0, os.path.abspath('../src/'))
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 # Add any Sphinx extension module names here, as strings
-extensions = ['sphinx.ext.napoleon']
+extensions = ['sphinx.ext.autodoc','sphinx.ext.napoleon']
 
 # Napoleon settings
 napoleon_google_docstring = True
