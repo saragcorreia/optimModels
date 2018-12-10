@@ -1,0 +1,404 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>optimModels.unittests package &#8212; optimModels 0.0.3 documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="optimModels.utils package" href="optimModels.utils.html" />
+    <link rel="prev" title="optimModels.simulation package" href="optimModels.simulation.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="optimModels.utils.html" title="optimModels.utils package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="optimModels.simulation.html" title="optimModels.simulation package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">optimModels 0.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >optimModels</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="optimModels.html" accesskey="U">optimModels package</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">optimModels.unittests package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.cbm_optim">optimModels.unittests.cbm_optim module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.cbm_simulation">optimModels.unittests.cbm_simulation module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.framed_cobrapy">optimModels.unittests.framed_cobrapy module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.gecko_optim">optimModels.unittests.gecko_optim module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.gecko_simulation">optimModels.unittests.gecko_simulation module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.kinetic_optim">optimModels.unittests.kinetic_optim module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.kinetic_simulation">optimModels.unittests.kinetic_simulation module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.presentation">optimModels.unittests.presentation module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests.simplify_solutions">optimModels.unittests.simplify_solutions module</a></li>
+<li><a class="reference internal" href="#module-optimModels.unittests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="optimModels.simulation.html"
+                        title="previous chapter">optimModels.simulation package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="optimModels.utils.html"
+                        title="next chapter">optimModels.utils package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/optimModels.unittests.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="optimmodels-unittests-package">
+<h1>optimModels.unittests package<a class="headerlink" href="#optimmodels-unittests-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-optimModels.unittests.cbm_optim">
+<span id="optimmodels-unittests-cbm-optim-module"></span><h2>optimModels.unittests.cbm_optim module<a class="headerlink" href="#module-optimModels.unittests.cbm_optim" title="Permalink to this headline">¶</a></h2>
+<dl class="data">
+<dt id="optimModels.unittests.cbm_optim.LEVELS">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">LEVELS</code><em class="property"> = [0.001, 0.01, 0.1, 0.5, 1, 5, 10, 50, 100.0, 500.0, 1000.0, 10000.0]</em><a class="headerlink" href="#optimModels.unittests.cbm_optim.LEVELS" title="Permalink to this definition">¶</a></dt>
+<dd><p>This file contains several functions to perform different strain design strategies using stoichiometric models</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.medium_Lactate_optim">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">medium_Lactate_optim</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em>, <em>withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.medium_Lactate_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.medium_SC_Etanol_Levels_optim">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">medium_SC_Etanol_Levels_optim</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em>, <em>withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.medium_SC_Etanol_Levels_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.medium_SC_Etanol_optim">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">medium_SC_Etanol_optim</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em>, <em>withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.medium_SC_Etanol_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.medium_SC_optim">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">medium_SC_optim</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em>, <em>withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.medium_SC_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.medium_optim">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">medium_optim</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em>, <em>withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.medium_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.medium_reac_ko_optim">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">medium_reac_ko_optim</code><span class="sig-paren">(</span><em>isMultiProc=False, size=[5, 5], withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.medium_reac_ko_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.reac_ko_medium_optim_CM">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">reac_ko_medium_optim_CM</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=(1</em>, <em>1)</em>, <em>withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.reac_ko_medium_optim_CM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.reac_ko_optim">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">reac_ko_optim</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em>, <em>withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.reac_ko_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_optim.reac_ko_optim_CM">
+<code class="descclassname">optimModels.unittests.cbm_optim.</code><code class="descname">reac_ko_optim_CM</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em>, <em>withCobraPy=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_optim.reac_ko_optim_CM" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests.cbm_simulation">
+<span id="optimmodels-unittests-cbm-simulation-module"></span><h2>optimModels.unittests.cbm_simulation module<a class="headerlink" href="#module-optimModels.unittests.cbm_simulation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.unittests.cbm_simulation.cbm_simualtion">
+<code class="descclassname">optimModels.unittests.cbm_simulation.</code><code class="descname">cbm_simualtion</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_simulation.cbm_simualtion" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_simulation.cbm_simualtion_iAF">
+<code class="descclassname">optimModels.unittests.cbm_simulation.</code><code class="descname">cbm_simualtion_iAF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_simulation.cbm_simualtion_iAF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.cbm_simulation.medium_test">
+<code class="descclassname">optimModels.unittests.cbm_simulation.</code><code class="descname">medium_test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.cbm_simulation.medium_test" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests.framed_cobrapy">
+<span id="optimmodels-unittests-framed-cobrapy-module"></span><h2>optimModels.unittests.framed_cobrapy module<a class="headerlink" href="#module-optimModels.unittests.framed_cobrapy" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.unittests.framed_cobrapy.cameo_optim">
+<code class="descclassname">optimModels.unittests.framed_cobrapy.</code><code class="descname">cameo_optim</code><span class="sig-paren">(</span><em>isMultiProc</em>, <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.framed_cobrapy.cameo_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.framed_cobrapy.cobra_optim">
+<code class="descclassname">optimModels.unittests.framed_cobrapy.</code><code class="descname">cobra_optim</code><span class="sig-paren">(</span><em>isMultiProc</em>, <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.framed_cobrapy.cobra_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.framed_cobrapy.framed_optim">
+<code class="descclassname">optimModels.unittests.framed_cobrapy.</code><code class="descname">framed_optim</code><span class="sig-paren">(</span><em>isMultiProc</em>, <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.framed_cobrapy.framed_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.framed_cobrapy.print_drains_cobrapy">
+<code class="descclassname">optimModels.unittests.framed_cobrapy.</code><code class="descname">print_drains_cobrapy</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.framed_cobrapy.print_drains_cobrapy" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.framed_cobrapy.print_results">
+<code class="descclassname">optimModels.unittests.framed_cobrapy.</code><code class="descname">print_results</code><span class="sig-paren">(</span><em>fileName</em>, <em>population</em>, <em>optimConfig</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.framed_cobrapy.print_results" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests.gecko_optim">
+<span id="optimmodels-unittests-gecko-optim-module"></span><h2>optimModels.unittests.gecko_optim module<a class="headerlink" href="#module-optimModels.unittests.gecko_optim" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.unittests.gecko_optim.prot_ko_optim">
+<code class="descclassname">optimModels.unittests.gecko_optim.</code><code class="descname">prot_ko_optim</code><span class="sig-paren">(</span><em>prot_measure_fractions=None</em>, <em>prot_measure_ggdw=None</em>, <em>constraints=None</em>, <em>isMultiProc=False</em>, <em>size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.gecko_optim.prot_ko_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests.gecko_simulation">
+<span id="optimmodels-unittests-gecko-simulation-module"></span><h2>optimModels.unittests.gecko_simulation module<a class="headerlink" href="#module-optimModels.unittests.gecko_simulation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.unittests.gecko_simulation.analysis_growth">
+<code class="descclassname">optimModels.unittests.gecko_simulation.</code><code class="descname">analysis_growth</code><span class="sig-paren">(</span><em>resFileName</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.gecko_simulation.analysis_growth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.gecko_simulation.analysis_ko">
+<code class="descclassname">optimModels.unittests.gecko_simulation.</code><code class="descname">analysis_ko</code><span class="sig-paren">(</span><em>resFileName</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.gecko_simulation.analysis_ko" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.gecko_simulation.simulate_prot">
+<code class="descclassname">optimModels.unittests.gecko_simulation.</code><code class="descname">simulate_prot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.gecko_simulation.simulate_prot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.gecko_simulation.simulate_wt">
+<code class="descclassname">optimModels.unittests.gecko_simulation.</code><code class="descname">simulate_wt</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.gecko_simulation.simulate_wt" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.gecko_simulation.simulate_wt_multi">
+<code class="descclassname">optimModels.unittests.gecko_simulation.</code><code class="descname">simulate_wt_multi</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.gecko_simulation.simulate_wt_multi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests.kinetic_optim">
+<span id="optimmodels-unittests-kinetic-optim-module"></span><h2>optimModels.unittests.kinetic_optim module<a class="headerlink" href="#module-optimModels.unittests.kinetic_optim" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.unittests.kinetic_optim.ko_chassagnole">
+<code class="descclassname">optimModels.unittests.kinetic_optim.</code><code class="descname">ko_chassagnole</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_optim.ko_chassagnole" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.kinetic_optim.ko_jahan">
+<code class="descclassname">optimModels.unittests.kinetic_optim.</code><code class="descname">ko_jahan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_optim.ko_jahan" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.kinetic_optim.ko_millard">
+<code class="descclassname">optimModels.unittests.kinetic_optim.</code><code class="descname">ko_millard</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_optim.ko_millard" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.kinetic_optim.under_over_chassagnole">
+<code class="descclassname">optimModels.unittests.kinetic_optim.</code><code class="descname">under_over_chassagnole</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_optim.under_over_chassagnole" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.kinetic_optim.under_over_millard">
+<code class="descclassname">optimModels.unittests.kinetic_optim.</code><code class="descname">under_over_millard</code><span class="sig-paren">(</span><em>isMultiProc=False</em>, <em>size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_optim.under_over_millard" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests.kinetic_simulation">
+<span id="optimmodels-unittests-kinetic-simulation-module"></span><h2>optimModels.unittests.kinetic_simulation module<a class="headerlink" href="#module-optimModels.unittests.kinetic_simulation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="optimModels.unittests.kinetic_simulation.Params">
+<em class="property">class </em><code class="descclassname">optimModels.unittests.kinetic_simulation.</code><code class="descname">Params</code><a class="headerlink" href="#optimModels.unittests.kinetic_simulation.Params" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="optimModels.unittests.kinetic_simulation.Params.get_params_set">
+<code class="descname">get_params_set</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_simulation.Params.get_params_set" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.kinetic_simulation.kinetic_sim">
+<code class="descclassname">optimModels.unittests.kinetic_simulation.</code><code class="descname">kinetic_sim</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_simulation.kinetic_sim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.kinetic_simulation.toy_model">
+<code class="descclassname">optimModels.unittests.kinetic_simulation.</code><code class="descname">toy_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_simulation.toy_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.kinetic_simulation.toy_model2">
+<code class="descclassname">optimModels.unittests.kinetic_simulation.</code><code class="descname">toy_model2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.kinetic_simulation.toy_model2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests.presentation">
+<span id="optimmodels-unittests-presentation-module"></span><h2>optimModels.unittests.presentation module<a class="headerlink" href="#module-optimModels.unittests.presentation" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.unittests.presentation.analysis_growth">
+<code class="descclassname">optimModels.unittests.presentation.</code><code class="descname">analysis_growth</code><span class="sig-paren">(</span><em>resFileName</em>, <em>scale=False</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.presentation.analysis_growth" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.presentation.essential_prot">
+<code class="descclassname">optimModels.unittests.presentation.</code><code class="descname">essential_prot</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.presentation.essential_prot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.presentation.essential_prot_scale">
+<code class="descclassname">optimModels.unittests.presentation.</code><code class="descname">essential_prot_scale</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.presentation.essential_prot_scale" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.presentation.prot_ko_optim">
+<code class="descclassname">optimModels.unittests.presentation.</code><code class="descname">prot_ko_optim</code><span class="sig-paren">(</span><em>prot_measure_fractions=None</em>, <em>prot_measure_ggdw=None</em>, <em>constraints=None</em>, <em>isMultiProc=False</em>, <em>size=1</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.presentation.prot_ko_optim" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests.simplify_solutions">
+<span id="optimmodels-unittests-simplify-solutions-module"></span><h2>optimModels.unittests.simplify_solutions module<a class="headerlink" href="#module-optimModels.unittests.simplify_solutions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.jahan_ko">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">jahan_ko</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.jahan_ko" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.jahan_model">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">jahan_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.jahan_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.jahan_uo">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">jahan_uo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.jahan_uo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.millard_ko">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">millard_ko</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.millard_ko" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.millard_model">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">millard_model</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.millard_model" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.millard_uo">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">millard_uo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.millard_uo" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.simplify_solution">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">simplify_solution</code><span class="sig-paren">(</span><em>simulProblem</em>, <em>decoder</em>, <em>evalFunc</em>, <em>solutions</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.simplify_solution" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.simulate_solutions">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">simulate_solutions</code><span class="sig-paren">(</span><em>simulProblem</em>, <em>decoder</em>, <em>solutions</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.simulate_solutions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="optimModels.unittests.simplify_solutions.yield_solutions">
+<code class="descclassname">optimModels.unittests.simplify_solutions.</code><code class="descname">yield_solutions</code><span class="sig-paren">(</span><em>simulationResults</em>, <em>productId</em>, <em>uptakeId</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.unittests.simplify_solutions.yield_solutions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.unittests">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-optimModels.unittests" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="optimModels.utils.html" title="optimModels.utils package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="optimModels.simulation.html" title="optimModels.simulation package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">optimModels 0.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >optimModels</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="optimModels.html" >optimModels package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Sara Correia.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

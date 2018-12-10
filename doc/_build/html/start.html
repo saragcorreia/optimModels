@@ -1,0 +1,155 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Getting started &#8212; optimModels 0.0.3 documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Phenotype Simulation" href="simulation.html" />
+    <link rel="prev" title="Installation" href="install.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="simulation.html" title="Phenotype Simulation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">optimModels 0.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Getting started</a><ul>
+<li><a class="reference internal" href="#default-configurations">Default Configurations</a></li>
+<li><a class="reference internal" href="#loading-kinetic-models">Loading kinetic models</a></li>
+<li><a class="reference internal" href="#loading-community-models-or-stoichiometric-models">Loading community models or stoichiometric models</a></li>
+<li><a class="reference internal" href="#loading-gecko-models">Loading GECKO models</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="install.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="simulation.html"
+                        title="next chapter">Phenotype Simulation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/start.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="default-configurations">
+<h2>Default Configurations<a class="headerlink" href="#default-configurations" title="Permalink to this headline">¶</a></h2>
+<p><em>optimModels</em>, at the moment supports kinetic metabolic models, communities models and Gecko models.
+The default configurations used in the optimization/simulation processes are in the optimModels.utils.configuration file.
+The parameters of EA can be changed using the class optimModels.optimization.evolutionary_algorithm.EAConfigurations</p>
+</div>
+<div class="section" id="loading-kinetic-models">
+<h2>Loading kinetic models<a class="headerlink" href="#loading-kinetic-models" title="Permalink to this headline">¶</a></h2>
+<p>The process of loading a model is quite simple, and are based on the classes available on the <em>framed</em> package.</p>
+<p>We assume that the vMax parameters associated to each reaction has the follow identifier “vMax**&lt;id of reaction&gt;**”.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">optimModels</span> <span class="k">import</span> <span class="n">load_kinetic_model</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_kinetic_model</span><span class="p">(</span><span class="s1">&#39;TinyModel_RHS.xml&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="loading-community-models-or-stoichiometric-models">
+<h2>Loading community models or stoichiometric models<a class="headerlink" href="#loading-community-models-or-stoichiometric-models" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">framed.io.sbml</span> <span class="k">import</span> <span class="n">load_cbmodel</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">load_cbmodel</span><span class="p">(</span><span class="s2">&quot;Ec_iAF1260.xml&quot;</span><span class="p">,</span> <span class="n">flavor</span><span class="o">=</span><span class="s2">&quot;cobra&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="loading-gecko-models">
+<h2>Loading GECKO models<a class="headerlink" href="#loading-gecko-models" title="Permalink to this headline">¶</a></h2>
+<p>Please, to understand the GECKO models read the paper:</p>
+<p>Sánchez, Benjamín J., et al. <em>“Improving the phenotype predictions of a yeast genome‐scale metabolic model by incorporating enzymatic constraints.”</em>
+Molecular systems biology 13.8 (2017): 935.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">geckopy</span> <span class="k">import</span> <span class="n">GeckoModel</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">GeckoModel</span><span class="p">(</span><span class="s2">&quot;single-pool&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="simulation.html" title="Phenotype Simulation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="install.html" title="Installation"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">optimModels 0.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Sara Correia.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

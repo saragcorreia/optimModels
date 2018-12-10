@@ -1,0 +1,1567 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>optimModels.optimization package &#8212; optimModels 0.0.3 documentation</title>
+    <link rel="stylesheet" href="../_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="optimModels.simulation package" href="optimModels.simulation.html" />
+    <link rel="prev" title="optimModels.model package" href="optimModels.model.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="optimModels.simulation.html" title="optimModels.simulation package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="optimModels.model.html" title="optimModels.model package"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">optimModels 0.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >optimModels</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="optimModels.html" accesskey="U">optimModels package</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">optimModels.optimization package</a><ul>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.decoders">optimModels.optimization.decoders module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.evaluation_functions">optimModels.optimization.evaluation_functions module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.evaluators">optimModels.optimization.evaluators module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.evolutionary_computation">optimModels.optimization.evolutionary_computation module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.generators">optimModels.optimization.generators module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.observers">optimModels.optimization.observers module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.replacers">optimModels.optimization.replacers module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.run">optimModels.optimization.run module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization.variators">optimModels.optimization.variators module</a></li>
+<li><a class="reference internal" href="#module-optimModels.optimization">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="optimModels.model.html"
+                        title="previous chapter">optimModels.model package</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="optimModels.simulation.html"
+                        title="next chapter">optimModels.simulation package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/optimModels.optimization.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="optimmodels-optimization-package">
+<h1>optimModels.optimization package<a class="headerlink" href="#optimmodels-optimization-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-optimModels.optimization.decoders">
+<span id="optimmodels-optimization-decoders-module"></span><h2>optimModels.optimization.decoders module<a class="headerlink" href="#module-optimModels.optimization.decoders" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="optimModels.optimization.decoders.Decoder">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.decoders.</code><code class="descname">Decoder</code><a class="headerlink" href="#optimModels.optimization.decoders.Decoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract class with the abstract methods that must be implemented by all decoders.</p>
+<dl class="method">
+<dt id="optimModels.optimization.decoders.Decoder.decode_candidate">
+<code class="descname">decode_candidate</code><span class="sig-paren">(</span><em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.Decoder.decode_candidate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.Decoder.get_override_simul_problem">
+<code class="descname">get_override_simul_problem</code><span class="sig-paren">(</span><em>candidate</em>, <em>simulProblem</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.Decoder.get_override_simul_problem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.decoders.DecoderMedium">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.decoders.</code><code class="descname">DecoderMedium</code><span class="sig-paren">(</span><em>ids</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMedium" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.decoders.Decoder" title="optimModels.optimization.decoders.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.decoders.Decoder</span></code></a></p>
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMedium.decode_candidate">
+<code class="descname">decode_candidate</code><span class="sig-paren">(</span><em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMedium.decode_candidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of indexes into a list of identifiers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>candidate</strong> (<em>list</em>) – indexes of parameters.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: list of parameters identifiers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMedium.decode_candidate_ids_to_index">
+<code class="descname">decode_candidate_ids_to_index</code><span class="sig-paren">(</span><em>identifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMedium.decode_candidate_ids_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of identifiers into a list of integers (indexes).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifiers</strong> (<em>list</em>) – Ids of parameters</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: List of integers (parameters indexes)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMedium.get_override_simul_problem">
+<code class="descname">get_override_simul_problem</code><span class="sig-paren">(</span><em>candidate</em>, <em>simulProblem</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMedium.get_override_simul_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the override simulation problem which will contains the modifications that must be applied to the model in order to simulate the drains that will be open for uptake.
+:param candidate: indexes of reactions that will be open (drains).
+:type candidate: list
+:param simulProblem: all information required to perform a model simulation.
+:type simulProblem: SimulationProblem</p>
+<p>Returns: OverrideSimulProblem instance with the modifications to be applied over the simulation Problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.decoders.DecoderMediumLevels">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.decoders.</code><code class="descname">DecoderMediumLevels</code><span class="sig-paren">(</span><em>ids</em>, <em>levels</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMediumLevels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.decoders.Decoder" title="optimModels.optimization.decoders.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.decoders.Decoder</span></code></a></p>
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMediumLevels.decode_candidate">
+<code class="descname">decode_candidate</code><span class="sig-paren">(</span><em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMediumLevels.decode_candidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the map of type <em>{parameterIndex : levelIndex}</em> to a map of type <em>{parameterId: levelOfExpression}</em></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>candidate</strong> (<em>dict</em>) – The key is the parameter index and the value is the level of expression index.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Returns: A dictionary where the key is the parameter id and the value is the level of expression with values between</dt>
+<dd>0 and 1 to represent under expression or higher that 1 to represent the over expression.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMediumLevels.decode_candidate_ids_to_index">
+<code class="descname">decode_candidate_ids_to_index</code><span class="sig-paren">(</span><em>identifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMediumLevels.decode_candidate_ids_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of tupples of identifiers into a list of tuples of integers (indexes).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifiers</strong> (<em>list</em>) – List of tuples whit the parameters and levels ids</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: List of tuples indexes of parameters.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMediumLevels.get_override_simul_problem">
+<code class="descname">get_override_simul_problem</code><span class="sig-paren">(</span><em>candidate</em>, <em>simulProblem</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMediumLevels.get_override_simul_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to create a instance of OverrideSimulationProblem based on the candidate given by argument.
+:param candidate: candidate to decode
+:type candidate: list
+:param simulProblem: Simulation problem instance.</p>
+<p>Returns: OverrideStoicSimulProblem instance</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.decoders.DecoderMediumReacKO">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.decoders.</code><code class="descname">DecoderMediumReacKO</code><span class="sig-paren">(</span><em>idsDrains</em>, <em>idsReactions</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMediumReacKO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.decoders.Decoder" title="optimModels.optimization.decoders.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.decoders.Decoder</span></code></a></p>
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMediumReacKO.decode_candidate">
+<code class="descname">decode_candidate</code><span class="sig-paren">(</span><em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMediumReacKO.decode_candidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of index into a list of identifiers.
+:param candidate: list of indexes of parameters
+:type candidate: list</p>
+<p>Returns: list of parameters ids.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMediumReacKO.decode_candidate_ids_to_index">
+<code class="descname">decode_candidate_ids_to_index</code><span class="sig-paren">(</span><em>identifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMediumReacKO.decode_candidate_ids_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of identifiers into a list of integers (indexes).
+:param identifiers: parameters identifiers
+:type identifiers: list</p>
+<p>Returns: List of parameters indexes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderMediumReacKO.get_override_simul_problem">
+<code class="descname">get_override_simul_problem</code><span class="sig-paren">(</span><em>candidate</em>, <em>simulProblem</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderMediumReacKO.get_override_simul_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the override simulation problem which will contains the modifications that must be applied to the model in order to simulate the drains that will be open for uptake and KO reactions.
+:param candidate: indexes of reactions that will be open (drains) or the flux will be 0 (internal reactions).
+:type candidate: list
+:param simulProblem: all information required to perform a model simulation.
+:type simulProblem: SimulationProblem</p>
+<p>Returns: OverrideSimulProblem instance with the modifications to be applied over the simulation Problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.decoders.DecoderProtKnockouts">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.decoders.</code><code class="descname">DecoderProtKnockouts</code><span class="sig-paren">(</span><em>ids</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderProtKnockouts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.decoders.Decoder" title="optimModels.optimization.decoders.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.decoders.Decoder</span></code></a></p>
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderProtKnockouts.decode_candidate">
+<code class="descname">decode_candidate</code><span class="sig-paren">(</span><em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderProtKnockouts.decode_candidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of indexes into a list of identifiers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>candidate</strong> (<em>list</em>) – indexes of parameters.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: list of parameters identifiers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderProtKnockouts.decode_candidate_ids_to_index">
+<code class="descname">decode_candidate_ids_to_index</code><span class="sig-paren">(</span><em>identifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderProtKnockouts.decode_candidate_ids_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of identifiers into a list of integers (indexes).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifiers</strong> (<em>list</em>) – Ids of proteins</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: List of integers (proteins indexes)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderProtKnockouts.get_override_simul_problem">
+<code class="descname">get_override_simul_problem</code><span class="sig-paren">(</span><em>candidate</em>, <em>simulProblem</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderProtKnockouts.get_override_simul_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the override simulation problem which will contains the modifications that must be applied to the model in order to simulate the protein knockouts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>candidate</strong> (<em>list</em>) – indexes of proteins.</li>
+<li><strong>simulProblem</strong> (<a class="reference internal" href="optimModels.simulation.html#optimModels.simulation.simul_problems.SimulationProblem" title="optimModels.simulation.simul_problems.SimulationProblem"><em>SimulationProblem</em></a>) – all information required to perform a model simulation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: OverrideSimulProblem instance with the modifications to be applied over the simulation Problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.decoders.DecoderProtUnderOverExpression">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.decoders.</code><code class="descname">DecoderProtUnderOverExpression</code><span class="sig-paren">(</span><em>ids</em>, <em>levels</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderProtUnderOverExpression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.decoders.Decoder" title="optimModels.optimization.decoders.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.decoders.Decoder</span></code></a></p>
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderProtUnderOverExpression.decode_candidate">
+<code class="descname">decode_candidate</code><span class="sig-paren">(</span><em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderProtUnderOverExpression.decode_candidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the map of type <em>{proteinIndex : levelIndex}</em> to a map of type <em>{proteinId: levelOfExpression}</em></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>candidate</strong> (<em>dict</em>) – The key is the parameter index and the value is the level of expression index.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Returns: A dictionary where the key is the protein id and the value is the level of expression with values between</dt>
+<dd>0 and 1 to represent under expression or higher that 1 to represent the over expression.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderProtUnderOverExpression.decode_candidate_ids_to_index">
+<code class="descname">decode_candidate_ids_to_index</code><span class="sig-paren">(</span><em>identifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderProtUnderOverExpression.decode_candidate_ids_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of tupples of identifiers into a list of tuples of integers (indexes).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifiers</strong> (<em>list</em>) – List of tuples whit the proteins and levels ids</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: List of tuples indexes.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderProtUnderOverExpression.get_override_simul_problem">
+<code class="descname">get_override_simul_problem</code><span class="sig-paren">(</span><em>candidate</em>, <em>simulProblem</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderProtUnderOverExpression.get_override_simul_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the override simulation problem which will contains the modifications that must be applied to the model in order to simulate the under/over proteins expression.
+:param candidate: candidate represented using proteins and levels indexes.
+:type candidate: dict
+:param simulProblem: all information required to perform a model simulation.
+:type simulProblem: SimulationProblem</p>
+<p>Returns: OverrideSimulProblem instance with the modifications to be applied over the simulation Problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.decoders.DecoderReacKnockouts">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.decoders.</code><code class="descname">DecoderReacKnockouts</code><span class="sig-paren">(</span><em>ids</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderReacKnockouts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.decoders.Decoder" title="optimModels.optimization.decoders.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.decoders.Decoder</span></code></a></p>
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderReacKnockouts.decode_candidate">
+<code class="descname">decode_candidate</code><span class="sig-paren">(</span><em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderReacKnockouts.decode_candidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of indexes into a list of identifiers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>candidate</strong> (<em>list</em>) – indexes of parameters/reactions.</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: list of parameters/reactions identifiers.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderReacKnockouts.decode_candidate_ids_to_index">
+<code class="descname">decode_candidate_ids_to_index</code><span class="sig-paren">(</span><em>identifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderReacKnockouts.decode_candidate_ids_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of identifiers into a list of integers (indexes).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifiers</strong> (<em>list</em>) – Ids of parameters/reactions</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: List of integers (parameters indexes)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderReacKnockouts.get_override_simul_problem">
+<code class="descname">get_override_simul_problem</code><span class="sig-paren">(</span><em>candidate</em>, <em>simulProblem</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderReacKnockouts.get_override_simul_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the override simulation problem which will contains the modifications that must be applied to the model in order to simulate the reactions knockouts.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>candidate</strong> (<em>list</em>) – indexes of reactions.</li>
+<li><strong>simulProblem</strong> (<a class="reference internal" href="optimModels.simulation.html#optimModels.simulation.simul_problems.SimulationProblem" title="optimModels.simulation.simul_problems.SimulationProblem"><em>SimulationProblem</em></a>) – all information required to perform a model simulation.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: OverrideSimulProblem instance with the modifications to be applied over the simulation Problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.decoders.DecoderReacUnderOverExpression">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.decoders.</code><code class="descname">DecoderReacUnderOverExpression</code><span class="sig-paren">(</span><em>ids</em>, <em>levels</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderReacUnderOverExpression" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.decoders.Decoder" title="optimModels.optimization.decoders.Decoder"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.decoders.Decoder</span></code></a></p>
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderReacUnderOverExpression.decode_candidate">
+<code class="descname">decode_candidate</code><span class="sig-paren">(</span><em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderReacUnderOverExpression.decode_candidate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the map of type <em>{parameterIndex : levelIndex}</em> to a map of type <em>{parameterId: levelOfExpression}</em></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>candidate</strong> (<em>dict</em>) – The key is the parameter index and the value is the level of expression index.</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>Returns: A dictionary where the key is the parameter id and the value is the level of expression with values between</dt>
+<dd>0 and 1 to represent under expression or higher that 1 to represent the over expression.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderReacUnderOverExpression.decode_candidate_ids_to_index">
+<code class="descname">decode_candidate_ids_to_index</code><span class="sig-paren">(</span><em>identifiers</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderReacUnderOverExpression.decode_candidate_ids_to_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert the list of tuples of identifiers into a list of tuples of integers (indexes).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>identifiers</strong> (<em>list</em>) – List of tuples whit the parameters and levels ids</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: List of tuples indexes of reactions.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.decoders.DecoderReacUnderOverExpression.get_override_simul_problem">
+<code class="descname">get_override_simul_problem</code><span class="sig-paren">(</span><em>candidate</em>, <em>simulProblem</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.decoders.DecoderReacUnderOverExpression.get_override_simul_problem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the override simulation problem which will contains the modifications that must be applied to the model in order to simulate the under/over enzymes expression.
+:param candidate: candidate represented using reactions and levels indexes.
+:type candidate: dict
+:param simulProblem: all information required to perform a model simulation.
+:type simulProblem: SimulationProblem</p>
+<p>Returns: OverrideSimulProblem instance with the modifications to be applied over the simulation Problem.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization.evaluation_functions">
+<span id="optimmodels-optimization-evaluation-functions-module"></span><h2>optimModels.optimization.evaluation_functions module<a class="headerlink" href="#module-optimModels.optimization.evaluation_functions" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="optimModels.optimization.evaluation_functions.BPCY">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evaluation_functions.</code><code class="descname">BPCY</code><span class="sig-paren">(</span><em>biomassId</em>, <em>productId</em>, <em>uptakeId</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BPCY" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.evaluation_functions.EvaluationFunction" title="optimModels.optimization.evaluation_functions.EvaluationFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.evaluation_functions.EvaluationFunction</span></code></a></p>
+<p>This class implements the “Biomass-Product Coupled Yield” objective function. The fitness is given by the equation:
+(biomass_flux * product_flux)/ uptake_flux</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>biomassId</strong> (<em>str</em>) – Biomass reaction identifier</li>
+<li><strong>productId</strong> (<em>str</em>) – Target product reaction identifier</li>
+<li><strong>uptakeId</strong> (<em>str</em>) – Reaction of uptake</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.BPCY.get_fitness">
+<code class="descname">get_fitness</code><span class="sig-paren">(</span><em>simulResult</em>, <em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BPCY.get_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.BPCY.get_id">
+<em class="property">static </em><code class="descname">get_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BPCY.get_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.BPCY.get_name">
+<em class="property">static </em><code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BPCY.get_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.BPCY.get_parameters_ids">
+<em class="property">static </em><code class="descname">get_parameters_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BPCY.get_parameters_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.BPCY.method_str">
+<code class="descname">method_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BPCY.method_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.evaluation_functions.BP_MinModifications">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evaluation_functions.</code><code class="descname">BP_MinModifications</code><span class="sig-paren">(</span><em>biomassId</em>, <em>productId</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BP_MinModifications" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.evaluation_functions.EvaluationFunction" title="optimModels.optimization.evaluation_functions.EvaluationFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.evaluation_functions.EvaluationFunction</span></code></a></p>
+<p>This class is based the “Biomass-Product Coupled Yield” objective function but considering the candidate size. The fitness is given by the equation:
+(biomass_flux * product_flux)/ candidate_size)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>biomassId</strong> (<em>str</em>) – biomass reaction identifier</li>
+<li><strong>productId</strong> (<em>str</em>) – target product reaction identifier</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.BP_MinModifications.get_fitness">
+<code class="descname">get_fitness</code><span class="sig-paren">(</span><em>simulResult</em>, <em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BP_MinModifications.get_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.BP_MinModifications.get_id">
+<em class="property">static </em><code class="descname">get_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BP_MinModifications.get_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.BP_MinModifications.get_name">
+<em class="property">static </em><code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BP_MinModifications.get_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.BP_MinModifications.get_parameters_ids">
+<em class="property">static </em><code class="descname">get_parameters_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BP_MinModifications.get_parameters_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.BP_MinModifications.method_str">
+<code class="descname">method_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.BP_MinModifications.method_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.evaluation_functions.EvaluationFunction">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evaluation_functions.</code><code class="descname">EvaluationFunction</code><a class="headerlink" href="#optimModels.optimization.evaluation_functions.EvaluationFunction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This abstract class should be extended by all evaluation functions classes.</p>
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.EvaluationFunction.get_fitness">
+<code class="descname">get_fitness</code><span class="sig-paren">(</span><em>simulationResult</em>, <em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.EvaluationFunction.get_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.EvaluationFunction.method_str">
+<code class="descname">method_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.EvaluationFunction.method_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSize">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evaluation_functions.</code><code class="descname">MinCandSize</code><span class="sig-paren">(</span><em>maxCandidateSize</em>, <em>minFluxes</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.evaluation_functions.EvaluationFunction" title="optimModels.optimization.evaluation_functions.EvaluationFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.evaluation_functions.EvaluationFunction</span></code></a></p>
+<p>This class implements the “minimization of number of reactions” objective function. The fitness is given by
+1 - size(candidate)/ max_candidate_size, where the max_candidate_size is the maximum size that a candidate can have
+during optimization.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>maxCandidateSize</strong> (<em>int</em>) – Maximum size allowed for candidate</li>
+<li><strong>minFluxes</strong> (<em>dict</em>) – Minimal value for fluxes to consider fitness different of 0 (key: reaction id, value: minimum of flux).</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSize.get_fitness">
+<code class="descname">get_fitness</code><span class="sig-paren">(</span><em>simulResult</em>, <em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSize.get_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSize.get_id">
+<em class="property">static </em><code class="descname">get_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSize.get_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSize.get_name">
+<em class="property">static </em><code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSize.get_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSize.get_parameters_ids">
+<em class="property">static </em><code class="descname">get_parameters_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSize.get_parameters_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSize.method_str">
+<code class="descname">method_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSize.method_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evaluation_functions.</code><code class="descname">MinCandSizeAndMaxTarget</code><span class="sig-paren">(</span><em>maxCandidateSize</em>, <em>maxTargetFlux</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.evaluation_functions.EvaluationFunction" title="optimModels.optimization.evaluation_functions.EvaluationFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.evaluation_functions.EvaluationFunction</span></code></a></p>
+<p>This evaluation function finds the solution with the minimum candidate size and levels considering the maximization
+of the target flux.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>maxCandidateSize</strong> (<em>int</em>) – maximum of candidate size</li>
+<li><strong>maxTargetFlux</strong> (<em>str</em>) – reaction id to maximize</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.get_fitness">
+<code class="descname">get_fitness</code><span class="sig-paren">(</span><em>simulResult</em>, <em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.get_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.get_id">
+<em class="property">static </em><code class="descname">get_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.get_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.get_name">
+<em class="property">static </em><code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.get_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.get_parameters_ids">
+<em class="property">static </em><code class="descname">get_parameters_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.get_parameters_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.method_str">
+<code class="descname">method_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeAndMaxTarget.method_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evaluation_functions.</code><code class="descname">MinCandSizeWithLevelsAndMaxTarget</code><span class="sig-paren">(</span><em>maxCandidateSize</em>, <em>levels</em>, <em>maxTargetFlux</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.evaluation_functions.EvaluationFunction" title="optimModels.optimization.evaluation_functions.EvaluationFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.evaluation_functions.EvaluationFunction</span></code></a></p>
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.get_fitness">
+<code class="descname">get_fitness</code><span class="sig-paren">(</span><em>simulResult</em>, <em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.get_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.get_id">
+<em class="property">static </em><code class="descname">get_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.get_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.get_name">
+<em class="property">static </em><code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.get_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.get_parameters_ids">
+<em class="property">static </em><code class="descname">get_parameters_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.get_parameters_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.method_str">
+<code class="descname">method_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.MinCandSizeWithLevelsAndMaxTarget.method_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.evaluation_functions.TargetFlux">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evaluation_functions.</code><code class="descname">TargetFlux</code><span class="sig-paren">(</span><em>targetReactionId</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.TargetFlux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#optimModels.optimization.evaluation_functions.EvaluationFunction" title="optimModels.optimization.evaluation_functions.EvaluationFunction"><code class="xref py py-class docutils literal notranslate"><span class="pre">optimModels.optimization.evaluation_functions.EvaluationFunction</span></code></a></p>
+<p>This class implements the “target flux” objective function. The fitness is given by the flux value of the target reaction.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>targetReactionId</strong> (<em>str</em>) – Reaction identifier of the target compound production.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.TargetFlux.get_fitness">
+<code class="descname">get_fitness</code><span class="sig-paren">(</span><em>simulResult</em>, <em>candidate</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.TargetFlux.get_fitness" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.TargetFlux.get_id">
+<em class="property">static </em><code class="descname">get_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.TargetFlux.get_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.TargetFlux.get_name">
+<em class="property">static </em><code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.TargetFlux.get_name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="optimModels.optimization.evaluation_functions.TargetFlux.get_parameters_ids">
+<em class="property">static </em><code class="descname">get_parameters_ids</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.TargetFlux.get_parameters_ids" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evaluation_functions.TargetFlux.method_str">
+<code class="descname">method_str</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.TargetFlux.method_str" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.evaluation_functions.build_evaluation_function">
+<code class="descclassname">optimModels.optimization.evaluation_functions.</code><code class="descname">build_evaluation_function</code><span class="sig-paren">(</span><em>id</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluation_functions.build_evaluation_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to return an evaluation function instance.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>id</strong> (<em>str</em>) – Name of the objective function. The implemented objective functions should be registed in constants.objFunctions class</li>
+<li><strong>*args</strong> (<em>list of str</em>) – The number of arguments depends of the objective function chosen by user.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">return an evaluation function instance.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#optimModels.optimization.evaluation_functions.EvaluationFunction" title="optimModels.optimization.evaluation_functions.EvaluationFunction">EvaluationFunction</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization.evaluators">
+<span id="optimmodels-optimization-evaluators-module"></span><h2>optimModels.optimization.evaluators module<a class="headerlink" href="#module-optimModels.optimization.evaluators" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.optimization.evaluators.evaluator">
+<code class="descclassname">optimModels.optimization.evaluators.</code><code class="descname">evaluator</code><span class="sig-paren">(</span><em>candidates</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluators.evaluator" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function allows the evaluation of candidate solutions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>candidates</strong> (<em>list</em>) – A list of candidate solutions</li>
+<li><strong>args</strong> (<em>dict</em>) – A dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a list of fitness values</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of floats</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.evaluators.parallel_evaluation_mp">
+<code class="descclassname">optimModels.optimization.evaluators.</code><code class="descname">parallel_evaluation_mp</code><span class="sig-paren">(</span><em>candidates</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evaluators.parallel_evaluation_mp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the candidates in parallel using <code class="docutils literal notranslate"><span class="pre">multiprocessing</span></code>.</p>
+<p>This function allows parallel evaluation of candidate solutions.
+It uses the standard multiprocessing library to accomplish the
+parallelization. The function assigns the evaluation of each
+candidate to its own job, all of which are then distributed to the
+available processing units.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>candidates</strong> – list the candidate solutions</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:</p>
+<p>Notes:
+All arguments to the evaluation function must be pickleable.
+Those that are not will not be sent through the <code class="docutils literal notranslate"><span class="pre">args</span></code> variable and will be unavailable to your function.
+Required keyword arguments in args:
+- <em>mp_evaluator</em> – actual evaluation function to be used (This function</p>
+<blockquote>
+<div>should have the same signature as any other inspyred evaluation function.)</div></blockquote>
+<p>Optional keyword arguments in args:</p>
+<ul class="simple">
+<li><em>mp_nprocs</em> – number of processors that will be used (default machine
+cpu count)</li>
+</ul>
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization.evolutionary_computation">
+<span id="optimmodels-optimization-evolutionary-computation-module"></span><h2>optimModels.optimization.evolutionary_computation module<a class="headerlink" href="#module-optimModels.optimization.evolutionary_computation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="optimModels.optimization.evolutionary_computation.EAConfigurations">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evolutionary_computation.</code><code class="descname">EAConfigurations</code><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.EAConfigurations" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basic configurations to Evolutionary Algorithm.</p>
+<dl class="method">
+<dt id="optimModels.optimization.evolutionary_computation.EAConfigurations.get_default_config">
+<code class="descname">get_default_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.EAConfigurations.get_default_config" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="optimModels.optimization.evolutionary_computation.OptimProblemConfiguration">
+<em class="property">class </em><code class="descclassname">optimModels.optimization.evolutionary_computation.</code><code class="descname">OptimProblemConfiguration</code><span class="sig-paren">(</span><em>simulationProblem=None</em>, <em>type=None</em>, <em>decoder=None</em>, <em>evaluationFunc=None</em>, <em>EAConfig=None</em>, <em>scaleProblem=1</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.OptimProblemConfiguration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class contains all information to perform a strain optimization</p>
+<dl class="method">
+<dt id="optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_decoder">
+<code class="descname">get_decoder</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_decoder" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_ea_configurations">
+<code class="descname">get_ea_configurations</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_ea_configurations" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_evaluation_function">
+<code class="descname">get_evaluation_function</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_evaluation_function" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_number_reactions">
+<code class="descname">get_number_reactions</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_number_reactions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_simulation_problem">
+<code class="descname">get_simulation_problem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.OptimProblemConfiguration.get_simulation_problem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.evolutionary_computation.run_optimization">
+<code class="descclassname">optimModels.optimization.evolutionary_computation.</code><code class="descname">run_optimization</code><span class="sig-paren">(</span><em>optimProbConf</em>, <em>resultFile=None</em>, <em>isMultiProc=False</em>, <em>population=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.evolutionary_computation.run_optimization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to perform the optimization using the integer set representation to the candidates solutions.</p>
+<p>Args:
+optimProbConf (OptimProblemConfiguration): This object contains all information to perform the strain optimization task.
+resultFile (str): The path file to store all the results obtained during the optimization (default results are not saved into a file)
+isMultiProc (bool): True, if the user wants parallelize the population evaluation. (default False)</p>
+<dl class="docutils">
+<dt>Returns</dt>
+<dd>list: the individuals of the last population.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization.generators">
+<span id="optimmodels-optimization-generators-module"></span><h2>optimModels.optimization.generators module<a class="headerlink" href="#module-optimModels.optimization.generators" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.optimization.generators.generator_single_int_set">
+<code class="descclassname">optimModels.optimization.generators.</code><code class="descname">generator_single_int_set</code><span class="sig-paren">(</span><em>random</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.generators.generator_single_int_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to generate a new individual using the integer set representation.
+The function returns a set of integer values with a maximum of <em>candidate_max_size</em> elements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>args</strong> (<em>dict</em>) – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a new individual</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">set</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Required  arguments in args:
+- <em>candidate_max_size</em> : number of integer values which compose a individual.
+- <em>_ec</em> : configuration of evolutionary computation. The argument bounder is required to get the maximum value allowed for the individual values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.generators.generator_single_int_tuple">
+<code class="descclassname">optimModels.optimization.generators.</code><code class="descname">generator_single_int_tuple</code><span class="sig-paren">(</span><em>random</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.generators.generator_single_int_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to generate a new individual using the integer tuple representation.
+The function returns a set of tuples values with a maximum of <em>candidate_max_size</em> elements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>args</strong> (<em>dict</em>) – keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a new individual where each element is composed by a tuple.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">set</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Required  arguments in args:
+- <em>candidate_max_size</em> : number of integer values which compose a individual.
+- <em>_ec</em> : configuration of evolutionary computation. The argument bounder is required to get the maximum value allowed for the individual values.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.generators.generator_tuple_int_set">
+<code class="descclassname">optimModels.optimization.generators.</code><code class="descname">generator_tuple_int_set</code><span class="sig-paren">(</span><em>random</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.generators.generator_tuple_int_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to generate a new individual using the integer representation.
+The function returns two integer sets.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>args</strong> (<em>dict</em>) – keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">returns a tuple with two integer sets.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization.observers">
+<span id="optimmodels-optimization-observers-module"></span><h2>optimModels.optimization.observers module<a class="headerlink" href="#module-optimModels.optimization.observers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.optimization.observers.load_population">
+<code class="descclassname">optimModels.optimization.observers.</code><code class="descname">load_population</code><span class="sig-paren">(</span><em>initPopFile=None</em>, <em>decoder=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.observers.load_population" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>initPopFile</strong> (<em>str</em>) – file name with the population to be loaded.</li>
+<li><strong>decoder</strong> (<a class="reference internal" href="#optimModels.optimization.decoders.Decoder" title="optimModels.optimization.decoders.Decoder"><em>Decoder</em></a>) – decoder to decode the candidates.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">number of the generation
+population (list): list of candidates
+fitness (list): fitness values for each candidate</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">num_generations(str)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.observers.save_all_results">
+<code class="descclassname">optimModels.optimization.observers.</code><code class="descname">save_all_results</code><span class="sig-paren">(</span><em>population</em>, <em>num_generations</em>, <em>num_evaluations</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.observers.save_all_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the output of the evolutionary computation to a file with the follow fields:
+- number of generation
+- fitness of candidate
+- the solution candidates
+- the solution encoded candidates</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>population</strong> (<em>list</em>) – the population of Individuals</li>
+<li><strong>num_generations</strong> (<em>int</em>) – the number of elapsed generations</li>
+<li><strong>num_evaluations</strong> (<em>int</em>) – the number of evaluations already performed</li>
+<li><strong>args</strong> (<em>dict</em>) – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>results_file</em> – the file path of the result file
+- <em>configuration</em> – the configuration of the EA algorithm</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization.replacers">
+<span id="optimmodels-optimization-replacers-module"></span><h2>optimModels.optimization.replacers module<a class="headerlink" href="#module-optimModels.optimization.replacers" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.optimization.replacers.new_candidates_no_duplicates_replacement">
+<code class="descclassname">optimModels.optimization.replacers.</code><code class="descname">new_candidates_no_duplicates_replacement</code><span class="sig-paren">(</span><em>random</em>, <em>population</em>, <em>parents</em>, <em>offspring</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.replacers.new_candidates_no_duplicates_replacement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs replacement for the offspring.</p>
+<p>This function performs a new candidates replacement, which means that
+the offspring replace the least fit individuals in the existing
+population, even if those offspring are less fit than the individuals
+that they replace.Moreover a new set of candidates random generated
+will be added to the population. The duplicated candidates are
+replaced by new ones randomly generated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>population</strong> – the population of individuals</li>
+<li><strong>parents</strong> – the list of parent individuals</li>
+<li><strong>offspring</strong> – the list of offspring individuals</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Returns the new population that will be used to next generation.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.replacers.new_candidates_replacement">
+<code class="descclassname">optimModels.optimization.replacers.</code><code class="descname">new_candidates_replacement</code><span class="sig-paren">(</span><em>random</em>, <em>population</em>, <em>parents</em>, <em>offspring</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.replacers.new_candidates_replacement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs replacement for the offspring.</p>
+<p>This function performs a new candidates replacement, which means that
+the offspring replace the least fit individuals in the existing
+population, even if those offspring are less fit than the individuals
+that they replace. Moreover a new set of candidates random generated
+will be added to the population</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>population</strong> – the population of individuals</li>
+<li><strong>parents</strong> – the list of parent individuals</li>
+<li><strong>offspring</strong> – the list of offspring individuals</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Returns the new population that will be used to next generation.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization.run">
+<span id="optimmodels-optimization-run-module"></span><h2>optimModels.optimization.run module<a class="headerlink" href="#module-optimModels.optimization.run" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.optimization.run.cbm_strain_optim">
+<code class="descclassname">optimModels.optimization.run.</code><code class="descname">cbm_strain_optim</code><span class="sig-paren">(</span><em>simulProblem</em>, <em>evaluationFunc</em>, <em>levels</em>, <em>type=1</em>, <em>criticalReacs=[]</em>, <em>isMultiProc=False</em>, <em>candidateSize=None</em>, <em>resultFile=None</em>, <em>initPopFile=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.run.cbm_strain_optim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run the optimization process
+:param simulProblem: Simulation problem
+:type simulProblem: StoicSimulationProblem
+:param evaluationFunc: evaluation function used in EA to calculate the fitness value of each candidate
+:param levels: List for under/expression of proteins (the levels should be set when type is <a href="#id1"><span class="problematic" id="id2">*</span></a>_UO
+:type levels: list
+:param type: type of optimization ( by default Reaction knockouts)
+:param criticalReacs: list of reactions that should not be considered in the optimization
+:type criticalReacs: list
+:param isMultiProc: use multiprocessing
+:type isMultiProc: bool
+:param candidateSize: (by default use the size defined in EAConfigurations.MAX_CANDIDATE_SIZE)
+:type candidateSize: int
+:param resultFile: File to store the solutions of each generation
+:type resultFile: string
+:param initPopFile: File with the initial population
+:type initPopFile: string</p>
+<p>Returns (list): Returns the list of the best modifications.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.run.findBestSolutions">
+<code class="descclassname">optimModels.optimization.run.</code><code class="descname">findBestSolutions</code><span class="sig-paren">(</span><em>population</em>, <em>eaConfig</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.run.findBestSolutions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to get the best individuals of a populations according to their fitness value. The number of individuals
+to return is given by  EAConfigurations.NUM_BEST_SOLUTIONS parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>population</strong> (<em>list</em>) – list of individuals returned by EA</li>
+<li><strong>eaConfig</strong> (<a class="reference internal" href="#optimModels.optimization.evolutionary_computation.EAConfigurations" title="optimModels.optimization.evolutionary_computation.EAConfigurations"><em>EAConfigurations</em></a>) – EA configuration object</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: list of best individuals</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.run.gecko_strain_optim">
+<code class="descclassname">optimModels.optimization.run.</code><code class="descname">gecko_strain_optim</code><span class="sig-paren">(</span><em>simulProblem</em>, <em>evaluationFunc</em>, <em>levels</em>, <em>type=10</em>, <em>criticalProteins=[]</em>, <em>isMultiProc=False</em>, <em>candidateSize=None</em>, <em>resultFile=None</em>, <em>initPopFile=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.run.gecko_strain_optim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run the optimization process.
+:param simulProblem: Simulation problem
+:type simulProblem: GeckoSimulationProblem
+:param evaluationFunc: evaluation function used in EA to calculate the fitness value of each candidate
+:param levels: List for under/expression of proteins (the levels should be set when type is  PROTEIN_UO
+:type levels: list
+:param type: type of optimization ( by default Protein knockouts)
+:param criticalProteins: list of proteins that should not be considered in the optimization
+:type criticalProteins: list
+:param isMultiProc: use multiprocessing
+:type isMultiProc: bool
+:param candidateSize: (by default use the size defined in EAConfigurations.MAX_CANDIDATE_SIZE)
+:type candidateSize: int
+:param resultFile: File to store the solutions of each generation
+:type resultFile: string
+:param initPopFile: File with the initial population
+:type initPopFile: string</p>
+<p>Returns (list): Returns the list of the best modifications.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.run.kinetic_strain_optim">
+<code class="descclassname">optimModels.optimization.run.</code><code class="descname">kinetic_strain_optim</code><span class="sig-paren">(</span><em>simulProblem</em>, <em>objFunc=None</em>, <em>levels=None</em>, <em>type=1</em>, <em>criticalParameters=[]</em>, <em>isMultiProc=False</em>, <em>candidateSize=None</em>, <em>resultFile=None</em>, <em>initPopFile=None</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.run.kinetic_strain_optim" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function to run the optimization process
+:param simulProblem: Simulation problem
+:type simulProblem: KineticSimulationProblem
+:param evaluationFunc: evaluation function used in EA to calculate the fitness value of each candidate
+:param levels: List for under/expression of proteins (the levels should be set when type is <a href="#id3"><span class="problematic" id="id4">*</span></a>_UO
+:type levels: list
+:param type: type of optimization ( by default Reaction knockouts)
+:param criticalReacs: list of reactions that should not be considered in the optimization
+:type criticalReacs: list
+:param isMultiProc: use multiprocessing
+:type isMultiProc: bool
+:param candidateSize: (by default use the size defined in EAConfigurations.MAX_CANDIDATE_SIZE)
+:type candidateSize: int
+:param resultFile: File to store the solutions of each generation
+:type resultFile: string
+:param initPopFile: File with the initial population
+:type initPopFile: string</p>
+<dl class="docutils">
+<dt>Returns (list): Returns the list of the best modifications.</dt>
+<dd>The function returns the best solutions found in strain optimization. The kineticSimulationResults object has the
+flux distribution and metabolites concentration at steady-state, and the modifications made over the
+original model.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.run.print_results">
+<code class="descclassname">optimModels.optimization.run.</code><code class="descname">print_results</code><span class="sig-paren">(</span><em>fileName</em>, <em>population</em>, <em>optimConfig</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.run.print_results" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="docutils">
+<dt>Save the results of a generation in the selected file.</dt>
+<dd><dl class="first docutils">
+<dt>Args:</dt>
+<dd>fileName (string): file where the results are stored. If the file already exist append the new information.
+population: list of candidates
+optimConfig: optimization configuration object with the decoder of solutions</dd>
+</dl>
+<p class="last">Returns:</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.run.simplifySolutions">
+<code class="descclassname">optimModels.optimization.run.</code><code class="descname">simplifySolutions</code><span class="sig-paren">(</span><em>optimProbConf</em>, <em>population</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.run.simplifySolutions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simplify the solution by removing the modification that not affect the final fitness value.
+:param optimProbConf: The configuration problem.
+:type optimProbConf: optimProblemConfiguration
+:param population: List of individuals returned by EA algorithm.
+:type population: list</p>
+<dl class="docutils">
+<dt>Returns: list of SimulationResults</dt>
+<dd>The function returns the best solutions found in strain optimization. The SimulationResults object has the
+flux distribution, and the modifications made over the original model.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization.variators">
+<span id="optimmodels-optimization-variators-module"></span><h2>optimModels.optimization.variators module<a class="headerlink" href="#module-optimModels.optimization.variators" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="optimModels.optimization.variators.grow_mutation_intSetRep">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">grow_mutation_intSetRep</code><span class="sig-paren">(</span><em>random</em>, <em>candidate</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.grow_mutation_intSetRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mutant produced by a grow mutation on the candidate (when the representation is a set of integers).
+If a candidate solution has the maximum size candidate allowed, this function leaves it unchanged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>candidate</strong> – the candidate solution</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">new candidate</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">set</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>mutation_rate</em> – the rate at which mutation is performed (default 0.1)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.grow_mutation_intTupleRep">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">grow_mutation_intTupleRep</code><span class="sig-paren">(</span><em>random</em>, <em>candidate</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.grow_mutation_intTupleRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mutant produced by a grow mutation on the candidate (when the representation is a set of tuples).
+If a candidate solution has the maximum size candidate allowed, this function leaves it unchanged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>candidate</strong> – the candidate solution</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Returns a new candidate</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>mutation_rate</em> – the rate at which mutation is performed (default 0.1)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.grow_mutation_tuple_intSetRep">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">grow_mutation_tuple_intSetRep</code><span class="sig-paren">(</span><em>random</em>, <em>candidate</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.grow_mutation_tuple_intSetRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mutant produced by a grow mutation on the candidate (when the representation is a set of integers).
+If a candidate solution has the maximum size candidate allowed, this function leaves it unchanged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>candidate</strong> – the candidate solution</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Returns a new candidate</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>mutation_rate</em> – the rate at which mutation is performed (default 0.1)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.shrink_mutation">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">shrink_mutation</code><span class="sig-paren">(</span><em>random</em>, <em>candidate</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.shrink_mutation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mutant produced by shrink mutation on the candidate.
+If a candidate solution has length of 1, this function leaves it unchanged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>candidate</strong> – the candidate solution</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">new candidate</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">set</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>mutation_rate</em> – the rate at which mutation is performed (default 0.1)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.shrink_mutation_tuple">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">shrink_mutation_tuple</code><span class="sig-paren">(</span><em>random</em>, <em>candidate</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.shrink_mutation_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mutant produced by shrink mutation on the candidate.
+If a candidate solution has length of 1, this function leaves it unchanged.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>candidate</strong> – the candidate solution</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Returns a  new candidate</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>mutation_rate</em> – the rate at which mutation is performed (default 0.1)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.single_mutation_intSetRep">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">single_mutation_intSetRep</code><span class="sig-paren">(</span><em>random</em>, <em>candidate</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.single_mutation_intSetRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mutant produced by a single mutation on the candidate (when the representation is a set of integers).
+The candidate size is maintained.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> (<em>the random number generator object</em>) – </li>
+<li><strong>candidate</strong> (<em>the candidate solution</em>) – </li>
+<li><strong>args</strong> (<em>a dictionary of keyword arguments</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>out</strong> (<em>new candidate</em>)</li>
+<li><em>Optional keyword arguments in args</em></li>
+<li><em>- *mutation_rate</em> – the rate at which mutation is performed (default 0.1)*</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.single_mutation_intTupleRep">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">single_mutation_intTupleRep</code><span class="sig-paren">(</span><em>random</em>, <em>candidate</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.single_mutation_intTupleRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mutant produced by a single mutation on the candidate (when the representation is a set of tuples).
+The candidate size is maintained.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>candidate</strong> – the candidate solution</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Returns a new candidate</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Optional keyword arguments in args:</p>
+<ul class="simple">
+<li><em>mutation_rate</em> – the rate at which mutation is performed (default 0.1)</li>
+</ul>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.single_mutation_tuple_intSetRep">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">single_mutation_tuple_intSetRep</code><span class="sig-paren">(</span><em>random</em>, <em>candidate</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.single_mutation_tuple_intSetRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the mutant produced by a single mutation on the candidate (when the representation is a set of integers).
+The candidate size is maintained.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>candidate</strong> – the candidate solution</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Returns a  new candidate</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>mutation_rate</em> – the rate at which mutation is performed (default 0.1)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.uniform_crossover">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">uniform_crossover</code><span class="sig-paren">(</span><em>random</em>, <em>mom</em>, <em>dad</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.uniform_crossover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the offspring of the uniform crossover on the candidate. Based on two candidates (parents) build 2 children:
+- elements present in both parents will be present in both children;
+- both children have at least one element;
+- elements present in only one parent have equal probability to be present in child 1 or child 2 (after each child has at least one element).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>mom</strong> – the first parent candidate</li>
+<li><strong>dad</strong> – the second parent candidate</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Return the offspring of the candidates given as argument.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>crossover_rate</em> – the rate at which crossover is performed (default 1.0)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.uniform_crossover_intTupleRep">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">uniform_crossover_intTupleRep</code><span class="sig-paren">(</span><em>random</em>, <em>mom</em>, <em>dad</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.uniform_crossover_intTupleRep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the offspring of the uniform crossover on the candidate. Based on two candidates (parents) build 2 children:
+- elements present in both parents will be present in both children;
+- both children have at least one element;
+- elements present in only one parent have equal probability to be present in child 1 or child 2 (after each child has at least one element).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>mom</strong> – the first parent candidate</li>
+<li><strong>dad</strong> – the second parent candidate</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Returns the offspring of the candidates given as argument.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>crossover_rate</em> – the rate at which crossover is performed (default 1.0)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="optimModels.optimization.variators.uniform_crossover_tuple">
+<code class="descclassname">optimModels.optimization.variators.</code><code class="descname">uniform_crossover_tuple</code><span class="sig-paren">(</span><em>random</em>, <em>mom</em>, <em>dad</em>, <em>args</em><span class="sig-paren">)</span><a class="headerlink" href="#optimModels.optimization.variators.uniform_crossover_tuple" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the offspring of the uniform crossover on the candidate. Based on two candidates (parents) build 2 children:
+- elements present in both parents will be present in both children;
+- both children have at least one element;
+- elements present in only one parent have equal probability to be present in child 1 or child 2 (after each child has at least one element).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>random</strong> – the random number generator object</li>
+<li><strong>mom</strong> – the first parent candidate</li>
+<li><strong>dad</strong> – the second parent candidate</li>
+<li><strong>args</strong> – a dictionary of keyword arguments</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Return the offspring of the candidates given as argument.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Optional keyword arguments in args:
+- <em>crossover_rate</em> – the rate at which crossover is performed (default 1.0)</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-optimModels.optimization">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-optimModels.optimization" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="optimModels.simulation.html" title="optimModels.simulation package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="optimModels.model.html" title="optimModels.model package"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">optimModels 0.0.3 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="modules.html" >optimModels</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="optimModels.html" >optimModels package</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Sara Correia.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>

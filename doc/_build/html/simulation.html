@@ -1,0 +1,187 @@
+
+
+<!doctype html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Phenotype Simulation &#8212; optimModels 0.0.3 documentation</title>
+    <link rel="stylesheet" href="_static/bizstyle.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/bizstyle.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Strain optimization" href="optimization.html" />
+    <link rel="prev" title="Getting started" href="start.html" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="_static/css3-mediaqueries.js"></script>
+    <![endif]-->
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="optimization.html" title="Strain optimization"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="start.html" title="Getting started"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">optimModels 0.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Phenotype Simulation</a><ul>
+<li><a class="reference internal" href="#stoichiometric-simulation">Stoichiometric Simulation</a></li>
+<li><a class="reference internal" href="#gecko-simulation">GECKO Simulation</a></li>
+<li><a class="reference internal" href="#kinetic-simulation">Kinetic Simulation</a><ul>
+<li><a class="reference internal" href="#wild-type-simulation">Wild-type simulation</a></li>
+<li><a class="reference internal" href="#simulation-with-diferent-parameters">Simulation with diferent parameters</a></li>
+<li><a class="reference internal" href="#knockouts-simulation">Knockouts simulation</a></li>
+<li><a class="reference internal" href="#under-over-expression-simulation">Under/Over expression simulation</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="start.html"
+                        title="previous chapter">Getting started</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="optimization.html"
+                        title="next chapter">Strain optimization</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/simulation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="phenotype-simulation">
+<h1>Phenotype Simulation<a class="headerlink" href="#phenotype-simulation" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="stoichiometric-simulation">
+<h2>Stoichiometric Simulation<a class="headerlink" href="#stoichiometric-simulation" title="Permalink to this headline">¶</a></h2>
+<p>The phenotype simulation of stoichiometric metabolic models are out of scope of this package.
+For the phenotype prediction prupose, you can use the available methods on <em>framed</em> package,  developed by Daniel Machado.</p>
+<p>For more information see:
+GitHub: <a class="reference external" href="https://github.com/cdanielmachado/framed">https://github.com/cdanielmachado/framed</a></p>
+</div>
+<div class="section" id="gecko-simulation">
+<h2>GECKO Simulation<a class="headerlink" href="#gecko-simulation" title="Permalink to this headline">¶</a></h2>
+<p>The phenotype simulation of GECKO metabolic models are out of scope of this package.
+The GECKO toolbox contains a Python package(geckopy) for enhancing a Genome-scale model to account for Enzyme Constraints, using Kinetics and Omics. ics data.</p>
+<p>For more information see:
+GitHub:https://github.com/SysBioChalmers/GECKO</p>
+</div>
+<div class="section" id="kinetic-simulation">
+<h2>Kinetic Simulation<a class="headerlink" href="#kinetic-simulation" title="Permalink to this headline">¶</a></h2>
+<p><em>optimModels</em> implements some basic support for working with kinetic models.</p>
+<p>It now also supports models that contain assignment rules (see for example the
+<a class="reference external" href="https://www.ebi.ac.uk/biomodels-main/BIOMD0000000051">Chassagnole 2002</a> <em>E. coli</em> model).</p>
+<div class="section" id="wild-type-simulation">
+<h3>Wild-type simulation<a class="headerlink" href="#wild-type-simulation" title="Permalink to this headline">¶</a></h3>
+<p>Running a simple steady state simulation (uses odespy package, LSODA method):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">optimModels</span> <span class="k">import</span> <span class="n">kinetic_simulation</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">kinetic_simulation</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="simulation-with-diferent-parameters">
+<h3>Simulation with diferent parameters<a class="headerlink" href="#simulation-with-diferent-parameters" title="Permalink to this headline">¶</a></h3>
+<p>It is possible override model parameters without changing the model:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">kinetic_simulation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">parameters</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Dil&#39;</span> <span class="p">:</span> <span class="mf">0.2</span><span class="o">/</span><span class="mi">3600</span><span class="p">})</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="knockouts-simulation">
+<h3>Knockouts simulation<a class="headerlink" href="#knockouts-simulation" title="Permalink to this headline">¶</a></h3>
+<p>The simulation of reaction knockouts is done by multiplying vMax parameter with the factor 0,
+for instance maxG6PDH = 0 will be knockout the reaction vG6PDH:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">kinetic_simulation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">factors</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxG6PDH&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">})</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="under-over-expression-simulation">
+<h3>Under/Over expression simulation<a class="headerlink" href="#under-over-expression-simulation" title="Permalink to this headline">¶</a></h3>
+<p>The simulation of under (over) expression enzymes is done by multiplying vMax parameter with the factor less than 1 (higher than 1)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">kinetic_simulation</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">factors</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxG6PDH&#39;</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">})</span>
+
+<span class="n">result</span><span class="o">.</span><span class="n">print</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="optimization.html" title="Strain optimization"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="start.html" title="Getting started"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="index.html">optimModels 0.0.3 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Sara Correia.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.6.
+    </div>
+  </body>
+</html>
